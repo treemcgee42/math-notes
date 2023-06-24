@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+
+\title{Hilbert spaces}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{adjoints} % {{{1 
+
+\begin{proposition}
+	If an operator $T:\mathcal{H}\to\mathcal{H}$ has an adjoint then it is bounded.
+\end{proposition}
+\begin{proof}
+	$T$ is bounded if and only if it is continuous. By the closed graph theorem, it suffices to show $\Gamma(T)$ is closed. In particular, we must show that if $x_n\to x$ and $Tx_n\to z$, then $Tx=z$. So suppose $x_n\to x$ and $Tx_n\to y$. Then, for any $y$,
+	\begin{equation*}
+		\langle z, y\rangle = \langle Tx_n, y\rangle = \langle x_n, T^\ast y\rangle. 
+	\end{equation*}
+	Taking limits, 
+	\begin{equation*}
+		\langle z, y\rangle = \langle x, T^\ast y\rangle.
+	\end{equation*}
+	But also $\langle x, T^\ast y\rangle = \langle Tx, y\rangle$, so 
+	\begin{equation*}
+		\langle z, y\rangle = \langle Tx, y\rangle.
+	\end{equation*}
+	Since this is true for all $y\in Y$, it must be that $Tx=z$ as desired.
+\end{proof}
+
+% adjoints }}}1
+
+\end{document}

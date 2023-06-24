@@ -1,0 +1,266 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\externaldocument{measure_theory}
+\addbibresource{probability_theory.bib}
+
+\title{probability theory}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{unsorted} % {{{1 
+
+\begin{definition}
+	Let $(E,\mathcal{E})$ and $(F,\mathcal{F})$ be measure spaces. A \emph{transition probability} from $E$ to $F$ is a function 
+	\begin{equation*}
+		\nu: E\times F \to [0,1]
+	\end{equation*}
+	such that, for $x\in E$ and $A\in\mathcal{F}$, 
+	\begin{enumerate}
+		\item $v_x(-)$ is a probability measure on $(F\mathcal{F})$ for all $x\in E$
+		\item $v_A(-)$ is $\mathcal{E}$-measurable for all $A\in\mathcal{F}$.
+	\end{enumerate}
+\end{definition}
+
+\begin{example}
+	Let $(F,\mathcal{F},\mu)$ be $\sigma$-finite, and $f:E\times F\to\mathbb{R}_+$ be $\mathcal{E}\otimes\mathcal{F}$-measurable. If 
+	\begin{equation*}
+		\int_F f(x,y)\ \mu(dy) = 1
+	\end{equation*}
+	for all $x\in E$, then 
+	\begin{equation*}
+		v(x,A) = \int_A f(x,y)\ \mu(dy)
+	\end{equation*}
+	is a transition probability from $E$ to $F$. To verify the two conditions: 
+	\begin{enumerate}
+		\item follows by assumption
+		\item by Fubini-Tonelli (Theorem \ref{thm_fubini-tonelli} in \textit{Measure Theory}, strengthed by Remark \todo{do this remark}).
+	\end{enumerate}
+\end{example}
+
+
+
+% unsorted }}}1
+
+\section{basic definitions} % {{{1 
+
+\begin{definition}
+	Given a probability space $(\Omega, \mathcal{A}, \mathbb{P})$ and a measurable space $(E, \mathcal{E})$, an \emph{$E$-valued random variable} is a measurable function $X:\Omega \to E$.
+\end{definition}
+
+\begin{definition}
+	The \emph{law} or \emph{distribution} of $X$ is the pushforward of $\mathbb{P}$ along $X$, i.e. the measure on $(E,\mathcal{E})$ characterized by the equality 
+	\begin{equation*}
+		\mathbb{P}_X(B) = \mathbb{P}(X^{-1}(B))
+	\end{equation*}
+	for all $B\in\mathcal{E}$.
+\end{definition}
+
+\begin{definition}
+	The $\emph{expectation}$ of a random variable $X$ is defined as 
+	\begin{equation*}
+		\mathbb{E}[X] = \int_\Omega X\ d\mathbb{P},
+	\end{equation*}
+	provided this integral makes sense (i.e. either $X\geq 0$ or $\mathbb{E}[ |X| ]<\infty$).
+\end{definition}
+
+\begin{proposition}
+	Let $X:\Omega\to[0,\infty]$ be a random variable. Then 
+	\begin{equation*}
+		\mathbb{E}[X] = \int_0^\infty \mathbb{P}(X\geq x) dx.
+	\end{equation*}
+	Let $Y:\Omega\to\mathbb{Z}_+$ be a random variable. Then 
+	\begin{equation*}
+		\mathbb{E}[Y] = \sum_{k=0}^\infty k\mathbb{P}(Y=k)=\sum_{k=1}^\infty \mathbb{P}(Y\geq k).
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	Note 
+	\begin{equation*}
+		\int_0^\infty 1_{\{x\leq X(\omega)\}} dx = \lambda(\{0\leq x \leq X(\omega)\}) = X(\omega), 
+	\end{equation*}
+	and so 
+	\begin{equation*}
+		\mathbb{E}[X] 
+		= E\left[ \int_0^\infty 1_{\{x\leq X\}} dx \right]
+		= \int_0^\infty \int_\Omega 1_{\{x\leq X(\omega)\}} \mathbb{P}(d\omega)dx
+		= \int_0^\infty \mathbb{P}(x\leq X)dx.
+	\end{equation*}
+	Swapping the integrals above was justified by Tonelli's theorem, since the function we are integrating is nonnegative.
+
+	For $Y$, observe
+	\begin{equation*}
+		Y = \sum_{k=0}^\infty k 1_{\{Y(\omega)=k\}} = \sum_{k=1}^\infty 1_{\{Y(\omega)\geq k\}}.
+	\end{equation*}
+	Then the result follows by another application of Tonelli's theorem, e.g. by viewing the infinite sum as an integral with respect to counting measure.
+\end{proof}
+
+% basic }}}1
+
+\section{conditional probability} % {{{1 
+
+There are several classes of objects we can take conditional probability with respect to, which can cause some confusion:
+\begin{itemize}
+	\item \dots of $A\in\mathcal{A}$ with respect to $B\in\mathcal{A}$, written $\mathbb{P}(A\mid B)$. Letting $A$ vary, this is a probability measure on $(\Omega,\mathcal{A})$ (Definition \ref{def_conditional_prob_wrt_set}). Given a random variable $X$, We can also consider a conditional expectation $\mathbb{E}[X\mid B]$ (Definition \ref{def_conditional_expectation_wrt_set}), which is nothing but the expectation of $X$ with respect to the aforementioned conditional probability measure (Proposition \ref{prop_conditional_expectation_wrt_set_is_expectation_wrt_conditional_probability_measure}).
+	\item \dots of a real random variable $X$ with respect to a random variable $Y$ taking values in a countable space (Definition \ref{def_conditional_expectation_wrt_countable_rv}). 
+\end{itemize}
+
+\begin{definition} % conditional prob wrt set
+\label{def_conditional_prob_wrt_set}
+	Consider a probability space $(\Omega,\mathcal{A},\mathbb{P})$. For any $B\in\mathcal{A}$ with nonzero measure, we can define a new probability measure on $(\Omega,\mathcal{A})$ as follows: 
+	\begin{equation*}
+		\mathbb{P}(\cdot \mid B) \coloneqq \frac{\mathbb{P}(\cdot \cap B)}{\mathbb{P}(B)}.
+	\end{equation*}
+	This is the \emph{conditional probability} given $B$.
+\end{definition}
+\begin{proof}[Proof this is a probability measure]
+	By (Measure Theory, Proposition \ref{prop_basic_operations_on_measures}), we see that $\mathbb{P}(\cdot \mid B)$ is an unsigned measure, and direct calculation shows
+	\begin{equation*}
+		\mathbb{P}(\Omega \mid B) = \frac{\mathbb{P} (\Omega \cap B)}{\mathbb{P}(B)} = \frac{\mathbb{P}(B)}{\mathbb{P}(B)} = 1.
+	\end{equation*}
+\end{proof}
+
+\begin{definition} % conditional expectation wrt set
+\label{def_conditional_expectation_wrt_set}
+	As above, consider a probability space $(\Omega,\mathcal{A},\mathbb{P})$ and $B\in\mathcal{A}$ with nonzero measure. For a random variable $X$, we define the \emph{conditional expectation}
+	\begin{equation*}
+		\mathbb{E}[X \mid B] \coloneqq \frac{\mathbb{E}[X1_B]}{\mathbb{P}(B)}.
+	\end{equation*}
+\end{definition}
+
+\begin{proposition}
+\label{prop_conditional_expectation_wrt_set_is_expectation_wrt_conditional_probability_measure}
+	$\mathbb{E}[X \mid B]$ is the expectation of $X$ with respect to the probability measure $\mathbb{P}(\cdot \mid B)$.
+\end{proposition}
+\begin{proof}
+	By (Measure Theory, Proposition \ref{prop_basic_operations_on_measures}), 
+	\begin{equation*}
+		\int_\Omega X\ d\mathbb{P}(\cdot\mid B) = \frac{1}{\mathbb{P}(B)} \int_B X\ d\mu = \frac{\mathbb{E}[X1_B]}{\mathbb{P}(B)}.
+	\end{equation*}
+\end{proof}
+
+\begin{definition} % conditional expectation wrt countable rv
+\label{def_conditional_expectation_wrt_countable_rv}
+	Let $(E, \mathcal{P}(E))$ be a countable space, and $Y:\Omega \to E$ a random variable. Let $X \in L^1(\Omega, \mathcal{A}, \mathbb{P})$ be a real-valued random variable. Define 
+	\begin{equation*}
+		E' = \{y \in E : \mathbb{P}(Y=y) > 0 \}
+	\end{equation*}
+	be the set of outcomes with nonzero probability. In particular, for all $y \in E'$, we can define the conditional expectation (Definition \ref{def_conditional_expectation_wrt_set})
+	\begin{equation*}
+		\mathbb{E}[X \mid Y=y] = \frac{\mathbb{E}[X1_{Y=y}]}{\mathbb{P}(Y=y)}.
+	\end{equation*}
+	This induces a function $\phi_X: E \to \mathbb{R}$ by
+	\begin{equation*}
+		\phi_X(y) = 
+		\begin{cases}
+			\mathbb{E}[X \mid Y=y] & y\in E' \\
+			0 & \text{otherwise}
+		\end{cases}.
+	\end{equation*}
+	Finally, we define the \emph{conditional expectation} of $X$ with respect to $Y$ to be the random variable $\Omega \to \mathbb{R}$
+	\begin{equation*}
+		\mathbb{E}[X \mid Y](-) = \phi_X(Y(-)).
+	\end{equation*}
+\end{definition}
+
+\begin{remark}
+	The countability of $E$ makes this definition canonical up to a set of measure zero. In particular, we can choose any value of $\phi_X(y)$ for $y\not\in E'$, since 
+	\begin{equation*}
+		\mathbb{P}(Y \not\in E') = \mathbb{P}\left( \bigcup_{y\not\in E'} \{Y = y\} \right) =  \sum_{y\not\in E'} \mathbb{P}(Y=y) = 0,
+	\end{equation*}
+	where we have used the countable additivity of measure.
+\end{remark}
+
+\begin{remark}
+	We may visualize Definition \ref{def_conditional_expectation_wrt_countable_rv} as follows:
+	% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQAKAHS4HkBbGAHN6pAAQ9+9HAAsAxk2ABBAL7jJ0mQCMtwAAoqAlCDXpMufIRRli1Ok1bsOAUXVcpshY30qXh46YgGNh4BEQATKS2NAwsbIggGrI6wABKKiakZiGWEaThdrGOCUnauumZ2RZhKJFUMQ7xIAD8JnYwUELwRKAAZgBOEPxIZCA4EEjkNIz0WjCMeuahViCMML04IA1x7ACalSADQyM040iR9jsl7popzirIABoS7lhQYruUW6uz84s5NRA-SwQhkm0CR2GiFGZ0QAGZtsUQI9vjM5gslrkEmsNgdIZNThNEBcik0eGgZFgAPooiGDKEXWEI1ZYMBNKAQHA4DrfGQwehQdiQNnfUnsVrTX4YgErVnYWBtFRAA
+	\begin{center}
+	\begin{tikzcd}
+		{(E, \mathcal{P}(E))} \arrow[rr, "\phi_X"] &  & \mathbb{R} \arrow[dd, "?" description, no head, dotted] \\
+		{(\Omega, \mathcal{A}, \mathbb{P})} \arrow[u, "Y"] \arrow[rru, "{\mathbb{E}[X \mid Y]}"'] \arrow[rrd, "X"] &  & ? \\
+		&  & \mathbb{R}                                             
+	\end{tikzcd}
+	\end{center}
+	The question now becomes how the random variables $\mathbb{E}[X \mid Y]$ and $X$ are related to each other.
+\end{remark}
+
+\begin{definition} % conditional expectation
+	Let $\mathcal{B}\subset\mathcal{A}$ be a sub-$\sigma$-algebra, and let $X\in L^1(\Omega, \mathcal{A}, \mathbb{P})$ (i.e. $X$ is an absolutely integrable real random variable). Then the \emph{conditional expectation} $\mathbb{E}[X | \mathcal{B}] \in L^1(\Omega, \mathcal{B}, \mathbb{P})$ is the unique random variable such that
+	\begin{equation*}
+		\mathbb{E}[ XZ ] = \mathbb{E}[ \mathbb{E} [X|\mathcal{B}] Z]
+	\end{equation*}
+	for all $\mathcal{B}$-measurable real random variables $Z$.
+\end{definition}
+
+\begin{theorem}
+	$\mathbb{E}[ X | \mathcal{B} ]$ exists and is unique.
+\end{theorem}
+\begin{proof}
+	\todo{prove}
+\end{proof}
+
+% conditional }}}1
+
+\section{stochastic processes} % {{{1 
+
+\begin{definition}
+	A \emph{discrete random process} is a sequence $(X_n)_{n\in\mathbb{Z_+}}$ of random variables on $(\Omega,\mathcal{A},\mathbb{P})$ taking values on the same measurable space.
+\end{definition}
+
+\begin{definition}
+	A \emph{filtration} on $(\Omega,\mathcal{A},\mathbb{P})$ is an increasing sequence of sub-$\sigma$-algebras $(\mathcal{F}_n)_{n\in\mathbb{Z}_+}$, i.e.
+	\begin{equation*}
+		\mathcal{F}_0 \subset \mathcal{F}_1 \subset \mathcal{F}_2 \subset \cdots \subset \mathcal{A}.
+	\end{equation*}
+	The probability space together with a filtration is called a \emph{filtered probability space}.
+\end{definition}
+
+\begin{definition}
+	A random process $(X_n)_{n\in\mathbb{Z}_+}$ is \emph{adapted} to the filtration $(\mathcal{F}_n)_{n\in\mathbb{Z}_+}$ if $X_n$ is $\mathcal{F}_n$ measurable for all $n$.
+\end{definition}
+
+\begin{definition}
+	Let $(X_n)_{n\in\mathbb{Z}_+}\subset L^1$ be a real-valued random process adapted to the filtration $(\mathcal{F}_n)_{n\in\mathbb{Z}_+}$. We say $(X_n)$ is \emph{martingale} if $\mathbb{E}[X_{n+1}\mid \mathcal{F}_n] = X_n$ for all $n$.
+\end{definition}
+
+\begin{definition}
+	A (continuous) random variable $T:\Omega\to[0,\infty]$ is a \emph{stopping time} (of the filtration $(\mathcal{F}_t)_{t\geq 0}$) if 
+	\begin{equation*}
+		\{T \leq t \} = \{\omega\in\Omega : T(\omega) \leq t\} \in \mathcal{F}_t
+	\end{equation*}
+	for all $t\geq 0$.
+\end{definition}
+\begin{remark}
+	For intuition, consider the probability space to be the possible paths/evolution of a casino game. The time at which the player decides to leave is a stopping time, since it will only be influenced by events that occurred up to the moment they decide to leave, and not on future events.
+\end{remark}
+
+% stochastic processes }}}1
+
+\section{Brownian motion} % {{{1 
+
+\begin{definition}
+	An $\mathbb{R}^d$-valued continuous random process $(B_t)_{t\geq 0}$ is called ($d$-dimensional) \emph{Brownian motion} or a \emph{Wiener process} if the following conditions hold:
+	\begin{enumerate}[label=BR\arabic*),ref=BR\arabic*]
+		\item $B_0=0$ almost surely.
+		\item (independent increments) future increments are independent of past increments, i.e. for all $u,t>0$, it is the case that $B_{t+u}-B_t$ is independent of $B_s$ for $t>s$.
+		\item (Gaussian increments) $B_{t+u}-B_t \sim \mathcal{N}(0,u)$.
+		\item (continuous paths) $B_t$ is continuous in $t$.
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}
+	Brownian motion exists.
+\end{theorem}
+\begin{proof}
+	\todo{prove}
+\end{proof}
+
+% brownian motion }}}1
+
+\nocite{legall_2022}
+\nocite{wikipedia_wiener_process}
+\printbibliography
+
+\end{document}

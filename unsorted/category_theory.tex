@@ -1,0 +1,1525 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\newtheorem{para}[theorem]{}
+
+\title{category theory}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{basics} % {{{1 
+
+\begin{definition}
+	A category $\mathcal{C}$ consists of: 
+	\begin{itemize}
+		\item a class of \emph{objects} $\text{Obj}(\mathcal{C})$
+		\item for any $X,Y\in\text{Obj}(\mathcal{C})$\footnote{we will abbreviate $X\in\text{Obj}(\mathcal{C})$ as $X\in\mathcal{C}$}, an associated set $\mathcal{C}(X,Y)=\text{Hom}_\mathcal{C}(X,Y)$ of \emph{arrows} from $X$ to $Y$.
+		\item a ``composition'' 
+			\begin{gather*}
+				\mathcal{C}(Y,Z) \times \mathcal{C}(X,Y) \to \mathcal{C}(X,Z) \\
+				(g,f) \mapsto g\circ f
+			\end{gather*}
+			which is associative: $h\circ(g\circ f) = (h\circ g)\circ f$. 
+		\item for each object $X\in\mathcal{C}$, there exists an arrow $1_X$ such that $1_X\circ f = f$ and $g\circ 1_X = g$. 
+	\end{itemize}
+\end{definition}
+
+\begin{para}
+	Given a category $\mathcal{C}$, to any object $X\in\mathcal{C}$ we can associate an arrow $1_X$, and to any arrow $f:X\to Y$ we can associate two objects: $d_0(f)=X$ and $d_1(f)=Y$.
+\end{para}
+
+\begin{example}
+	\hfill 
+	\begin{enumerate}
+		\item $\text{Set}$.
+		\item $\text{Grp}$, the category whose objects are groups and whose arrows are group homomorphisms.
+		\item $\text{Top}$, the category whose objects are topological spaces and whose arrows are continuous maps.
+		\item $(P,\leq)$ where $P$ is a poset. This is the category whose objects are the elements of $P$ and whose morphisms are as follows: if $x\leq y$ in $P$ then there exists a unique array $(x,y)$.
+		\item Let $G$ be a monoid (e.g. a group). Define the category $BG$ to have as its unique object $\{\ast\}$ and whose arrows are $BG(\ast,\ast)=G$. Composition in this case is monoid multiplication.
+		\item (slice category) Let $\mathcal{C}$ be a category, and fix some object $B\in\mathcal{C}$. Define a category $\mathcal{C}/B$ as follows:
+			\begin{itemize}
+				\item objects are arrows in $\mathcal{C}$ terminating in $B$
+				\item an arrow from $f:E\to B$ to $f':E'\to B$ is an arrow $h:E\to E'$ making the diagram commute:
+					\begin{equation*}
+						% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAFEQBfU9TXfIRQAmclVqMWbTjz7Y8BIgEZSS8fWatEIAELdxMKAHN4RUADMAThAC2SMiBwQkKiZrYALbrxBXb96ickUTcpbXMQagY6ACMYBgAFfgUhEEssIw8cbwtrO0RXIMQQjTDfAHJ9LiA
+\begin{tikzcd}
+E \arrow[rr, "h"] \arrow[rd, "f"'] &   & E \arrow[ld, "f'"] \\
+                                   & B &                   
+\end{tikzcd}
+					\end{equation*}
+			\end{itemize}
+			Similarly, one can define the category $B\setminus \mathcal{C}$ whose objects are arrows in $\mathcal{C}$ beginning at $B$.
+	\end{enumerate}
+\end{example}
+
+\begin{definition}
+	An \emph{isomorphism} in a category $\mathcal{C}$ is an invertible arrow. In other words, an arrow $f:X\to Y$ is an isomorphism if there exists an arrow $g:Y\to X$ such that $g\circ f = \text{Id}_X$ and $f\circ g=\text{Id}_Y$.
+\end{definition}
+
+\begin{example}
+	This is the ``right'' notion of an isomorphism; for example in $\text{Top}$ a bijective map which preserves the topological structure (i.e. is continuous) is not strong enough for what we would like. For example, the map 
+	\begin{gather*}
+		(0,2\pi) \to S^1 \\
+		t \mapsto e^{it}
+	\end{gather*}
+	is bijective and continuous, but we wouldn't want to consider these isomorphic objects.
+\end{example}
+
+\begin{definition}
+	Let $\mathcal{C}$ be a category. The \emph{opposite/dual category} $\mathcal{C}^{\text{op}}$ has:
+	\begin{itemize}
+		\item objects are the objects of $\mathcal{C}$
+		\item arrows are the arrows of $\mathcal{C}$ reversed. For an arrow $f:X\to Y$ in $\mathcal{C}$, write its corresponding arrow in $\mathcal{C}^{\text{op}}$ as $f':Y\to X$.
+		\item composition is $g'\circ f'=(f\circ g)'$
+		\item the identity on $X\in\mathcal{C}^{\text{op}}$ is $(\text{Id}_X)'$
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	Let $\mathcal{C},\mathcal{D}$ be categories. A \emph{covariant functor} $F:\mathcal{C}\to\mathcal{D}$ associates:
+	\begin{itemize}
+		\item to an object $X\in\mathcal{C}$ an object $F(X)\in\mathcal{D}$
+		\item to an arrow $f:X\to Y$ in $\mathcal{C}$, an arrow $F(f):F(X)\to F(Y)$ in $\mathcal{D}$ such that $F(g\circ f)=F(g)\circ F(f)$ and $F(\text{Id}_X)=\text{Id}_{F(X)}$.
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	A contravariant functor $F:\mathcal{C}\to\mathcal{D}$ is a covariant functor $\mathcal{C}^{\text{op}}\to\mathcal{D}$. In other words, to every arrow $f:X\to Y$ in $\mathcal{C}$ it associates an arrow $F(f):F(Y)\to F(X)$ in $\mathcal{D}$ and is such that $F(g\circ f)=F(f)\circ F(g)$.
+\end{definition}
+
+\begin{corollary}
+	Functors preserve isomorphisms.
+\end{corollary}
+
+\begin{example}
+	 Let $G$ be a group. A functor 
+	\begin{gather*}
+		F:BG \to \{\text{Set}\} \\
+		\ast \mapsto X 
+	\end{gather*}
+	is essentially a $G$-set. If we replace $\text{Set}$ with vector spaces, then this is a linear representation.
+\end{example}
+
+\begin{definition}
+	Let $\mathcal{C}$ be a category, let $X\in\mathcal{C}$. The (covariant) \emph{representable functor} represented by $X$ is 
+	\begin{equation*}
+		h^X = \mathcal{C}(X,-): \mathcal{C} \to \text{Set}
+	\end{equation*}
+	defined by: 
+	\begin{itemize}
+		\item on objects, $h^X(Y) = \mathcal{C}(X,Y)$
+		\item on arrows: if $f:Y\to Z$ is in $\mathcal{C}$, then $h^X(f)$ maps $X\to Y$ to maps $X\to Z$ by postcomposing with $f$. 
+	\end{itemize}
+	We can similarly define this covariantly, for which we write $h_X=\mathcal{C}(-,X)$.
+\end{definition}
+
+\begin{definition}
+	An \emph{isomorphism of categories} is a functor $F:\mathcal{C}\to\mathcal{D}$ with inverse functor $G:\mathcal{D}\to\mathcal{C}$ such that $G\circ F=\text{Id}_\mathcal{C}$ and $F\circ G=\text{Id}_\mathcal{D}$.
+\end{definition}
+
+\begin{definition}
+	Let $F,G: \mathcal{C}\to\mathcal{D}$ be functors. A natural transformation
+	\begin{equation*}
+		\tau: F\Rightarrow G
+	\end{equation*}
+	consists of, for each object $X\in\mathcal{C}$, an arrow $\tau_X:F(X)\to G(X)$ such all diagrams of the following form commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEAKADQEoQAvqXSZc+QigCM5KrUYs2AcR78hI7HgJEyk2fWatEHTgE1VwkBg3ii03dX0Kjys4NkwoAc3hFQAMwAnCABbJDIQHAgkaTkDNgAdeJw6JgB9bkELQJCw6kikACYHeUNjP35qBjoAIxgGAAVRTQkQAKxPAAscTP8g0MQY-MQAZmK4505ynpBs-qKIqJGxpxBE5LSTEEqausbrLSM2zu6BCgEgA
+\begin{tikzcd}
+F(X) \arrow[r, "\tau_X"] \arrow[d, "F(f)"'] & G(X) \arrow[d, "G(f)"] \\
+F(Y) \arrow[r, "\tau_Y"']                   & G(Y)                  
+\end{tikzcd}
+	\end{equation*}
+\end{definition}
+
+\begin{example}
+	Let $\mathcal{C}=\mathcal{V}_k$ be the category of finite dimensional $k$-vector spaces. Let $F=\text{Id}_\mathcal{C}:\mathcal{C}\to\mathcal{C}$ and 
+	\begin{equation*}
+		G:\mathcal{C}\to\mathcal{C} \\
+		V \mapsto V^{\ast\ast}
+	\end{equation*}
+	Define $\tau:F\Rightarrow G$ to be such that $\tau_V(v)=\text{ev}_v$, where $v\in V$ and $\text{ev}_v\in V^{\ast\ast}$ is the evaluation functional.
+\end{example}
+
+\begin{example}
+	Let $\mathcal{C}=\mathcal{V}_k^{\text{op}}\times\mathcal{V}_k$, let $\mathcal{D}=\mathcal{V}_k$. Define 
+	\begin{gather*}
+		\mathcal{V}_k^{\text{op}}\times\mathcal{V}_k \to \mathcal{V}_k \\
+		(V,W) \overset{F}{\mapsto} V^\ast\otimes W \\
+		(V,W) \overset{G}{\mapsto} \text{Hom}_k(V,W).
+	\end{gather*}
+	Define $\gamma:F\Rightarrow G$ by 
+	\begin{gather*}
+		\gamma_{V,W}: V^\ast\otimes_k W \to \text{Hom}_k(V,W) \\
+		\phi\otimes w \mapsto \phi(-)w.
+	\end{gather*}
+	Let's check this is a natural transformation. If $T:V\to V'$, we get an induced $T^\ast:(V')^\ast \to V^\ast$. Similarly for $U:W\to W'$. Then there are two diagrams: 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADUA9AHW7rhy8IeALbwABAHUQAX1LpMufIRRkAjFVqMWbABTsA5AEoefAUNETpchdjwEiAJlIbq9Zq0QheOGAA8cYAAJCBEZAH0Aa30DUkkjWXkQDDtlJ3JNdx0vH39AkLCo-TiEm2TFexVkABYMt21PDlN+QW5hLDE4KUTbJQcUWtctDzZDCw6rAx7y1P7kADY64ezvbl8A4NCI6PYS6ZS+qsWhrMbcjYLt4sljWU0YKABzeCJQADMAJ1CkNWocCCQZBADDoACMYAwAAoVNJeBgwN44ED1EZeAAqzXMbUscHOgSwUBk00+30QzhA-yQAGZqCDwVCYf0QB8sI8ABZIlErXQAWiMvAAxlgPgLxGjiV8RIC-gDEDTlmduI86CIRHRwsBdpIiWUSVLEL8KbLyac2Lxlar1ZrYtrkcCwRDobMVMzWRyJaTakakABWLmK9b4wnjTriACqdrpjsZLpZ7KRuslSEW3sQAHZ-Www4LhaLeaUknqkF7KYgU6ackqVWqNVqdYWk4g-amMwqzVXLbW4gYibSHQznWw4+6ZBQZEA
+\begin{tikzcd}
+V^\ast\otimes W \arrow[rr, "{\gamma_{V,W}}"]                                          &  & {\text{Hom}_k(V,W)}                           &  & V^\ast\otimes W \arrow[d, "\text{id}\otimes U"'] \arrow[rr, "{\gamma_{V,W}}"] &  & {\text{Hom}_k(V,W)} \arrow[d, "U\circ (-)"] \\
+(V')^\ast\otimes W \arrow[u, "T^\ast\otimes\text{id}"] \arrow[rr, "{\gamma_{V',W}}"'] &  & {\text{Hom}_k(V',W)} \arrow[u, "(-)\circ T"'] &  & V'\otimes W' \arrow[rr, "{\gamma_{V,W'}}"']                                   &  & {\text{Hom}_k(V,W')}                       
+\end{tikzcd}
+	\end{equation*}
+	Together these show that $\gamma$ is a natural transformation (ref).
+\end{example}
+
+\begin{example}[universal coefficient theorem]
+	The following is an example of where we need to be careful about when things are natural. The universal coefficient theorem states that for a topological space $X$ and an abelian group $G$ there exists a \textit{natural} exact sequence
+	\begin{equation*}
+		0 \to H_q(X)\otimes G \to H_q(X; G) \to \text{Tor}_1(H_{q-1}(X), G) \to 0.
+	\end{equation*}
+	Concretely, natural means that, given a continuous map $X\to Y$, there is an induced map on exact sequences 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRGJAF9T1Nd9CKAIzkqtRizYAJAPoBHABQANAJQAdNRDwBbeAAIA4lx4gM2PASIAmUdXrNWiELMVKA3AZXHe5gUQDMtuIObBo4MAAeOMAAKhAATpwyQgqywHIAtEKcyiqkhl7cPvyWKAAsQfaSThxFpnwWgiSkQmJVjuze9b6lyCKtdhIdLgoAmuqaOvpGdWYlTTYDwdXO8mMehSZzjQEtbUOhauFRsQlJKWmZ2WN5BV3bfuV7gyE1XGIwUADm8ESgAGbxCDaJBkEA4CBIbImQHAqHUCFIKx1WEgxA2cGQxD+FFAtGBTFIMq4uGIAAcCKxAE4SWiAOyUpBk2lIABsjMQdJZiAArBzWdyRITEOyQAwsGAOlA6HAABafLqopEchliiVSmXyqCKvFIAmI8nUcWStjSuUKzgUThAA
+\begin{tikzcd}
+0 \arrow[r] & H_q(X)\otimes G \arrow[r] \arrow[d, dashed] & H_q(X;G) \arrow[r] \arrow[d, dashed] & {\text{Tor}_1(H_{q-1}(X), G)} \arrow[r] \arrow[d, dashed] & 0 \\
+0 \arrow[r] & H_q(Y)\otimes G \arrow[r]                   & H_q(Y;G) \arrow[r]                   & {\text{Tor}_1(H_{q-1}(Y), G)} \arrow[r]                   & 0
+\end{tikzcd}
+	\end{equation*}
+	Let's be pedantic. One way to view this is that there is a functor between $\text{Top}$ and some category which includes exact sequences, sending $X$ to the exact sequence above. Another way to see it is that each component of the exact sequence is a functor, e.g. $H_q(-)\otimes G$, and there exists natural transformations between these functors. Moreover the component maps of these natural transformations are such that, when we ``chain'' them we get an exact sequence.
+
+	The universal coefficient theorem also says that the sequence splits, i.e. 
+	\begin{equation*}
+		H_q(X;G) \cong (H_q(X) \otimes G) \oplus \text{Tor}_1(H_{q-1}(X), G).
+	\end{equation*}
+	However, this splitting is \textit{not} natural:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAAkB9ARwAoANANwBxAJQgAvqXSZc+QigCM5KrUYs2XPv1EAdXRDwBbeAAJhk6SAzY8BIgCYV1es1aIQ+nDAAeOYAAqEABOEpyKvFzA3AC0ihICoqTm4lIytvJEZIqqrhoeWrwAmoIpluly9kqkOS7q7hw8xXoGxmYWadaydgrITrVqbmxevv5BoeGRnNFxCUVJZRKqMFAA5vBEoABmwRBGSGQgOBBIAMydO3tIykcniAAsF7v7iE63SACsT1eIh8fX1AYdAARjAGAAFbqZDxYMDYWAgOpDDz6ADGBFWiJAAAsYHQoGxIGBWN8Xjd-q9qLj8YSCKwkflPAY0MwEIDYQ0ifSjnQsAxacSsUDQRCoVUQLD4SSrJcXqdqBT7uzBR4uVjqQTVXSsThefytYLASCwZCMuLJVgEQyGmiMeUQLKkEr3ogPsrOdqqXjNeBPTy+QLucKTWKFBK4ZbuXkbczWfbHZSXc6GBy2FA6HBcQTSQCXW6QCmVSB05mVpIKBIgA
+\begin{tikzcd}
+H_q(X;G) \arrow[d] \arrow[r, "\cong", phantom] & H_q(X)\otimes G \arrow[d] \arrow[r, "\oplus", phantom] \arrow[rd, dashed] & {\text{Tor}_1(H_{q-1}(X), G)} \arrow[d] \arrow[ld, dashed] \\
+H_q(Y; G) \arrow[r, "\cong", phantom]                      & H_q(Y)\otimes G \arrow[r, "\oplus", phantom]                              & {\text{Tor}_1(H_{q-1}(Y), G)}                             
+\end{tikzcd}
+	\end{equation*}
+	We can't say that $H_q(Y; G)$ decomposes as the direct sum of the images of the decomposition of $H_q(X;G)$, as they may ``cross'' into each other.
+\end{example}
+
+\begin{definition}
+	Let $\mathcal{C}$ and $\mathcal{D}$ be categories. The \emph{functor category}, denoted $\mathcal{D}^\mathcal{C}$, consists of 
+	\begin{itemize}
+		\item objects: functors $\mathcal{C}\to\mathcal{D}$
+		\item arrows: an arrow between objects $F,G:\mathcal{C}\to\mathcal{D}$ is a natural transformation $\alpha: F\Rightarrow G$
+		\item composition: composition of natural transformations $F\Rightarrow G\Rightarrow H$: on components, this looks like 
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEAKADQEoQAvqXSZc+QijIBGKrUYs2XAJr8hI7HgJEp5WfWatEIAOI9VwkBg3jtpGdX0KjplYItWxWlACY7e+YYgABJmbuqeEsi+lA4BbCF8grIwUADm8ESgAGYAThAAtkhkIDgQSDpyBoqcWfzUDHQARjAMAAqimhIgOVipABY4YSC5BUi+JWWIAMyxVc41dSANzW0dNkY9-YNqw3mFiACs1KVIACyzTsELIPVNLe3WXt29A0Mj+8UniOOOgQA6f0YaD6dAA+tw3nsxsdJkdKpcAc0cGCITt3uUYUgZvD-oCGMCwUpIaNppjEOccWxETBkaCiQIKAIgA
+\begin{tikzcd}
+F(X) \arrow[d, "F(f)"'] \arrow[r, "\alpha_X"] & G(X) \arrow[d, "G(f)"'] \arrow[r, "\beta_X"] & H(X) \arrow[d, "H(f)"'] \\
+F(Y) \arrow[r, "\alpha_Y"]                    & G(Y) \arrow[r, "\beta_Y"]                    & H(X)                   
+\end{tikzcd}
+			\end{equation*}
+	\end{itemize}
+\end{definition}
+
+\begin{remark}
+	We defined categories to have hom sets that are sets. It is not gaurenteed here, so let's just assume for now that this is well-defined, which it will be in many situations.
+\end{remark}
+
+\begin{definition}
+	Let $F,G\in\mathcal{D}^\mathcal{C}$. A \emph{natural isomorphism} or \emph{natural transformation} between $F$ and $G$ is an isomorphism in $\mathcal{D}^C$. In other words, it is a natural transformation $\alpha:F\Rightarrow G$ with an inverse $G\Rightarrow F$.
+\end{definition}
+
+\begin{remark}
+	$\alpha:F\to G$ is a natural equivalence if and only if each component $\alpha_X:F(X)\to G(X)$ is an isomorphism (in $\mathcal{D}$). Indeed, if $\beta\circ\alpha=1_F$ then each component $(\beta\circ\alpha)_X=1_X$. Similarly $(\alpha\circ\beta)_X=1_X$. Then $\alpha_X$ and $\beta_X$ are inverses, so $\alpha_X$ is an isomorphism.
+\end{remark}
+
+\begin{example}
+	For a finite dimensional vector space $V$, the isomorphism $V\cong V^{\ast\ast}$ can be expressed as a natural equivalence between the identity functor and the double dual functor.
+\end{example}
+
+\begin{definition}
+	A functor $F:\mathcal{C}\to\mathcal{D}$ is \emph{faithful} if, for all $X,Y\in\mathcal{C}$, the induced map 
+	\begin{equation*}
+		F:\mathcal{C}(X,Y) \to \mathcal{D}(F(X), F(Y))
+	\end{equation*}
+	is injective. We say $F$ is \emph{full} if the map is surjective.
+\end{definition}
+
+\begin{definition}
+	A functor $F:\mathcal{C}\to\mathcal{D}$ is an \emph{equivalence of categories} if there exists a functor $G:\mathcal{D}\to\mathcal{C}$ and natural transformations 
+	\begin{gather*}
+		G\circ F \overset{\sim}{\Rightarrow} 1_\mathcal{C} \\
+		F\circ G \overset{\sim}{\Rightarrow} 1_\mathcal{D}.
+	\end{gather*}
+\end{definition}
+
+\begin{definition}
+	A functor $F:\mathcal{C}\to\mathcal{D}$ is \emph{essentially surjective} if, for all $D\in\mathcal{D}$, there exists $C\in\mathcal{C}$ and an isomorphism $F(C)\overset{\sim}{\to} D$ in $\mathcal{D}$.
+\end{definition}
+
+\begin{theorem}
+	Let $F:\mathcal{C}\to\mathcal{D}$ be a functor. The following are equivalent:
+	\begin{enumerate}
+		\item $F$ is a category equivalence 
+		\item $F$ is full, faithful, and essentially surjective
+	\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+	($1\Rightarrow 2$) Let $F:\mathcal{C}\to\mathcal{D}$ be an equivalence of categories. So there exist natural equivalences $\alpha: 1_\mathcal{C}\Rightarrow GF$ and $\beta: 1_\mathcal{D}\Rightarrow FG$.
+	\begin{itemize}
+		\item (essentially surjective) For $D\in\mathcal{D}$, the component $\beta_D:D\to FG(D)$ is an isomorphism, which shows $D$ is isomorphic to $G(D)\in\mathcal{C}$.
+		\item (faithful) We want to show that $\mathcal{C}(C,C')\to\mathcal{D}(F(C), F(C'))$ is injective for all $C,C'\in\mathcal{C}$. Suppose there are arrows $f,g\in\mathcal{C}(C,C')$ such that $F(f)=F(g)$. We need to show $f=g$. Well then the following diagram commutes:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRQBGclVqMWbAOIAxABTsAlN14gM2PASJlh4+s1aIOAclV9NgoqL3UDU43MUmVXcTCgBzeEVAAzACcIAFskACZqHAgkAGY7SSMQAB0kxjQACzoAfWB2Ey4QagY6ACMYBgAFfi0hEACsT3SccxBAkPDI6MQ4iUM2FOxQnn8g0MQyECiO3odWwpBissrqq2N6xubqOHSsP2bEYWHW0aQJqcQImcTPee3d-YBaQ7U2sdFJrp77RKc-JQBeJyeVwvE7jTpId7ffqpBgZbKcI6vU4Qg7xPrGAZYUJFUrlKqWbRrBpNbgULhAA
+\begin{tikzcd}
+C \arrow[d, "f"', shift right] \arrow[d, "g", shift left] \arrow[r, "\alpha_C"] \arrow[r, "\sim"'] & GF(C) \arrow[d, "GF(f)=GF(g)"] \\
+C' \arrow[r, "\alpha_{C'}"'] \arrow[r, "\sim"]                                                     & GF(C')                        
+\end{tikzcd}
+			\end{equation*}
+			So 
+			\begin{align*}
+				F(f)=F(g) \Rightarrow& GF(f)=GF(g) \\
+				\Rightarrow& GF(f)\circ\alpha_C = GF(g)\circ\alpha_C \\
+				\Rightarrow& \alpha_{C'}\circ f = \alpha_{C'}\circ g \\
+				\Rightarrow& f=g.
+			\end{align*}
+		\item (full) We want to show $\mathcal{C}(C,C')\to \mathcal{D}(F(C), F(C'))$ is surjective. Let $h\in\mathcal{D}(F(C), F(C'))$. Then, letting $f=\alpha_{C'}^{-1}\circ G(h) \circ \alpha_C$, the following diagram commutes by construction:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRQBGclVqMWbAOIAxABTsAlN14gM2PASJlh4+s1aIOAclV9NgoqL3UDU43MUmVXcTCgBzeEVAAzACcIAFskACZqHAgkAGY7SSMQAB0kxjQACzoAfWB2Ey4QagY6ACMYBgAFfi0hEACsT3SccxBAkPDI6MQ4iUM2FOxQnn8g0MQyECiO3odWwpBissrqq2N6xubqOHSsP2bEYWHW0aQJqcQImcTPee3d-YBaQ7U2sdFJrp77RKc-JQBeJyeVwvE7jTpId7ffqpBgZbKcI6vU4Qg7xPrGAZYUJFUrlKqWbRrBpNbgULhAA
+\begin{tikzcd}
+C \arrow[d, "f"', shift right] \arrow[d, "g", shift left] \arrow[r, "\alpha_C"] \arrow[r, "\sim"'] & GF(C) \arrow[d, "GF(f)=GF(g)"] \\
+C' \arrow[r, "\alpha_{C'}"'] \arrow[r, "\sim"]                                                     & GF(C')                        
+\end{tikzcd}
+			\end{equation*}
+			But this diagram also commutes:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRQBGclVqMWbAOIAKAGKz2ASmXdeIDNjwEio4ePrNWiEHMXsA5Gp59tgomQPUjU01e7iYUAObwioABmAE4QALZIZCA4EEgAzC6SJiCBINQMdABGMAwACvw6QiDBWD4AFjjqQaERiFExSKISxmwAOq2MaGV0APqctik1kdQNiE2uye3YEelZOfn2uqYl5ZUDIeHxI7GIAEyJLabtnd09wFZcaSAZ2XkFDsulFVWDm4gJ0Tv7zW4gU1gRdZDMbbJDfCYyRSBGwULhAA
+\begin{tikzcd}
+C \arrow[d, "f"'] \arrow[r, "\alpha_C"] \arrow[r, "\sim"'] & G(F(C)) \arrow[d, "GF(f)"] \\
+C' \arrow[r, "\alpha_{C'}"'] \arrow[r, "\sim"]             & G(F(C')                   
+\end{tikzcd}
+			\end{equation*}
+			So $G(h)\circ\alpha_C = GF(f)\circ\alpha_C$, so $G(h)=GF(f)$. But we have just shown that $G$ is faithful (we have not technically shown this, but just apply the above steps to $G$ instead of $F$). So it must be that $h=F(f)$.
+	\end{itemize}
+
+	($2\Rightarrow 1$) HW. Idea: by essential surjectivity, for each $D\in\mathcal{D}$ there exists $C\in\mathcal{C}$ and an isomorphism $\beta_D: F(C)\to D$. Let $G$ be the function associating sending $D$ to $C$ as above. We need to show:
+	\begin{itemize}
+		\item $G$ is a functor 
+		\item $\beta=\{\beta_D\}_{D\in\mathcal{D}}$ is a natural isomorphism $FG\Rightarrow 1_\mathcal{D}$
+		\item there exists a natural isomorphism $GF\Rightarrow 1_\mathcal{C}$
+	\end{itemize}
+\end{proof}
+	
+% basics }}}1
+
+\section{Yoneda's lemma} % {{{1 
+
+\begin{proposition}
+	Let $F:\mathcal{C}\to\text{Set}$ be a covariant functor. For $C\in\mathcal{C}$, let $h^C=\mathcal{C}(C,-)$ be the representable functor represented by $C$. Then 
+	\begin{enumerate}
+		\item there exists a bijection 
+			\begin{gather*}
+				\theta: \text{Set}^\mathcal{C}(h^C, F)=\text{Nat}(h^C, F) \overset{\sim}{\to} F(C) \\
+				\alpha \mapsto \alpha_C(1_C)
+			\end{gather*}
+			(note $1_C\in h^C(C,C)=\mathcal{C}(C,C)$)
+		\item the map $\theta$ above is natural in both $\mathcal{C}$ and $F$
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	First we will show injectivity. Let $\alpha:h^C\to F$ be a natural transformation. For any $f\in h^C(X)=\mathcal{C}(C,X)$, the naturality of $\alpha$ says that the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAAsA9AYQApuAlCAC+pdJlz5CKAEzkqtRizYAxfkNHjseAkTkyF9Zq0Qg1ADQ1iQGbVKJkD1I8tNc+lkdduTdKAAyk-oZKJiDEAPrcXlq+0sgAzEEhxmwAOmk47DA4dLwZjGjsdAIAvAUMRXRRvJGCMTYSOvFJCSmuZrwAZgL5mdm5fYXFAmUVVRHm3VaxzUSBbc6hbF0ZAMZYAE5rAAR1pV0iCjBQAObwRKBdmxAAtkiBIDgQSEmKqaaraRvbvAC0QmoDDoACMYAwAApNeymTZYU7sHANa53JBkJ4vRByd4dNQ9ZE3e6IR7PNFLD4gcbFKIE1GIN6krHkjpU6rmEBA0HgqF2PwgOEIpGaEAookAFmojIArJK6FgGGxbnQ0HBScLRUgJRikAB2WXyxXK1UvdWE3WSzEANn1CtMSpVausGsQMu1iGtTzltpA9uNR2EQA
+\begin{tikzcd}
+1_C \arrow[rrr, maps to] \arrow[ddd, maps to] &                                                      &                        & \theta(\alpha)=\alpha_C(1_C) \arrow[ddd, maps to] \\
+                                              & h^C(C) \arrow[d, "f\circ(-)"'] \arrow[r, "\alpha_C"] & F(C) \arrow[d, "F(f)"] &                                                   \\
+                                              & h^C(X) \arrow[r, "\alpha_X"']                        & F(X)                   &                                                   \\
+f\circ 1_C=f \arrow[rrr, maps to]             &                                                      &                        & F(f)(\theta(\alpha))=\alpha_X(f)                 
+\end{tikzcd}
+	\end{equation*}
+	This shows that each component $\alpha_X$ is completely determined by the value $\theta(\alpha)=\alpha_C(1_C)$. In particular, if $\theta(\alpha)=\theta(\beta)$ then $\alpha_X=\beta_X$ for all $X$, so $\alpha=\beta$. Thus $\theta$ is injective.
+
+	For surjectivity, let $e\in F(C)$. Consider the map $h^C\to F$ defined component-wise as 
+	\begin{gather*}
+		\beta^e: h^C(X) \to F(X) \\
+		f \mapsto F(f)(e).
+	\end{gather*}
+	It remains to show that $\beta^e$ is a natural transformation, i.e. that the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAAsA9AYQAoANAJQgAvqXSZc+QijIBGKrUYs2XPgE1hYidjwEic8ovrNWiEADEBW8SAy7pB0guomV5q5tGKYUAObwRKAAZgBOEAC2SGQgOBBIAEyuymYgADppAEYwOHScMAD6-KK2YZFIhrHxiADMyaZsGdm5+QXqINQMdNkMAAqSejIgoVh+7DglIeFRiElVSHVKDR68fjZT5YgxcRX17iB+GQDGWKFHAAS8ALTCnd0wfQOO5iNjEyIUIkA
+\begin{tikzcd}
+h^C(X) \arrow[r, "\beta^e_X"] \arrow[d, "g\circ (-)"'] & F(X) \arrow[d, "F(g)"] \\
+h^C(Y) \arrow[r, "\beta^e_Y"']                         & F(Y)                  
+\end{tikzcd}
+	\end{equation*}
+	Well for the right-down composition we have 
+	\begin{equation*}
+		F(g)(\beta^e_X(f)) = F(g)(F(f)(e)) = F(g\circ f)(e)
+	\end{equation*}
+	on for the down-right composition we have 
+	\begin{equation*}
+		\beta^e_Y(g\circ f) = F(g\circ f)(e).
+	\end{equation*}
+	So $\beta^e$ is a natural transformation. Finally, 
+	\begin{equation*}
+		\theta(\beta^e) = \beta^e_C(1_C)=F(1_C)(e)=1_{F(C)}(e)=e.
+	\end{equation*}
+
+	It remains to prove naturality. 
+
+	(Naturality in $F$). Given $\tau: F\Rightarrow G$, we want to show the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHYAHJ0cAXwAUACwB6AYVIAxAJQgRpdJlz5CKMgEYqtRizadufQcPHS5AcWWr12PASK7S+6vWatEIG2Jl7NRAMJy1XcgMvY195APsDGCgAc3giUAAzACcIAFskMhAcCCQ3Q28TLjomTgBjLCzagAIxAFplagY6ACMYBgAFDWdtECysZIkcFWDsvKQAZmpipAAmTyMfDiqmAH0Zacyc-MRC5cRF8pitnAkYHDod+QOQWePTkvPOnr7BsJdfMYTKbrCq+TjYfIOF5HUpLD5rS6bUy3e57Z6vWFFeFfXoDIbhAHjSYgEFXcFYSEUERAA
+\begin{tikzcd}
+{\text{Nat}(h^C,F)} \arrow[d, "\tau\circ (-)"'] \arrow[r, "\theta_F"] \arrow[r, "\sim"'] & F(C) \arrow[d, "\tau_C"] \\
+{\text{Nat}(h^C,G)} \arrow[r, "\theta_G"] \arrow[r, "\sim"']                             & G(C)                    
+\end{tikzcd}
+	\end{equation*}
+	Let $\alpha\in \text{Nat}(h^C, F)$. In the right-down direction, we have 
+	\begin{equation*}
+		\theta_C(\theta_F(\alpha)) = \theta_C(\alpha_C(1_C)).
+	\end{equation*}
+	In the down-right direction, we have 
+	\begin{equation*}
+		\theta_G(\tau\circ\alpha)=(\theta\circ\alpha)_C(1_C)=\tau_C(\alpha_C(1_C)).
+	\end{equation*}
+	Thus the diagram commutes.
+
+	(Naturality in $C$). Given $f:C\to C'$ in $\mathcal{C}$, we want to show that the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHYAHJ0cAXwAUACwB6AYVIAxAJQgRpdJlz5CKMgEYqtRizadufQcPHTgMgOSqlKtSAzY8BIrtL7q9Zq0QQeTE7ZVV1Ny1PcgM-Y0DgmTCDGCgAc3giUAAzACcIAFskMhAcCCQvQ382MWypTjo4HEV69kacEGoGOgAjGAYABQ13bRBcrDSJDvCQPMKkAGZqMqQAJl8jAKDasOc5osQSlcQlqviOLgkYHDoAfXknHPyDo-KTrt7+ociPQPHJjobaqBTjYIozfYVZZvdZnLamK43W4yR6zZ5Q0owj59QbDKJ-CZTTpwkzsMEqCgiIA
+\begin{tikzcd}
+{\text{Nat}(h^C,F)} \arrow[d, "(f^\ast)^\ast"'] \arrow[r, "\theta_C"] \arrow[r, "\sim"'] & F(C) \arrow[d, "F(f)"] \\
+{\text{Nat}(h^{C'},F)} \arrow[r, "\theta_{C'}"] \arrow[r, "\sim"']                          & F(C')                 
+\end{tikzcd}
+	\end{equation*}
+	The map $(f^\ast)^\ast$ is defined as follows: the map $f$ induces a functor $f^\ast:h^{C'}\to h^C$ via precomposition with $f$. This in turn induces a map $(f^\ast)^\ast:\text{Nat}(h^C,F)\to \text{Nat}(h^{C'},F)$ via precomposition with $f^\ast$. 
+
+	To see the commutativity, again let $\alpha\in\text{Nat}(h^C, F)$. The down-right direction is 
+	\begin{align*}
+		\theta_{C'}((f^\ast)^\ast(\alpha)) 
+		=& \theta_{C'}(\alpha\circ f^\ast) = (\alpha\circ f^\ast)_{C'}(1_{C'}) \\
+		=& \alpha_{C'}((f^\ast)_{C'}(1_{C'})) = \alpha_{C'}(1_{C'}\circ f) \\
+		=& \alpha_{C'}(f).
+	\end{align*}
+	The right-down direction is 
+	\begin{equation*}
+		F(f)(\theta_C(\alpha))=F(f)(\alpha_C(1_C)).
+	\end{equation*}
+	We can continue this equality chain by considering the naturality of (the natural transformation) $\alpha$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAAsA9AYQApuAlCAC+pdJlz5CKAEzkqtRizYAxfkNHjseAkTkyF9Zq0Qg13AOQaxIDNqlEyB6keWmufS9a2TdKAAyk-oZKJiAAOuGMaOx0APrcIjZ2vtLIgQDMIcZsAGaRAMZYAE4FAATECQC8uUk+OmkZQdluEVEMMfF8lYJVkTjsMDhdvJHRsd62Eg1ETVkuoaq8uQKj7Z0JvD0CAn3rsXHAlsLLGgowUADm8ESgucUQALZIgSA4EEhNijmm+eFFpTKvAAtEJqAw6AAjGAMAAK0wcpmKWEu7BwdRA9yeSAALNR3kgAKz4uhYBhsR50NBwAmaTEPZ6IPFvD6IABsJLJFKpNI+dKxjNeBMQZG+rTGHQOiX5DKQouFcjFYTUKwxAqQHJZSAA7JzyaZKdTaTZ1YhiVrELq3qT9SBDby1bLEF8FQsfm1xvEjhZhCIKMIgA
+\begin{tikzcd}
+\alpha_C \arrow[ddd, maps to] \arrow[rrr, maps to] &                                                       &                        & \alpha_C(1_C)=\theta_C(\alpha) \arrow[ddd, maps to] \\
+                                                   & h^C(C) \arrow[d, "f\circ (-)"'] \arrow[r, "\alpha_C"] & F(C) \arrow[d, "F(f)"] &                                                     \\
+                                                   & h^C(C') \arrow[r, "\alpha_{C'}"]                      & F(C')                  &                                                     \\
+f\circ 1_C=f \arrow[rrr, maps to]                  &                                                       &                        & F(f)(\alpha_C(1_C))=\alpha_{C'}(f)                 
+\end{tikzcd}
+	\end{equation*}
+	Thus $F(f)(\alpha_C(1_C))=\alpha_{C'}(f)$, which is the same as the down-right direction. So the diagram commutes, and we are done.
+\end{proof}
+
+\subsection{Yoneda embeddings} % {{{2 
+
+\begin{proposition}
+	The functor 
+	\begin{gather*}
+		\yo: \cat{C}^\op \to \tcat{Set}^\cat{C} \\
+		C \mapsto h^C
+	\end{gather*}
+	is full and faithful. Thus it embeds $\cat{C}^\op\hookrightarrow\tcat{Set}^\cat{C}$.
+\end{proposition}
+\begin{proof}
+	We must show that the map 
+	\begin{equation*}
+		\yo: \cat{C}(C,C')\to\tcat{Nat}(h^C,h^{C'})
+	\end{equation*}
+	is bijective for all $C,C'\in\cat{C}$. By the Yoneda lemma, 
+	\begin{equation*}
+		\tcat{Nat}(h^{C'},h^C)=h^C(C')=\cat{C}(C,C').
+	\end{equation*}
+	One checks $\yo$ is the inverse of the forward map.
+\end{proof}
+
+\begin{proposition}
+	The functor 
+	\begin{gather*}
+		\yo: \cat{C}\to \tcat{Set}^{\cat{C}^\op} \\
+		C \mapsto h_C=\cat{C}(-,C)
+	\end{gather*}
+	is full and faithful.
+\end{proposition}
+
+\begin{corollary}
+	If $h_C=h_{C'}\in\tcat{Set}^{\cat{C}^\op}$, then $C\cong C'$ in $\cat{C}$.
+\end{corollary}
+
+% Yoneda embeddings }}}2
+
+\subsection{application: methods of acyclic models} % {{{2 
+
+\begin{definition}
+	Let $\cat{C}$ be a category. Let $\mathcal{M}\subset\text{Obj}(\cat{C})$ be a set of objects, which we will call ``models''. A functor $F:\cat{C}\to\tcat{Ab}$ is \emph{free on the models} if $F$ is a direct sum of a free-representable functor, i.e. $F=\mathbb{Z}[h^M(-)]$ for some $M\in\mathcal{M}$.
+\end{definition}
+
+\begin{definition}
+	A sequence of functors 
+	\begin{equation*}
+		G' \overset{u}{\Rightarrow} G \overset{v}{\Rightarrow} G''
+	\end{equation*}
+	from $\cat{C}\to\tcat{Ab}$ is called \emph{acyclic on the models} if, for all $M\in\mathcal{M}$, the sequence 
+	\begin{equation*}
+		G'(M) \overset{u_M}{\to} G(M) \overset{v_M}{\to} G''(M)
+	\end{equation*}
+	is exact.
+\end{definition}
+
+\begin{lemma}
+	Let $G'\overset{u}{\Rightarrow} G\overset{v}{\Rightarrow} G''$ be a sequence of functors $\cat{C}\to\tcat{Ab}$ that is acyclic on models $\mathcal{M}\subset\cat{C}$. Let $F:\cat{C}\to\tcat{Ab}$ be a functor that is free on the models $\mathcal{M}$. 
+
+	Suppose there exists a natural transformation $f:F\Rightarrow G$ such that $v\circ f=0$. Then there exists a natural transformation $\tilde{f}:F\Rightarrow G'$ such that $u\circ\tilde{f}=f$.
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQAxEAX1PU1z5CKMsWp0mrdgHEefEBmx4CRcqTE0GLNohDSA5HP5KhRAEzrxWqboOHu4mFADm8IqABmAJwgBbJGogOBBIZCCMWGA6IFAQzABGjGw0ABYw9FBIYMyMjDQ49FiM7JBRIJqS0R5GIN5+ofkhiADMNBFlurEJSeUgaRlZOXlBhcW6pckS2uy0NXX+iBZBTWHW0cy97dFdiZP9mYjZufmjJQRsvJ4+C4HBSK1TNiDkm5HRcBARmanpB0fDBSKZzKl1q1wCjSQSy27Cg9DgaW+j2iAB0UXhGLBgB5uJt6PEYIwAAoCZTCEBeLDOFI4HiUbhAA
+\begin{tikzcd}
+                              & F \arrow[d, "f", Rightarrow] \arrow[rd, "0"] \arrow[ld, "\tilde{f}"', dashed] &     \\
+G' \arrow[r, "u", Rightarrow] & G \arrow[r, "v", Rightarrow]                                                  & G''
+\end{tikzcd}
+	\end{equation*}
+\end{lemma}
+\begin{proof}
+	By assumption, $F$ is a direct sum of some copies of $h^M$. Let's call the index set of this direct product $J$. Then in particular it satisfies the universal property for coproducts: given a family of maps $\phi_j:h^M\to G'$ there exists a unique map $\tilde{f}:F\to G'$ making the following diagram commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRADEQBfU9TXfIRQAGclVqMWbABYA9ALLdeIDNjwEiZYePrNWiEAHEA5N3EwoAc3hFQAMwBOEALZIyIHBCSiQDOgCMYBgAFfnUhEAcsS2kcEGpdKQMsJXsnV0R3TyQAJgTJfRAAHSK0aRSeNJdvamzEPN8sMEKoOjhpC3iJPTYSvAZYYDsuLr9AkLDBNiiYuK4KLiA
+\begin{tikzcd}
+                                       & G'                                \\
+h^M \arrow[r, "i"'] \arrow[ru, "\phi_j"] & F \arrow[u, "\tilde{f}"', dashed]
+\end{tikzcd}
+	\end{equation*}
+	Thus to get a $\tilde{f}$ we just need to define $\phi_j$ for all $j\in J$. Since each $\phi_j$ will be a natural transformation $h^M\Rightarrow G'$, by the Yoneda lemma it suffices to specify $(\phi_j)_M(1_M)$. We'll pick that by exactness:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkRiB9AWRAF9S6TLnyEUZYtTpNW7AGY8AFF24BKfoJAZseAkQBMpSTQYs2iEOQ1CdoouSNTTsiwB1XeRrGBy+ynup8UjBQAObwRKByAE4QALZIAMw0OBBIZCA49FiM7HH0aHCpICYy5iDMPCUgjPQARjCMAArCumIg0VihABY41YxYYOVQ9HDdIdYgMfHpKWmIhtJm7LRVNLUNza12Fp09fQJRsQmIDpnzGc7lCrzr9Y0ttnq7Xb3VWTl5BUVph1PHSDOxQWKWyuQs+UKxVKyws5CqQT4QA
+\begin{tikzcd}
+                                                  & 1_M \arrow[d, "f_M"', maps to] \arrow[rd, "0_M", maps to] &   \\
+\tilde{f}(1_M) \arrow[r, "u_M"', dashed, maps to] & f_M(1_M) \arrow[r, "v_M"']                                & 0
+\end{tikzcd}
+	\end{equation*}
+	We start at the top. The image in $G$ lies in the kernel of $v_M$ by the commutativity of the triangle, hence by exactness pulls back to an object in $G'$. This is what we will define as $\tilde{f}(1_M)$ (fix notation?).
+
+	By our remarks above, we have thus defined a natural transformation $\tilde{f}:F\Rightarrow G'$. Does this really give us $u\circ\tilde{f}=f$? Yes: both $u\circ \tilde{f}$ and $f$ are natural transformations between $F$ and $G$, where $F$ is a direct sum of representable functors. Hence $f$ and $u\circ\tilde{f}$ are entirely determined by the component maps $h^M\to G$, which by Yoneda are entirely determined by where their $M$-component sends $1_M$. It might seem like we do not know the component maps $f_j:h^M\to G$ of $f$, only where it sends $1_M$ in aggregate. However, observe that $(f_j)_M(1_M)$ must equal $f_M(1_M)$ by the universal property of coproducts. (how to show existence though?).
+\end{proof}
+
+\begin{theorem}[acyclic models]
+	Let $\mathcal{M}\subset\cat{C}$ be a class of models. Suppose we have two augmented chain complexes of functors $\cat{C}\to\tcat{Ab}$ and a natural isomorphism $f_{-1}$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BjKCHBAL6l0mXPkIoAjOSq1GLNgDEA+pJBCR2PASIAmGdXrNWiECuLrhIDFvFEAzAbnGly4AFpJAy5rE6UACxORgqmFhrWotoSyEGSsiEmIOFWNn4xjvGG8kkA4m6e3hFp0XqkWc6hIPkpvqVS5Qk5bPlqxVF2KGQViWycPHyCsjBQAObwRKAAZgBOEAC2SGQgOBBIXlazC+vUq0i6EVuLiPora4j2h3PHjmdIAVfbiABsu+cArI-HAOxvSM9fJAADj+iG+gMQAE5QUCIbc9i9si5TFMCl4fCAjkh4edXpUkpxsItqAw6AAjGAMAAKHX8IBmWFGAAscOoKAIgA
+\begin{tikzcd}
+\cdots \arrow[r] & F_1 \arrow[r] & F_0 \arrow[r] & F_{-1} \arrow[r] \arrow[d, "f_{-1}"] \arrow[d, "\sim"'] & 0 \\
+\cdots \arrow[r] & G_1 \arrow[r] & G_0 \arrow[r] & G_{-1} \arrow[r]                                        & 0
+\end{tikzcd}
+	\end{equation*}
+	Assume furthermore that each $F_i$ is free on the models, and the complex $G_\ast$ is acyclic on the models.
+
+	Then there exists a natural chain map $f_\ast:F_\ast\to G_\ast$ extending the augmentation, and any two such are \textit{naturally} chain homotopic.
+\end{theorem}
+\begin{proof}
+	The idea is to iteratively apply the previous lemma.
+\end{proof}
+
+\begin{theorem}[Eilenberg-Zilber]
+	Let $X,Y$ be topological spaces. Let $F$ be the chain complex $C_\ast(X\times Y)$. Let $G$ be the chain complex $C_\ast(X)\otimes C_\ast(Y)$. 
+
+	One considers the maps $\phi:F\to G$ (called the Alexander-Whitney map) and $\psi:G\to F$ (called the Eilenberg-Zilber map). Then $\psi\phi\simeq 1$ naturally, i.e. $\psi\phi$ is naturally chain homotopic to the identity on $F$.
+\end{theorem}
+\begin{proof}
+	The idea is to let $\mathcal{M}$ be the set $\{\Delta^p, \Delta^q\}_{p,q\geq 0}$ and apply the acyclic models theorem.
+\end{proof}
+
+% application: methods of acyclic models }}}2
+
+% Yoneda's lemma }}}1
+
+\section{adjoint functors} % {{{1 
+
+\begin{definition}
+	Let $\cat{C}$, $\cat{D}$ be categories, and consider a pair of covariant functors 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BbOnACwDGjYAGEAviDGl0mXPkIoAjOSq1GLNpx78hDYABEJY1TCgBzeEVAAzAE4QuSMiBwQkykHD5ZrOJAFoPemZWRBAAMUlpEDsHd2pXJ2ovHz9EQOpgjTCAcUkKMSA
+\begin{tikzcd}
+\mathcal{C} \arrow[r, "F", shift left] & \mathcal{D} \arrow[l, "G", shift left]
+\end{tikzcd}
+	\end{equation*}
+	If there exists a natural isomorphism 
+	\begin{equation*}
+		\alpha: \cat{D}(F(-), -) \overset{\sim}{\Rightarrow} \cat{C}(-, G(-))
+	\end{equation*}
+	of functors $\cat{C}^\op\times\cat{D}\to\tcat{Set}$, i.e. if there exists a bijection 
+	\begin{gather*}
+		\alpha_{C,D}: \cat{D}(F(C), D) \to \cat{C}(C, G(D)) \\
+		f \mapsto f^\flat \\
+		f^\sharp \leftarrow f
+	\end{gather*}
+	for all $C\in\cat{C}$ and all $D\in\cat{D}$ that is natural in both $C$ and $D$, then we say
+	\begin{itemize}
+		\item $F$ is a \emph{left adjoint} to $G$, denoted $F\dashv G$.
+		\item $G$ is a \emph{right adjoint} to $F$, denoted $G\vdash F$.
+	\end{itemize}
+\end{definition}
+
+\begin{example}
+	Let $\cat{C}=\tcat{Set}$ and $\cat{D}=R\text{Mod}$. Let $F:\cat{C}\to\cat{D}$ be the ``free module'' functor and $G:\cat{D}\to\cat{C}$ be the forgetful functor.
+\end{example}
+
+\subsection{(co)unit} % {{{2 
+
+\begin{para}
+	Recall that for an adjunction $F\dashv G$ between categories $\mathcal{C}$ and $\mathcal{D}$ there is an isomorphism 
+	\begin{equation*}
+		\alpha_{C,D}:\cat{D}(F(C), D) \overset{\sim}{\to}\cat{C}(C, G(D))
+	\end{equation*}
+	for every $C\in\cat{C}$ and every $D\in\cat{D}$, sending a morphism to its ``transpose''. Consider the special case where we take $D=F(C)$. Then in particular we may associate to $1_{F(C)}$ a map $\eta_C: C\to GF(C)$:
+	\begin{gather*}
+		\cat{D}(F(C), F(C)) \overset{\sim}{\to} \cat{C}(C, GF(C)) \\
+		1_{F(C)} \mapsto \eta_C \coloneqq 1_{F(C)}^\flat.
+	\end{gather*}
+	Likewise, by taking $C=G(D)$ we may associate to $1_{G(D)}$ a map $\epsilon_D: FG(D)\to D$:
+	\begin{gather*}
+		\cat{D}(FG(D), D) \overset{\sim}{\to} \cat{C}(G(D), G(D)) \\
+		\epsilon_D\coloneqq 1_{G(D)}^\sharp \leftarrow 1_{G(D)}.
+	\end{gather*}
+\end{para}
+
+\begin{proposition}
+	$\eta=\{\eta_C\}_{C\in\cat{C}}$ defines a natural transformation $1_\cat{C} \Rightarrow GF$, and $\epsilon=\{\epsilon_D\}_{D\in\cat{D}}$ defines a natural transformation $FG \Rightarrow 1_\cat{D}$.
+\end{proposition}
+\begin{proof}
+	We will show that $\eta$ is a natural transformation, and the other situation in analagous. Let $f:C\to C'$ in $\cat{C}$. We must show the commutativity of the following diagram:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbdgHJuvEBmx4CREaTHV6zVohABxAGIAKWQEp5fZYLXlx2qXqOmLXcTCgBzeEVAAzACcIAFskMhAcCCR1CR02PxBqBjoAIxgGAAV+FSEQAKxPAAscSxBAkLDqSKQAZi1JXRAAHSaYHDoAfU4efyDQxDqIqMQAJnq4pxM-VwVy-pjq0fHHZtb2juBZLkSQZLTM7Js9fKKSty4gA
+\begin{tikzcd}
+C \arrow[d, "f"'] \arrow[r, "\eta_C"] & GF(C) \arrow[d, "GF(f)"] \\
+C' \arrow[r, "\eta_{C'}"']            & GF(C')                  
+\end{tikzcd}
+	\end{equation*}
+	To do that, consider the following diagrams which follow from the naturality of $\alpha$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BbOnACwDGjYABEAvgAoAYhIDCASlIACGQvkgxpdJlz5CKAIzkqtRizace-IQ2CzJs5QHFV89Zu3Y8BImQMn6ZlZEDm5eQWFxaTlFFTkAcjcNLRAMLz0iI39qQPMQy3CbOwdnVUT3FLTdHxQAZlJs0yCLMOtIyVdlMqSPVJ1vfWQAFgaAs2DQqwjbezlShJ7K-oy64xzxlqmiqO6uhYrPasGRynXm-Nbp4oT52XKNExgoAHN4IlAAMwAnCC4kMhAOAgSCMTTyoUYaD4dAA+nY9goxMlPj8-ohQUCkPUwRMXBIPvJOAIsF8BEoJABaA4gb6-f7UTGIABMZ3BMgJRJJZMp6moDDoACMYAwAArLGogL5YZ58HDImmopAswHAxDY3ITTiQ6FwxxxO7yJG9WlokYqpAAVlZmvY2th8P1iSNKRNSAA7AzVVacWweZzSUoPvLXYgAGyepBmjW+qn+sns3kgflC0Xi-SS6Wy4OKsMRxAen0XO26+IIp0PMRAA
+\begin{tikzcd}
+{\mathcal{D}(F(C), F(C))} \arrow[r, "{\alpha_{C, F(C)}}"] \arrow[d, "F(f)\circ (-)"'] & {\mathcal{C}(C, GF(C))} \arrow[d, "GF(f)\circ (-)"] &  & {\mathcal{D}(F(C'), F(C'))} \arrow[d, "(-)\circ F(f)"'] \arrow[r, "{\alpha_{C', F(C')}}"] & {\mathcal{C}(C', GF(C'))} \arrow[d, "(-)\circ f"] \\
+{\mathcal{D}(F(C), F(C'))} \arrow[r, "{\alpha_{C, F(C')}}"]                           & {\mathcal{C}(C, GF(C'))}                            &  & {\mathcal{D}(F(C), F(C'))} \arrow[r, "{\alpha_{C, F(C')}}"]                               & {\mathcal{C}(C, GF(C'))}                         
+\end{tikzcd}
+	\end{equation*}
+	The bottom rows are the same in both diagrams. If we take the left diagram and follow where $1_{F(C)}$ gets mapped to (starting in the top left corner), we see by taking the right-down direction that it is mapped to $GF(f)\circ \eta_C$. Note this is the right-down direction of the diagram we are trying to prove the commutativity of. Now consider the right diagram, and follow where $1_{F(C')}$ goes (starting in the top left corner). Taking the right-down direction we see that it goes to $\eta_{C'}\circ f$, which is the down-right direction of the diagram we are trying to prove the commutativity of. 
+
+	To conclude that $GF(f)\circ \eta_C=\eta_{C'}\circ f$, it suffices to show that they are the image of the same object in $\mathcal{D}(F(C), F(C'))$, which is the object in the bottom left of both diagrams. Well in the left diagram $1_{F(C)}$ is sent to $F(f)$ in there, and likewise in the right diagram $1_{F(C')}$ is sent to $F(f)$ there.
+\end{proof}
+
+\begin{definition}
+	$\eta:1_\cat{C}\Rightarrow GF$ is called the \emph{unit} of the adjunction. $\epsilon:FG\Rightarrow 1_\cat{D}$ is called the \emph{counit} of the adjunction.
+\end{definition}
+
+\begin{example}
+	\hfill 
+	\begin{enumerate}
+		\item Let $F:\tcat{Set}\to R\text{Mod}$ be the ``free'' functor, sending a set to the free $R$-module on that set. Let $G: R\text{Mod} \to \tcat{Set}$ be the forgetful functor. We have that $F\dashv G$.
+			\begin{itemize}
+				\item the unit $\eta_C:C\to GF(C)$ sends an element $c\in C$ to the basis element \break $(0,\dots, 0, 1, 0,\dots)$ where the $1$ corresponds to the $c$th copy of $R$ in the free module.
+				\item The object $GF(D)$ is the free module on the underlying set of a module. The counit $\epsilon_D: GF(D)\to D$. This map demonstrates that every $R$-module admits a free resolution, namely an exact sequence 
+					\begin{equation*}
+						0 \to \ker(\epsilon_D) \to FG(D) \to D \to 0
+					\end{equation*}
+					where all objects other than $D$ are free modules (submodules of a free module are free).
+			\end{itemize}
+
+		\item Let $F:\tcat{Ab}\to\tcat{Ring}$ be the functor which associates to an abelian group $A$ the tensor algebra on $A$. As a graded module, this is 
+			\begin{equation*}
+				F(A)=\mathbb{Z} \oplus A \oplus A^{\otimes 2} \oplus \cdots = \coprod_{n\geq 0}A^{\otimes n}.
+			\end{equation*}
+			Multiplication is 
+			\begin{equation*}
+				A^{\otimes p} \times A^{\otimes q} \to A^{\otimes p}\otimes A^{\otimes q}=A^{\otimes (p+q)}.
+			\end{equation*}
+			Once again, let $G:\tcat{Ring}\to\tcat{Ab}$ be the forgetful functor. Then $F\dashv G$.
+			\begin{itemize}
+				\item The unit $\epsilon_A: A\to GF(A)$ is the inclusion of $A$ into the $A^{\otimes 1}=A$ component of the coproduct (now viewed as an abelian group rather than a ring).
+				\item TODO
+			\end{itemize}
+
+		\item Over $\mathbb{R}$, Lie algebras and associative algebras. TODO
+
+		\item Let $F:\tcat{Grp}\to\tcat{Ab}$ be the abelianization functor which sends a group to its quotient by the commutator subgroup, and let $G:\tcat{Ab}\to\tcat{Grp}$ be the forgetful functor. 
+			\begin{itemize}
+				\item the unit $\eta_C: C\to GF(C)$ abelianizes a group and then forgets the abelian structure. 
+				\item the counit $\eta_D: FG(D) \to D$ sends an abelian group to its abelianization, hence doesn't really do anything: $\eta_D$ is an isomorphism.
+			\end{itemize}
+	\end{enumerate}
+\end{example}
+
+\begin{proposition}[transpose equivalence]
+	Let $F\dashv G$ be adjoint functors between $\cat{C}$ and $\cat{D}$. Let $f:C\to C'\in \cat{C}$ and $g: D\to D'\in\cat{D}$. Consider the diagrams 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEAKAYQEoQAvqXSZc+QijIBGKrUYs2XbgHJ+QkdjwEiU0jOr1mrRCAAiywcJAZN4neVmGFJ05Y1jtKAMwOD84yDcbtaiWhLIPvpyRmwqwTYe4QAseo7+bADinOZqVglhRCmUfjEmWaZqsjBQAObwRKAAZgBOEAC2SGQgOBBIutHOHJyN-NQMdABGMAwACqF2Js1YNQAWOMEt7Z3UPUg+AwFMG60diP27iABMJYM0IGOT03O2niBLq+vqIJun+xfXBzYNWOW0QKW6vUQAFYbgFGvcQOMprN5q93msQadwRcAOywthMAB6AB1iY1xp8rD8kHiIUgAGz4sqcGq5JonJAwumIRmAkw0ElkikIpFPVESN7LDECCgCIA
+\begin{tikzcd}
+F(C) \arrow[d, "F(f)"'] \arrow[r, "u"] & D \arrow[d, "g"] &  & C \arrow[d, "f"'] \arrow[r, "u^\flat"] & G(D) \arrow[d, "G(g)"] \\
+F(C') \arrow[r, "v"']                  & D'               &  & C' \arrow[r, "v^\flat"']               & G(D')                 
+\end{tikzcd}
+	\end{equation*}
+	where $u, v$ are some morphisms. Then one diagram commutes if and only if the other commutes.
+\end{proposition}
+\begin{proof}
+	Consider the following diagrams expressing the naturality of the adjunction:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BbOnACwDGjYABEAvgAoAYhIDCASlIACEfJBjS6TLnyEUARnJVajFm049+QhsFmTZygOITVajVux4CRMvuP1mVkQObl5BYXFpOUUVAHI3TRAMT10iQz9qALNgizDrW3snF3iEjx1vFABmUgyTQPNQqwjJGQVlEXj1ROTyvWQAFhr-UyCQy3CbOzkijvlSpO0vPurKTJGG8fzI1vj2zvcFlIqBozX6nMaJgrlYmZL1YxgoAHN4IlAAMwAnCC4kMhAOAgSEMdWyIWwfwO31+SAATNQgUhqmDRpxIV1Pj8-ogAUjEAjUWxnpwBFgvgIlBIALRqagMOgAIxgDAACotUsEvlhnnwcJiQDCcaD8SisqNnM95KTyZSafMhUgAGyI4GIADsZ3B6KwUMSisQg0BaoArFq0ewMdDscrVUgjeK2PKZRSlDIPnSQAzmWyORUQNzefzrbCNXbEGaicFnewya6Pg8xEA
+\begin{tikzcd}
+{\mathcal{D}(F(C), D)} \arrow[r, "\sim"] \arrow[d, "g\circ (-)"'] & {\mathcal{C}(C, G(D))} \arrow[d, "G(g)\circ (-)"] &  & {\mathcal{D}(F(C'), D')} \arrow[r, "\sim"] \arrow[d, "(-)\circ F(f)"'] & {\mathcal{C}(C', G(D'))} \arrow[d, "(-)\circ f"] \\
+{\mathcal{D}(F(C), D')} \arrow[r, "\sim"]                         & {\mathcal{C}(C, G(D'))}                           &  & {\mathcal{D}(F(C), D')} \arrow[r, "\sim"]                              & {\mathcal{C}(C, G(D'))}                         
+\end{tikzcd}
+	\end{equation*}
+	Consider the left diagram. Following $u$ we get $G(g)circ u^\flat = (g\circ u)^\flat$. In the right diagram, if we follow $v$ we get $v^\flat\circ f = (v\circ F(c))^\flat$. Note that all of these things are equal, i.e. 
+	\begin{equation*}
+		G(g)\circ u^\flat = (g\circ u)^\flat = v^\flat\circ f = (v\circ F(c))^\flat
+	\end{equation*}
+	then the second diagram in the proposition commutes. By the commutativity of both diagrams, and especially the isomorphism beon the bottom row which they both share, this will only happen if they are the image of the same element in $\mathcal{D}(F(C), D')$. Thus we need to show that (from the left diagram) $g\circ u$ equals (from the right diagram) $v\circ F(f)$. But this equality is exactly the condition that the first diagram in the proposition commutes.  
+\end{proof}
+
+\begin{para}
+	Our goal now is to show that the unit and counit completely characterize the adjunction.
+\end{para}
+
+\begin{proposition}
+	Suppose $F\dashv G$ between $\cat{C}$ and $\cat{D}$. For any $C\in \cat{C}$, the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEAKAYQEoQAvqXSZc+QijIBGKrUYs27AOJc+g4SAzY8BIlNIzq9Zq0Qce-AbJhQA5vCKgAZgCcIAWyRkQOCEn1yJoqcADohMDh0APpq1Ax0AEYwDAAKojoSIC5YtgAWOOrObp6IAb5IAExG8qYgYTBo2AwEUcCqvAIgcYnJadribNl5BUJFHl7U5YhVgQpmUq3tnVYCQA
+\begin{tikzcd}
+F(C) \arrow[d, "F(\eta_C)"'] \arrow[rd, "1_{F(C)}"] &      \\
+FGF(C) \arrow[r, "\epsilon_{F(C)}"']                & F(C)
+\end{tikzcd}
+	\tag{T1}
+	\end{equation*}
+\end{proposition}
+
+\begin{remark}
+	This is the same spirit as a Galois connection. Consider the case where $\cat{C}$ is a poset, so an arrow $a\to b$ means $a\leq b$. Suppose we have an adjunction with another poset category $\cat{D}$. Then the unit $C\to GF(C)$ says that $C\leq GF(C)$, which is the ``inflationary'' property of a Galois connection. Similarly, the counit is an arrow $FG(D)\to D$, i.e. $FG(D)\leq D$, which is the ``deflationary'' property of a Galois connection.
+\end{remark}
+
+\begin{remark}
+	We can (somewhat ambiguosly) write see this as the following diagram:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEQBfU9TXfIRRkAjFVqMWbdgHFOPPtjwEiI0mOr1mrRB27iYUAObwioAGYAnCAFskZEDghI1IBljA6QUCEwBGDKzUABYwdFBIYEwMDNQ4dFgMbJCeIJqSXuwAFAA6OTDxAJRpbnR+MAwACvzKQiCWWEbBONy8IFa2LnHOiABM1O6puj7+gSWh4ZHRsY4JSbopQRLabHkwaNgMBAD6nANlFdVKgmwNTS0K7dZ2iA5OSP1uHl4jAUsTEYhRMXFzyQRLLRSXQiXb6LhAA
+\begin{tikzcd}
+F \arrow[d, "F(\eta)"', Rightarrow] \arrow[rd, "1_F", Rightarrow] &   \\
+FGF \arrow[r, "\epsilon_F"', Rightarrow]                          & F
+\end{tikzcd}
+	\end{equation*}
+\end{remark}
+
+\begin{proof}[Proof of proposition]
+	T1 commutes iff this commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEAKAYQEoQAvqXSZc+QigCM5KrUYs2XPoOEgM2PASLTJs+s1aIOPfkJEbxRMrur6FR9gHElp2TCgBzeEVAAzAE4QALZIZCA4EEgAzLbyhsYAOgkwOHQA+srUDHQARjAMAAqimhIg-lgeABY4Kn6BIYhhEUjScgZskmnALgK1IAHBLdTNiABMse1Gnd0mvWb99dHDkWMT9iBJMGjYDARdPSBZuflFFlpG5VU1AhQCQA
+\begin{tikzcd}
+F(C) \arrow[d, "F(\eta_C)"'] \arrow[r, "1_{F(C)}"] & F(C) \arrow[d, "1_{F(C)}"] \\
+FGF(C) \arrow[r, "\epsilon_{F(C)}"']               & F(C)                      
+\end{tikzcd}
+	\end{equation*}
+	which commutes (by the previous proposition) if and only if this commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRQBGclVqMWbAGIAKdgEpuvEBmx4CRUcPH1mrRCADicxcr7rBRMjup6phk-KVdxMKAHN4RUADMAThAAtkhkIDgQSADMdpIGIAA6CTA4dAD6nNQMdABGMAwACvwaQiD+WB4AFjjmIAHBodQRSKIS+mzCacCmClwAekm+2TgAvEkp6Zw8foEhiK3NiABMse2Osp3dzlwKI5tOily19XMx4ZHLqw6JyWjYDARdPf2Dw3tdB70gWbn5RZaaQzlKo1VxcIA
+\begin{tikzcd}
+C \arrow[d, "\eta_C"'] \arrow[r, "1_{F(C)}^\flat=\eta_C"] & F(C) \arrow[d, "G(1_{F(C)})=1_{GF(C)}"] \\
+GF(C) \arrow[r, "\epsilon_{F(C)}^\flat=1_{GF(C)}"']       & GF(C)                                  
+\end{tikzcd}
+	\end{equation*}
+	but this manifestly commutes.
+\end{proof}
+
+\begin{proposition}
+	Under the same hypothesis as the previous proposition, the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAHEAKAEQEoQAvqXSZc+QijIBGKrUYs27AGJc+g4SAzY8BIlNIzq9Zq0Qce-AbJhQA5vCKgAZgCcIAWyRkQOCEn1yJmwAOsEwOHQA+sCqvAIg1Ax0AEYwDAAKojoSIC5YtgAWOOrObp6IAb5IAExG8qbmoTBo2AwEkWqJKWmZ2uJseYXFQqUeXtRViLWBCmZS0bHxVgJAA
+\begin{tikzcd}
+G(D) \arrow[d, "\eta_{G(D)}"'] \arrow[rd, "1_{G(D)}"] &      \\
+GFG(D) \arrow[r, "G(\epsilon_D)"']                    & G(D)
+\end{tikzcd}
+\tag{T2}
+	\end{equation*}
+\end{proposition}
+
+\begin{theorem}
+	Given functors $F:\cat{C}\to \cat{D}: G$ and natural transformations $\eta:1_\cat{C}\to GF$, $\epsilon:FG\to 1_\cat{D}$ satisfying (T1), (T2), then there is an adjunction $F\dashv G$ defined as follows:
+	\begin{itemize}
+		\item given $f:C\to G(D)$, define 
+			\begin{equation*}
+				f^\sharp = F(C) \overset{F(f)}{\to} FG(D) \overset{\epsilon_D}{\to} D.
+			\end{equation*}
+
+		\item given $g:F(C)\to D$, define 
+			\begin{equation*}
+				g^\flat: C \overset{\eta_C}{\to} GF(C) \overset{G(g)}{\to} G(D).
+			\end{equation*}
+	\end{itemize}
+\end{theorem}
+\begin{proof}
+	HW
+\end{proof}
+
+% (co)unit }}}2
+
+% adjoint functors }}}1
+
+\section{(co)limits} % {{{1 
+
+\begin{para}
+	Let $J$ be a small index category.
+\end{para}
+
+\begin{example}
+	The following are examples of small index categories:
+	\begin{enumerate}
+		\item (discrete category) the only arrows are the identity ones.
+		\item (parallel arrows) two objects, labeled $1$ and $2$, and two distinct arrows $\gamma, \gamma':1\to 2$ between them.
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12AjJhhmHCAC+pdJlz5CKAIzkqtRizacefAcPkwoAc3hFQAMwBOEALZIyIHBCSyQcABZYDgxAFo79Zq0Qd22ulNTOmFREGMzC2prW2pHZ1dPRR8-AKC6AHIQagY6LhgGAAVxPAI2IyxtB0EhCiEgA
+\begin{tikzcd}
+1 \arrow[r, "\gamma", shift left] \arrow[r, "\gamma'"', shift right] & 2
+\end{tikzcd}
+			\end{equation*}
+
+		\item The following:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkRyQBfU9TXfIRTkK1Ok1bti3XiAzY8BIiOJiGLNohAAmbmJhQA5vCKgAZgCcIAWyRkQOCEhHiN7ADrvD9a9foA9cgB9aRpGegAjGEYABX5FIRALLEMACxwZcytbRG0aR2cadUktT29fAO0QvS4gA
+\begin{tikzcd}
+                           & 2 \arrow[d, "\gamma^2_0"] \\
+1 \arrow[r, "\gamma^1_0"'] & 0                        
+\end{tikzcd}
+			\end{equation*}
+
+		\item $(\mathbb{N}, \leq)^\op$:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BjKCHBAL6l0mXPkIoAjOSq1GLNgGYQQkdjwEiAJhnV6zVohBaVwkBnXiii3XINtJK2TCgBzeEVAAzAE4QAtkhkIDgQSJKqIL4B4dShSDp2CkacrnT+-nQAeooA+iaR0YGIifGINkmGHOxpGdlauY4CFAJAA
+\begin{tikzcd}
+\cdots \arrow[r] & 3 \arrow[r, "\gamma^3_2"] & 2 \arrow[r, "\gamma^2_1"] & 1
+\end{tikzcd}
+			\end{equation*}
+	\end{enumerate}
+\end{example}
+
+\begin{definition}
+	A \emph{diagram of shape $J$} in a category $\cat{C}$ is a covariant functor $F:J\to C$.
+\end{definition}
+
+\begin{example}
+	The numbering corresponds to the examples of the small index categories $J$.
+	\begin{enumerate}
+		\item For a discrete index category $J$, a $J$-shaped diagram is a collection of objects $\{F_j\}_{j\in J}$ of objects in $\cat{C}$.
+
+		\item This functor is essentially
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEU3clVqMWbLgCZ+UmFADm8IqABmAJwgBbJGRA4ISCdOatEHABQAde6rr79dAJQhqcABZYtOEgAtNwC2nqGiMam5t5+AbGWsjbsDk4ubgDkntQMdABGMAwACsJ4BGw6WKo+gXwUfEA
+\begin{tikzcd}
+F_1 \arrow[r, "F(\gamma)", shift left] \arrow[r, "F(\gamma')"', shift right] & F_2
+\end{tikzcd}
+			\end{equation*}
+
+		\item This functor is essentially 
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQAxAfXJAF9S6TLnyEU5CtTpNW7bsX6CQGbHgJEJxKQxZtEnLgCZ+UmFADm8IqABmAJwgBbJGRA4ISCdN3sAOr8dmLmIAPV4aRnoAIxhGAAVhNTEQOyxzAAscRVsHZ0RDGndPGh1ZfX9AkMNgkz4gA
+\begin{tikzcd}
+                          & F_2 \arrow[d, "\mu^2_0"] \\
+F_1 \arrow[r, "\mu_0^1"'] & F_0                     
+\end{tikzcd}
+			\end{equation*}
+
+		\item This functor is essentially 
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12BjKCHBAL6l0mXPkIoAjOSq1GLNgDEA+gGYQQkdjwEiAJhnV6zVohAq9G4SAzbxRVYbkmlyyRtkwoAc3hFQAGYAThAAtkhkIDgQSJKaIMFhsdTRSAbOCmacoUwAeqrKlvGJ4YjpqYiOGaYc7Dm5em4eAkA
+\begin{tikzcd}
+\cdots \arrow[r] & F_3 \arrow[r, "\mu^3_2"] & F_2 \arrow[r, "\mu^2_1"] & F_1
+\end{tikzcd}
+			\end{equation*}
+	\end{enumerate}
+\end{example}
+
+\begin{definition}
+	Consider the functor category $\cat{C}^J$ of $J$-shaped diagrams in $\cat{C}$. The \emph{constant functor} or \emph{diagonal functor} is 
+	\begin{gather*}
+		\Delta: \cat{C} \to \cat{C}^J \\
+		C \mapsto \begin{cases} (j\in\cat{C}) \mapsto C \\ (f\in\text{Mor}(\cat{C}))\mapsto 1_C \end{cases}
+	\end{gather*}
+	the one sending $C\in\cat{C}$ to the functor which sends every object in $J$ to $C$ and every arrow in $J$ to $1_C$.
+\end{definition}
+
+\begin{definition}
+	Let $F:J\to \cat{C}$ be a $J$-shaped diagram in $\cat{C}$. A \emph{cone} over $F$ with apex $C\in\cat{C}$ is a natural transformation $f:\Delta(C)\Rightarrow F$.
+\end{definition}
+
+\begin{example}
+	The numbering corresponds to the previous examples.
+	\begin{enumerate}
+		\item This is a collection of arrows 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbAGIB9Ed14gM2PASIjy4+s1aIOivqsEbSY6jqn65AJkPL+aochtaLkvQZ5GB6lK-MJXRlZAGZucRgoAHN4IlAAMwAnCABbJDIQHAgkEW8QZLSkVyycxFD8wvTEABZqbKQAVi4KLiA
+\begin{tikzcd}
+C \arrow[d] & C \arrow[d] & C \arrow[d] \\
+F_1         & F_2         & F_3        
+\end{tikzcd}
+		\end{equation*}
+		which, if we collapse the unnecessary ones, looks like 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQAxAfXJAF9S6TLnyEU5UsWp0mrdgGF+gkBmx4CRCVRoMWbRJy4AmJULWiiRitN1yD3AMz9pMKAHN4RUADMAThABbJAkQHAgkIwEffyDEELCkYiiQP0DgmgTEBz5KPiA
+\begin{tikzcd}
+    & C \arrow[d] \arrow[ld] \arrow[rd] &     \\
+F_1 & F_2                               & F_3
+\end{tikzcd}
+		\end{equation*}
+
+	\item This looks like 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRQBGclVqMWbTjz7Y8BImWHj6zVohAAxAPrDuvEBnmCioldTVTNugEzdxMKAHN4RUADMAThAC2SMhAcCCRREDgACywPHCQAWjCrDRBhHRlDbz8A6mDQ6kjo2MREyWTUzmoGOgAjGAYABX4FIRAvLGcI2NkQTP9inJDEAGZLUrYPHXtu3uygwdtR9XG9EEqausaTRU02jq6Mnz6FuaQR8KiY+JKlmwAKAB175zpfXzoASgNPQ6Rj3OH8hcitdrNoHk8Xm8AOSfNa1BpNUw7dqdBxcIA
+\begin{tikzcd}
+C \arrow[r, "1_C", shift left] \arrow[r, "1_C"', shift right] \arrow[d, "f_1"'] & C \arrow[d, "f_2"] \\
+F_1 \arrow[r, "F(\gamma)", shift left] \arrow[r, "F(\gamma')"', shift right]    & F_2               
+\end{tikzcd}
+		\end{equation*}
+		or essentially 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQBhEAX1PU1z5CKcqWLU6TVuwBiAfWI8+IDNjwEiAJjESGLNohDzNPCTCgBzeEVAAzAE4QAtklEgcEJGUn72thSA0jPQARjCMAAoC6sIg9lgWABY4SnaOLojeHkjaIHCJWLYpiAC03nrShjIAFAA6tRb0Tk70AJSpIA7OXjTZiLn5hcXlUgZGdQ1NLQDk7UGh4VFqQuzxSSm8ad2Ibn25FWP+JtyU3EA
+\begin{tikzcd}
+                                                                               & C \arrow[ld, "f_1"'] \arrow[rd, "f_2"] &     \\
+F_1 \arrow[rr, "F(\gamma)", shift left] \arrow[rr, "F(\gamma')"', shift right] &                                        & F_2
+\end{tikzcd}
+		\end{equation*}
+
+	\item This looks like 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQBhEAX1PU1z5CKchWp0mrdl179seAkVHFxDFm0ScefEBnlClpAEyrJGkADEA+uW1zBilEeOn17a8Tu6BC4cmdUNGpSmtZGPOIwUADm8ESgAGYAThAAtkhkIDgQSADMQWbsCTYgNIz0AEYwjAAKPgaaSVjRABY4XslpGTTZSKISbprkVjI6nemIzlk5iP3B5sNcZZXVdfqOIE2t7bIg40hTvYgArAWDe1bhu-snPTMALGchIAA6L6nMAHpGVp7XKRN8tMkI8Bs83h9PsNPMsqrV6hstm0OgC+ncQU9zMUYSBynC1g5hJtmsjuJRuEA
+\begin{tikzcd}
+                                      & C \arrow[d, "1_C"'] \arrow[rd, "f_2"] &                          \\
+C \arrow[rd, "f_1"'] \arrow[r, "1_C"] & C \arrow[rd, "f_0"']                  & F_2 \arrow[d, "\mu^2_0"] \\
+                                      & F_1 \arrow[r, "\mu^1_0"']             & F_0                     
+\end{tikzcd}
+		\end{equation*}
+		or essentially 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbAGIB9Ed14gM2PASIjSY6vWatEIOcUV9VgjeXG6pBuQCZu4mFADm8IqABmAJwgBbJDIQHAgkTQk9Nk95EGoGOgAjGAYABX41IRBvLBcACxwTEB9-JABmahCkOx1JfRAAHXq-JgA9O1ljHi9fAMRwysRqiJsGptaRDtiQeKTU9PMDbLyCrqKewIrQxHLhuuiHLgouIA
+\begin{tikzcd}
+C \arrow[d, "f_1"'] \arrow[r, "f_2"] & F_2 \arrow[d, "\mu^2_0"] \\
+F_1 \arrow[r, "\mu^1_0"']            & F_0                     
+\end{tikzcd}
+		\end{equation*}
+
+	\item This looks like 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQBhEAX1PU1z5CKAEwVqdJq3Zde-bHgJEAzOJoMWbRJx58QGBUKJliEjdO0AxAPrLd8wUtGlT6qVpA2R9-QMXDkVVdJTXYbYh8DRwDyFzN3dgAdRIBjKAgcBDlfQydkWKo3UO1ktIysiRgoAHN4IlAAMwAnCABbJAA2GhwIJGVs5ra+7t7EABYBlvbxkaQAVkmhxAB2WcRyRenYkB7hkIsQBtsfQa214k2kMh3RsaKDo+9LxGvdxBFnsRv5+48jiO4lG4QA
+\begin{tikzcd}
+\cdots \arrow[r] & C \arrow[d, "f_3"] \arrow[r] & C \arrow[d, "f_2"] \arrow[r] & C \arrow[d, "f_1"] \\
+\cdots \arrow[r] & F_3 \arrow[r]                & F_2 \arrow[r]                & F_1               
+\end{tikzcd}
+		\end{equation*}
+		or essentially 
+		\begin{equation*}
+			% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAGAXVJADcBDAGwFcYkQBhEAX1PU1z5CKMsWp0mrdgDEA+gGYefEBmx4CRAEykxNBizaIQczUv5qhReTvH6pRucTMqB64cnI29kwyAA6fgDGUBA4CNziMFAA5vBEoABmAE4QALZIACw0OBBIxLyJKemIZCA5SJoFIMlpFdm5iPJVNcWeZQ3aEgbsCbKmNIz0AEYwjAAKrpZGSVjRABY4zi1IbeUl3t1GvYoDw6MTFhrTswtLRSv1SNZd9tWyThHcQA
+\begin{tikzcd}
+                 & C \arrow[rd, "f_2"'] \arrow[d, "f_3"'] \arrow[rrd, "f_1"] &               &     \\
+\cdots \arrow[r] & F_3 \arrow[r]                                             & F_2 \arrow[r] & F_1
+\end{tikzcd}
+		\end{equation*}
+	\end{enumerate}
+\end{example}
+
+\begin{definition}
+	Let $F:J\to \cat{C}$ be a diagram, let $f$ be a cone with apex $C$ above $F$. A \emph{limit cone} above $F$ is a universal cone above $F$, i.e. it has data:
+	\begin{itemize}
+		\item an object $\varprojlim F\in\cat{C}$ (the apex)
+		\item a collection of maps $\mu_i:\varprojlim F\to F_i$ (the ``legs'')
+	\end{itemize}
+	such that if $\{C\overset{f_j}{\to} F_j\}_j$ is any cone above $F$ then there exists a unique arrow $\tilde{f}:C\to\varprojlim F$ such that the following diagrams commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbADrT6AJzTyIAKwZYAtgAIAYt14gM2PASIjSY6vWatEIHQH0V3cTCgBzeEVAAzZRqQyEBwIJAAmK0lbEB8nfV9-JHNg0MQIiRsZaQ0mOOoGOgAjGAYABX4TIRB5LHcACxx4mMTEIJCkyMy7WTwGWGAfLhB8opLy40E2GvrGrgouIA
+\begin{tikzcd}
+C \arrow[rd, "f_j"] \arrow[d, "\tilde{f}"'] &     \\
+\varprojlim F \arrow[r, "\mu_j"']           & F_j
+\end{tikzcd}
+	\end{equation*}
+\end{definition}
+
+\begin{example}
+	For $J=(\mathbb{N}, \leq)$, this looks like 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBoAmAXVJADcBDAGwFcYkQAxAfQGYQBfUuky58hFOQrU6TVu27kBQkBmx4CRHlJoMWbRJy7ElwtWKIAGbTL3sAOnYDGUCDgSDTojSisXpuuQMAYRMVEXVxZCtif1l9EAcGACc0JIgAK0YsAFsAAg4BaRgoAHN4IlAAMzTspAAWGhwIJCsbQJBK3hAaRnoAIxhGAAVw8wMsMGxYUOqIWsQGkCakMjb4zsUe-sGRs28QCam2Dw6a+sbmxEk19k7jLYHh0f3DrGmT2fmAVguWnTj7HZsswug8ds9xAdJm9jspPkgfktLqsAvEHMCuJsQL1HrsvJDXu84WdEIjlld-rYDOiQfdsdsnnsCdCiVUSYtyYismB4lB6HAABbFbo3al2PCMWDASr8EU48FM9hJLAlAU4Qr8IA
+\begin{tikzcd}
+C \arrow[rdd, "f_3" description] \arrow[rrdd, "f_2" description] \arrow[rrrdd, "f_1" description] \arrow[d, "\tilde{f}"', dashed] &     &     &     \\
+\varprojlim F \arrow[rd, "\mu_3" description] \arrow[rrd, "\mu_2" description] \arrow[rrrd, "\mu_1" description]                  &     &     &     \\
+\cdots                                                                                                                            & F_3 & F_2 & F_1
+\end{tikzcd}
+	\end{equation*}
+\end{example}
+
+\begin{example}
+	For $J$ the discrete category with two objects, this looks like 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAB136AnNbiAFYMsAWwAEAMRABfUuky58hFAAZSAJiq1GLNhID6xGXJAZseAkXUat9Zq0QgD64-PNKiZFbZ0OQAYRktGCgAc3giUAAzfhEkNRAcCCQybXs2TjQsQ1cQGIg4xASkpGs03UdM7KNqBjoAIxgGAAUFC2UQbixQgAscXPzCgGZqEsRUuwq8nNqGptb3S0cu3v7qRrAoJABaIZVZaNikEcTkxDLJvyj9F3WYTeP9k0Hj0bOE4TA-KDo4HpCQNRLhl2HgGLBgFFpEFpEA
+\begin{tikzcd}
+    & C \arrow[ldd, "f_1"', bend right] \arrow[rdd, "f_2", bend left] \arrow[d, "\tilde{f}", dashed] &     \\
+    & \varprojlim F \arrow[ld, "\pi_1"] \arrow[rd, "\pi_1"']                                         &     \\
+F_1 &                                                                                                & F_2
+\end{tikzcd}
+	\end{equation*}
+	Note this is the categorical product of two objects. In fact, if $J$ is any discrete index category then a limiting cone is just a cone with the categorical product as the apex and projection as the legs.
+\end{example}
+
+\begin{example}
+	Let $J$ be the parallel arrow category, i.e. the one with two objects and two nontrivial arrows from one to the other. A limiting cone looks like:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkATFVqMWbADrT6AJzTyIAKwZYAtgAIAYt14gM2PASIBGUmfH1mrRCB0B9M-r7HBREZeuS7DxyLc4jBQAObwRKAAZsoaSGQgOBBIFiDqYH5QdHAAFiEg1DZS9rJ4DLDAUVwFaXQARjAMAAr8JkIg8lihOTiuIDEQcYgJSUheErZsUc59A0Opo4jjRX6yGkwz1Az1jS3upvad3b080bFj1IsAzIW+MtLrNblYUb2IALRmp-3nS5fJiBuIGerxSt0mJQeTAA5DVtg1mq0PIcuj1Zr8FgCgQ0wFAkO8rgkVvd1gE4TtEft2kc0d85vF-khsTBcUyiXd7NNAlwKFwgA
+\begin{tikzcd}
+C \arrow[dd, "\tilde{f}"', dashed] \arrow[rd, "f_1"] \arrow[rrd, "f_2", bend left] &                                                                  &     \\
+                                                                                   & F_1 \arrow[r, "\mu", shift left] \arrow[r, "\mu'"', shift right] & F_2 \\
+\varprojlim F \arrow[ru, "\mu_1"'] \arrow[rru, "\mu_2"', bend right]               &                                                                  &    
+\end{tikzcd}
+	\end{equation*}
+	For example, if we consider $\cat{C}=\tcat{Grp}$ then and let consider the diagram $F$ be
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAHEQBfU9TXfIRQBGclVqMWbABLdxMKAHN4RUADMAThAC2SMiBwQkokHAAWWNTiQBaE-WatEIADou0F7rxCade6obG1OaW1oj2kk4gxCDUDHQARjAMAAr8eARsGliKZtZcFFxAA
+\begin{tikzcd}
+G \arrow[r, "\phi", shift left] \arrow[r, "0"', shift right] & H
+\end{tikzcd}
+	\end{equation*}
+	then $\varprojlim F$ is just $\ker(\phi)$. Indeed, the apex of any cone above $F$ would need to be a group consisting of elements which map into the elements of $F_1$ which vanish in $F_2$. The ``largest'' such group is the kernel of $\phi$. 
+\end{example}
+
+\begin{corollary}
+	Let $\mathcal{C}$ be a category that has limits. Then $\varprojlim$ is right adjoint to $\Delta(-)$:
+	\begin{equation*}
+		\adjunction{\Delta}{\cat{C}^J}{\cat{C}}{\varprojlim}
+	\end{equation*}
+	In particular, for each $C\in\cat{C}$ and each $F\in\cat{C}^J$, there is a bijection
+	\begin{equation*}
+		\cat{C}^J(\Delta(C), F) \overset{\sim}{\leftrightarrow} \cat{C}(C, \varprojlim F)
+	\end{equation*}
+	sending 
+	\begin{equation*}
+		\text{Cone}(C \overset{f_j}{\longrightarrow} F_j)_{j\in J} \mapsto \tilde{f},
+	\end{equation*}
+	where $\tilde{f}$ is the unique map into the limit, and sending 
+	\begin{equation*}
+		(g: C\to\varprojlim F) \mapsto \text{Cone}(C\overset{g}{\to}\varprojlim F \overset{\mu_j}{\to} F_j)_{j\in J}
+	\end{equation*}
+	where $\mu_j$ are the legs of the limiting cone.
+\end{corollary}
+
+\begin{definition}
+	A \emph{cone below} a diagram $F:J\to\cat{C}$ is a natural transformation $f:F\Rightarrow \Delta(C)$.
+\end{definition}
+
+\begin{example}
+	\hfill
+	\begin{enumerate}
+		\item When $J$ is discrete with two objects:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEUZblVqMWbAML9BIDNjwEi3clPrNWiDpwBMioatEbSk6jtn6FA0yPUoAzFusy9B3g+XC1YsgArO7Sumxcxr4qToEALJbanvL8UjBQAObwRKAAZgBOEAC2SGQgOBBI3L4FxUiG1BVILjWFJYgJ5ZWIAGytdYghXUh9FHxAA
+\begin{tikzcd}
+F_1 \arrow[d] & F_2 \arrow[d] &  & F_1 \arrow[rd] &   & F_2 \arrow[ld] \\
+C             & C             &  &                & C &               
+\end{tikzcd}
+			\end{equation*}
+		
+		\item When $J$ is the parallel arrow category:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEU3clVqMWbLgCZ+gkBmx4CRMtyn1mrRCADCSoWtFEJ26rtkHjA0yI0oAzJOsz9HHiZXD1YsgArO7SenKcig5+Zs7IACykVmG2RvxSMFAA5vBEoABmAE4QALZIZCA4EEgSIHAAFlj5OEgAtNzRRaXl1FU11A1NLYgdyl1liBV9iPKdxRPyvdWIbnWNzTVz3TNLSKuDG4jtWxO10y4nSImVywBsl4ghN0j3Y-NXu48D68OjBe+Ia7TJ4HYbHCh8IA
+\begin{tikzcd}
+F_1 \arrow[r, shift left] \arrow[r, shift right] \arrow[d] & F_2 \arrow[d] &  & F_1 \arrow[rd] \arrow[rr, shift right] \arrow[rr, shift left] &   & F_2 \arrow[ld] \\
+C \arrow[r, shift right] \arrow[r, shift left]             & C             &  &                                                               & C &               
+\end{tikzcd}
+			\end{equation*}
+	\end{enumerate}
+\end{example}
+
+\begin{definition}
+	A \emph{colimit} of a $J$-shaped diagram $F:J\to \cat{C}$ is the apex of a universal cone $(\mu^j: F_j\to \varinjlim F)_{j\in J}$, i.e. given any cone $(f^j: F_j\to C)$ below $F$, there exists a unique arrow $\hat{f}:\varinjlim F\to C$ such that the following diagrams commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbADrT6AJyxgAVgywBbAAQAxbrxAZseAkRGkx1es1aIQ2gPrLu4mFADm8IqABm8iOqQAJmocCCQzCWsZaXUmAD0nHh8-AMRgkFCkMkipW28EkGoGOgAjGAYABX5jIRBFNwALHD1k-3CQsMRstTAbECg6OAbXQpy+2Qa6HGBvLmcuIA
+\begin{tikzcd}
+C                                         &                                           \\
+\varinjlim F \arrow[u, "\hat{f}", dashed] & F_j \arrow[l, "\mu^j"] \arrow[lu, "f^j"']
+\end{tikzcd}
+	\end{equation*}
+\end{definition}
+
+\begin{corollary}
+	Let $\cat{C}$ be a category that has colimits. Then $\varinjlim$ is left adjoint to $\Delta$:
+	\begin{equation*}
+		\adjunction{\varinjlim}{\cat{C}}{\cat{C}^J}{\Delta}.
+	\end{equation*}
+	So for any $(F:J\to\cat{C})\in\cat{C}^J$ and any $C\in\cat{C}$ there is a bijection
+	\begin{equation*}
+		\cat{C}(\varinjlim F, C) \overset{\sim}{\leftrightarrow} \cat{C}^J(F, \Delta(C))
+	\end{equation*}
+	sending 
+	\begin{equation*}
+		(h: \varinjlim F\to C) \mapsto \text{Cone}(F_j\overset{\mu^j}{\to} \varinjlim F \overset{h}{\to} C)_{j\in J}
+	\end{equation*}
+	and sending 
+	\begin{equation*}
+		\text{Cone}(F_j\overset{f^j}{\to} C)_{j\in J} \mapsto \hat{f}.
+	\end{equation*}
+\end{corollary}
+
+\begin{example}
+	\hfill 
+	\begin{enumerate}
+		\item For a discrete category $J$, $\varinjlim F$ is the coproduct $\coprod_j F_j$.
+		\item For the parallel arrow category $J$, $\varinjlim F$ is called a coequalizer:
+			\begin{equation*}
+				% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQAxAfXJAF9S6TLnyEU5CtTpNW7bgCZ+gkBmx4CReaWJSGLNohAAdIwwBOWMACtGWALYACDkqFrRm0vN0yDIAML8UjBQAObwRKAAZmYQdkhaIDgQSADMNLZgvlD0cAAWwSA0erKGJrn0OMCRfC4g0bFIZInJiBLS+uwmdsyFIHlYkThIALTkAlExcYhNSUht-YNz6fQARjCMAArC6mIgFiG5Q0U+nUbdAOS19VNts4gJxb5dzAB6iuN1k0vNqccdhpEuIplmtNtt3IZ9ocrl9pjQ7mkQGswFARikmo92IDeCD1ls3BpIVgDkMPtdGvCWglkajEOi-iVjGdmDxAnwgA
+\begin{tikzcd}
+                                                                                                                                 &                                            & \varinjlim F \arrow[dd, "\hat{f}", dashed] \\
+F_1 \arrow[r, "\mu", shift left] \arrow[r, "\mu'"', shift right] \arrow[rrd, "f_1"', bend right] \arrow[rru, "\mu_1", bend left] & F_2 \arrow[ru, "\mu^2"] \arrow[rd, "f_2"'] &                                            \\
+                                                                                                                                 &                                            & C                                         
+\end{tikzcd}
+			\end{equation*}
+	\end{enumerate}
+\end{example}
+
+\subsection{construction of limits in Set} % {{{2 
+
+\begin{para}
+	Let $F:J\to\cat{C}$ be a $J$-shaped diagram in $\cat{C}$. Then we have a contravariant functor
+	\begin{equation*}
+		\text{Cone}_F:\cat{C}\to\tcat{Set}
+	\end{equation*}
+	which sends $C\in\cat{C}$ to the set of cones above $F$ with apex $C$, i.e.  
+	\begin{equation*}
+		C\in\cat{C} \mapsto \text{Nat}(\Delta(C), F),
+	\end{equation*}
+	and sends 
+	\begin{equation*}
+		(g: C'\to C) \mapsto g^\ast = (-) \circ g
+	\end{equation*}
+	where 
+	\begin{gather*}
+		g^\ast: \text{Cone}_F(C) \to \text{Cone}_F(C') \\
+		(f_j: C\to F_j)_{j\in J} \mapsto (f_j\circ g: C' \to F_j)_{j\in J}.
+	\end{gather*}
+\end{para}
+
+\begin{corollary}
+	If $\cat{C}$ has limits, then $\text{Cone}_F:\cat{C}\to\tcat{Set}$ is a representable functor represented by $\varprojlim F$:
+	\begin{equation*}
+		h_{\varprojlim F}(C) = \cat{C}(C, \varprojlim F) \overset{\sim}{\leftrightarrow} \text{Nat}(\Delta(C), F) = \text{Cone}_F(C),
+	\end{equation*}
+	which follows from the adjunction $\varprojlim\vdash\Delta$.
+\end{corollary}
+
+\begin{para}
+	Note also that $1_{\tcat{Set}}$ is a covariant representable functor, represented by the sidleton set $1=\{\ast\}$. Then, taking $\cat{C}=\tcat{Set}$ in the above corollary, assuming $\varprojlim F$ exists we would have 
+	\begin{align*}
+		\varprojlim F =& 1_{\tcat{Set}}(\varprojlim F) = h^1(\varprojlim F) = \tcat{Set}(1, \varprojlim F) \\
+		=& h_{\varprojlim F}(1) = \text{Cone}_F(1).
+	\end{align*}
+	But a cone above $F:J\to\tcat{Set}$ with apex $1$ is a collection of arrows $(f_j: 1\to F_j)_{j\in J}$ in $\tcat{Set}$ such that, for any arrow $\gamma: i\to j$ in $J$, the following diagrams commute:
+	\begin{equation*}
+		 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAEYBeAHW+F7pwcvAL4gRpdJlz5CKMuyq1GLNgDEA+lnGSQGbHgJF2pRdXrNWiEJoBW4pTCgBzeEVAAzAE4QAtkhMQHAgkACZzFSsbAApeZzpfXzoAShBqBjoAIxgGAAVpQzkQLyxnAAscHU8ff0QyIJDEQItVaw8tNJAM7LyC2TYS8sqJar8keuCwiMs2dvsRChEgA
+\begin{tikzcd}
+1=\{\ast\} \arrow[d, "f_i"'] \arrow[rd, "f_j"] &     \\
+F_i \arrow[r, "F(\gamma)"']                    & F_j
+\end{tikzcd}
+	\end{equation*}
+	i.e. $f_j(\{\ast\})=F(\gamma)(f_i(\ast))$. Let $x_j=f_j(\ast)\in F_j$ for all $j\in J$. Then for any arrow $\gamma:i\to j$ in $J$ we have $x_j=F(\gamma)(x_i)$.
+
+	This leads us to define the following:
+\end{para}
+
+\begin{theorem}[construction of limit in $\tcat{Set}$]
+	Let $F$ be a $J$-shaped diagram in $\cat{C}$. Then 
+	\begin{equation*}
+		\varprojlim F = \{ (x_i)\in\prod_{i\in J} F_i : \forall (\gamma: i\to j)\in J,\ F(\gamma)(x_i)=x_j) \}.
+	\end{equation*}
+\end{theorem}
+
+\begin{para}
+	In the special case where $J$ is a poset...
+\end{para}
+
+\begin{lemma}
+	Let $L$ be the set in the above theorem. Then the cone $(\mu_i: L\to F_i)_{i\in J}$ is universal.
+\end{lemma}
+\begin{proof}
+	Let $(f_i:C\to F_i)_{i\in J}$ be any cone over $F$. We want to show there exists a unique $\tilde{f}:C\to L$ such that the following diagrams commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbADLdeIDNjwEiI0mOr1mrRCABiAfQBW3cTCgBzeEVAAzAE4QAtkjUgcEJACZNknSAAdAKcmYxBqBjoAIxgGAAV+ZSEQeywLAAscOTtHF0Qyd09ENy0pXSC8BlhgWy5wkEiY+MTBNlSMrIisMH8oOjh082yQB2ckAo9vX202WzCuCi4gA
+\begin{tikzcd}
+C \arrow[d, "\tilde{f}"', dashed] \arrow[rd, "f_j"] &     \\
+L \arrow[r, "\mu_j"']                               & F_j
+\end{tikzcd}
+	\end{equation*}
+
+	(Uniqueness.) For $x\in C$, $\tilde{f}(x)\in L$ is completely determined by its projects: by the universal mapping property of the Cartesian product, there exists a unique map $\tilde{f}:C\to \prod F_i$ such that for all $j\in J$ the following diagrams commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbADrS0AJ2gACAGIB9LN14gM2PASIjSY6vWatEIdQCtu4mFADm8IqABmigLZIjIHBCQAJlNJCxBZNCw1W2oGOgAjGAYABX59IRB5LEcACxwtdy8kMj8AxF8zKUtZPAZYYDcuEFiEpNS9QTYs3PzYrDAwqDo4HIcCkA8Ib0QS-yCQ8zY3aLsuIA
+\begin{tikzcd}
+C \arrow[d, "\tilde{f}"', dashed] \arrow[rd, "f_j"] &     \\
+\prod F_i \arrow[r, "\pi_j"']                       & F_j
+\end{tikzcd}
+	\end{equation*}
+	and $\tilde{f}$ is given by $\tilde{f}(x)=(f_i(x))_{i\in J}$ for all $x\in C$.
+
+	(Existence.) If $\tilde{f}:C\to \prod F_i$ is defined as above, we want to show that $\tilde{f}$ carries $C$ into $L\subset\prod F_i$. Now $(f_i: C\to F_i)$ is a cone over $F$, so for any arrow $\gamma:i\to j$ in $J$ the following diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGEQBfU9TXfIRRkAjFVqMWbAGIB9LN14gM2PASIjSY6vWatEIOQCtu4mFADm8IqABmAJwgBbJJpA4ISAEw7J+wwAUADpBFnROTnQAlCDUDHQARjAMAAr8akIg9lgWABY4inaOLohk7p6IbrpSBrbysSDxSanpgmzZeQVxWGD+cBAMWFANuTB0w4hgTAwM1Dh0WAxskL2FIA7OSGUe3r56bHUmXBRcQA
+\begin{tikzcd}
+C \arrow[d, "f_i"'] \arrow[rd, "f_j"] &     \\
+F_i \arrow[r, "F(\gamma)"']           & F_j
+\end{tikzcd}
+	\end{equation*}
+	i.e. $f_j(x)=F(\gamma)(f_i(x))$. But this is exactly the condition that $(f_i(x))_{i\in J}=\tilde{f}(x)$ lies in $L$.
+\end{proof}
+
+\begin{example}
+	\hfill 
+	\begin{enumerate}
+		\item For a discrete category $J$ there are no maps other than the identities on objects, so the condition in the definition of $\varprojlim F$ is vacuous, and so $\varprojlim F = \prod F_i$.
+
+		\item For $J$ the parallel arrow category, 
+			\begin{align*}
+				\varprojlim F 
+				=& \{(x_1,x_2)\in F_1\times F_2 : \mu(x_1)=x_2,\ \mu'(x_1)=x_2 \} \\
+				=& \{ x_1\in F_1 : \mu(x_1)=\mu'(x_1) \},
+			\end{align*}
+			i.e. the set of elements in $F_1$ that map to the same thing under $\mu$ and $\mu'$.
+	\end{enumerate}
+\end{example}
+
+% Construction of limits in Set} }}}2
+
+\subsection{limits via products and equalizers} % {{{2 
+
+\begin{para}
+	The construction of the limit in $\tcat{Set}$ basically followed from the existence of the Cartesian product on sets.
+\end{para}
+
+\begin{para}
+	Let $F:J\to\tcat{Set}$ be a diagram. By the universal mapping property of products, there exists a unique map $\phi$ making the following diagram commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9AKxAF9S6TLnyEUARnJVajFmy68BQ7HgJEy46fWatEIADr60AJ2idgAa0NYwAAgBSfLhf6CQGFaKKTN1bXL1DEzNDAHM6AFsIulsuYEMcGAAPHGAAY2g+AAowyOiASj5XZRE1FABmKT9ZXQ4eYvdhVTFkABYqmR15eqVGzzLkSt9OgIMjUyhzK30bBydOF16PUpb24f9aoInOXKiYuITk1IyobN2Cor5pGChQ+CJQADNTCKQyEBwIJEkR2vFzBSXNzPCCvRCVD5fRA-DZsIJYerUBh0ABGMAYAAUml49MYsKEABY4BogsEAJmon2+SJstSgdDgBJuJJeSHakKQAFZql09P9gICWaCkAA2SlQzm9UlIADs4q5PNG8J6wNZiDFHMQcpADFpbHpjOZis2RgJWBASNR6Kx-TEIDxhOJUrVFM171hgSMCMUquF6vliHZHrGaG9-AofCAA
+\begin{tikzcd}
+F_j \arrow[r, "1_{F_j}"]                                & F_j                                                     &  & F_j \arrow[r, "1_{F_j}"]                                                   & F_j                                                    \\
+\prod_{k\in J}F_k \arrow[ru, dashed] \arrow[u, "\pi_j"] & \prod_\gamma F_{\text{cod}(\gamma)} \arrow[u, "\pi_j"'] &  & \prod_{k\in J}F_k \arrow[ru] \arrow[r, "\phi"', dashed] \arrow[u, "\pi_j"] & \prod_\gamma F_{\text{cod}(\gamma)} \arrow[u, "\pi_j"]
+\end{tikzcd}	
+	\end{equation*}
+	where $j=\text{cod}(\gamma)$ is the codomain of $\gamma$. But for the same reason, there is also a map $\psi$ making this diagram commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB120AnaAfWABrTljAACAFIBfAGJ9BIKaXSZc+QigCM5KrUYs2nHv04BzOgFsLdMXOCccMAB45gAY2hSAFGcvWAlFKKyiAY2HgERADMOtT0zKyIHFy8UALC7KKSsvLBKuHqRAAssXoJhikm7OZWNnYOzq4eUN6+tYF5oaoRGiSkmrrxBklyWJ1hapFa-YP6iSByAFbj3YUoMQNxc2yjKwVTyCWbZcMLfMtSujBQpvBEoABmvBZIJSA4EEgArFvlIz7VPx0fwgagMOgAIxgDAACqspiBuFhTAALHCdJ4QF6IMjvT6IN5DeZGLB8MZgyHQuH7DSI5FojHPJDaPHfX6nEnnRlYpC4j5skAMUTzKB0OAo67c7EAJmo-MQADZ2cSuKTyYLKbD4bSkaj0UpHkzEDFWYgAOzKipoUkXEKY7FK00Wk7zGQAmoBUEaqFamlsXUMg0ge1IWVOoMhxBh+UmoVgEViiVQL1Eq3YRQUKRAA
+\begin{tikzcd}
+\prod_{k\in J}F_k \arrow[d, "\pi_i"'] \arrow[rd, dashed] & \prod_\gamma F_{\text{cod}(\gamma)} \arrow[d, "\pi_j"] &  & \prod_{k\in J}F_k \arrow[d, "\pi_i"'] \arrow[rd] \arrow[r, "\psi", dashed] & \prod_\gamma F_{\text{cod}(\gamma)} \arrow[d, "\pi_j"] \\
+F_i \arrow[r, "F(\gamma)"']                              & F_j                                                    &  & F_i \arrow[r, "F(\gamma)"']                                                & F_j                                                   
+\end{tikzcd}
+	\end{equation*}
+	where $i=\text{dom}(\gamma)$ is the domain of $\gamma$.
+
+	Now let $E$ be the equalizer of $\phi,\psi$. This is given explicitly (e.g. from our example) as 
+	\begin{equation*}
+		E = \{(x_k)_k\in\prod_{k\in J} F_k : \phi((x_k)_k)=\psi((x_k)_k)\}.
+	\end{equation*}
+	
+	This condition is precisely the one that the composite diagram commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBoBGAXVJADcBDAGwFcYkQBREAX1PU1z5CKchWp0mrdgB1paAE7QA+rIDm9ALYb6AAgBiS4LJwwAHjmABjaNwAUazdoCU3HnxAZseAkTIAmcQYWNkQQAyw3fi8hIlEAmiCpUIMAK0iPAW9hElJiQMkQsKU03ijBHxFc-OD2VJ5xGChVeCJQADNFDSQ-GhwIJABmBILa+2l1LXonEBpGegAjGEYABUyY0PksVQALHHSOiC7EMhA+7uGa0Nk0LCUI2YWl1eiKkE2dvdKQA6PRU-7EEMJJcQNdbiV3D8kAAWXoAgCsFySIHIhlSri+UOOcJhSMKYOK+06SD+Z0QiOByIJaQeixWa1e712RMOSBOZL+iXxcm2WAAvNdsPVuEA
+\begin{tikzcd}
+F_j \arrow[r, "1_{F_j}"]                                        & F_j                                                                        \\
+E \arrow[d, "\pi_i"'] \arrow[u, "\pi_j"] \arrow[r, "\phi=\psi"] & \prod_\gamma F_{\text{cod}(\gamma)} \arrow[d, "\pi_j"] \arrow[u, "\pi_j"'] \\
+F_i \arrow[r, "F(\gamma)"']                                     & F_j                                                                       
+\end{tikzcd}
+	\end{equation*}
+	Since the maps on the right are the same, this commutativity is saying that, letting $x_i$ be the $F_i$-component of an element in $E$, that $F(\gamma)(x_i)=x_j$, which is the condition in our previous definition of the limit. So $E=\varprojlim F$.
+\end{para}
+
+\begin{theorem}
+	If a category $\cat{C}$ has products and equializers, then it has limits.
+\end{theorem}
+
+\begin{theorem}
+	If a category has coproducts and coequalizers, then it has colimits.
+\end{theorem}
+
+% limits via products and equalizers }}}2
+
+\subsection{construction of colimits in Set} % {{{2 
+
+\begin{proposition}
+	A coproduct in $\tcat{Set}$ is a disjoint union.
+\end{proposition}
+
+\begin{proposition}
+	$\tcat{Set}$ has coequalizers. This is given explicitly as follows: Given the diagram,
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEU3clVqMWbLgCZ+UmFADm8IqABmAJwgBbJGRA4ISCSDgALLFpxIAtBfrNWiEAB0P+pv0EhdAyNqU3Nqa1t7RGcZN09vJgByEGoGOgAjGAYABWE8AjYdLFUrez4KPiA
+\begin{tikzcd}
+F_1 \arrow[r, "\mu", shift left] \arrow[r, "\mu'"', shift right] & F_2
+\end{tikzcd},
+	\end{equation*}
+	consider 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEU3clVqMWbLgCZ+gkBmx4CReZOr1mrRCADCAXgUB6ADoXsAW35SYUAObwioAGYAnCHcRkQOBBIEiBwABZY7jhIALQhurIGVjZMSh7evv6BwdThkdGI8TL6IMlMAOQg1Ax0AEYwDAAKwupiIJ5YTmHRAuk+OQFBiFrSemxWaFj2fEA
+\begin{tikzcd}
+F_1 \arrow[r, "\mu", shift left] \arrow[r, "\mu'"', shift right] & F_2 \arrow[r, "\pi"] & C=F_2/\sim
+\end{tikzcd}
+	\end{equation*}
+	where $\sim$ is the equivalence relation on $F_2$ generated by requiring $\mu(x)\sim\mu'(x)$. Then $C$ is the coequalizer of the diagram.
+\end{proposition}
+\begin{proof}
+	We must show, given another map $h:F_2\to X$ such that $h\mu=h\mu'$, that there exists a unique map $\hat{h}:C\to X$ making the following diagram commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRADEB9ARhAF9S6TLnyEU3clVqMWbLgCZ+gkBmx4CReZOr1mrRCADCSoWtGbS3KbtkGAGvykwoAc3hFQAMwBOEALZIZCA4EEgSIHAAFlieOEgAtOE2+iAAOql+TCYgPv6B1CFh1FExcYhJMinpmQDkINQMdABGMAwACsLqYiDeWC6RcQJevgHlBaGIWtJ6bOloWNm5o+GFiADMOpVskfUgjS3tneYGvf2DyktIU6sbe1hgKVB0Uc67ybOpkXQ4wJF8jnwgA
+\begin{tikzcd}
+F_1 \arrow[r, "\mu", shift left] \arrow[r, "\mu'"', shift right] & F_2 \arrow[r, "\pi"] \arrow[rd, "h"'] & C \arrow[d, "\hat{h}", dashed] \\
+                                                                 &                                       & X                             
+\end{tikzcd}.
+	\end{equation*}
+
+	(Uniqueness) Suppose the map $\hat{h}$ exists. Then for $c=[y]\in C$ (where $y\in F_2$), we have 
+	\begin{equation*}
+		\hat{h}(c)=\hat{h}([y])=\hat{h}(\pi(y)) = h(y),
+	\end{equation*}
+	which forces the definition $\hat{h}([y])=h(y)$.
+
+	(Existence) It suffices to show that $\hat{h}$, as defined in the uniqueness step, is well-defined. We must show that if $y\sim y'$ in $F_2$, then $h(y)=h(y')$. But $y\sim y'$ means there exists a sequence $y=y_1, y_2,\dots, y_n=y'$ in $F_2$ such that, for each $i$, 
+	\begin{itemize}
+		\item $y_i=\mu(x_i)$ and $y_{i+1}=\mu'(x_i)$, or
+		\item $y_i=\mu'(x_i)$ and $y_{i+1}=\mu(x_i)$ 
+	\end{itemize}
+	for some $x_i\in F_1$ (we needed the sequence because $\sim$ is \textit{generated} by the relation $\mu(x)=\mu'(x)$). In either case, $h(y_i)=h(y_{i+1})$, since $h\mu=h\mu'$ by assumption. So $h(y)=h(y_1)=\cdots=h(y_n)=h(y')$ as desired.
+\end{proof}
+
+\begin{corollary}
+	$\tcat{Set}$ has colimits.
+\end{corollary}
+
+% construction of colimits in Set }}}2
+
+\subsection{limit-preserving functors} % {{{2 
+
+\begin{para}
+	Let $F:J\to \cat{C}$ be a $J$-shaped diagram in $\cat{C}$. Let $G:\cat{C}\to\cat{B}$ be a covariant functor. Then $G\circ F:J\to \cat{C}$ is a $J$-shaped diagram in $\cat{B}$:  
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACkQBfU9TXfIRQBGclVqMWbADrSAtnRwALAMaNgAYS7deIDNjwEio4ePrNWiELIXK1DYACFtXcTCgBzeEVAAzAE4QckhkIDgQSKISFmwAYjp+gcGIUeFIAEzU5lJWAOIJIAFBIdRpiJnROSC5sipY-ioABPHUDHQARjAMAAr8hkIg-lgeSjjcFFxAA
+\begin{tikzcd}
+J \arrow[r, "F"] \arrow[rd, "G\circ F"'] & \mathcal{C} \arrow[d, "G"] \\
+                                         & \mathcal{B}               
+\end{tikzcd}
+	\end{equation*}
+\end{para}
+
+\begin{definition}
+	Let $\mathcal{S}$ be a class of diagrams $J\to\cat{C}$. We say that a functor $G:\cat{C}\to\cat{B}$ \emph{preserves limits} if, for any diagram $F\in\mathcal{S}$ and any limit cone $(\mu_i:\varprojlim F\to F_i)_{i\in J}$ over $F$, the cone 
+	\begin{equation*}
+		(G(\mu_i): G(\varprojlim F)\to G(F_i))_{i\in J}
+	\end{equation*}
+	is a limit cone over $G\circ F$. In particular, $G(\varprojlim F)\cong \varprojlim (G\circ F)$.
+\end{definition}
+
+\begin{proposition}
+	Any right adjoint functor preserves limits.
+\end{proposition}
+\begin{proof}
+	Given an adjunction
+	\begin{equation*}
+		\adjunction{L}{\cat{B}}{\cat{C}}{G},
+	\end{equation*}
+	for any $B\in\cat{B}$ and any $C\in\cat{C}$ we have a bijection 
+	\begin{equation*}
+		\cat{C}(L(B), C) \overset{\sim}{\leftrightarrow} \cat{B}(B, G(C)).
+	\end{equation*}
+	Let $F:J\to\cat{C}$ be a diagram in $\cat{C}$ with limit cone $(\mu_i:\varprojlim F\to F_i)_{i\in J}$. Then $(G(\mu_i): G(\varprojlim F)\to G(F_i))_{i\in J}$ is already a cone above $G\circ F$. We want to show that this is the limit cone, i.e. that for any other cone $(f_i:B\to G(F_i))_{i\in J}$ above $G\circ F$, there exists a unique $\tilde{f}:B\to G(\varprojlim F)$ such that the following commutes for all $j\in J$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACEQBfU9TXfIRRkAjFVqMWbAOIAKADrz6AJzTKIAKwZYAtgAIAYgEpuvEBmx4CREaTHV6zVohByDAfQ0mu4mFADm8ESgAGbqOkhkIDgQSLYSTmyKeAywwCFcINQMdABGMAwACvxWQiDKWP4AFjhZINpgziBQdHBVfqah4ZHUMUgATDxdEBGI8X2I-Q6STXKKOkyeJtl5BcWWgmwV1bU+XEA
+\begin{tikzcd}
+B \arrow[d, "\tilde{f}"', dashed] \arrow[rd] &        \\
+G(\varprojlim F) \arrow[r, "G(\mu_j)"']      & G(F_j)
+\end{tikzcd}
+	\end{equation*}
+	We can rewrite this diagram as 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACEQBfU9TXfIRQBGclVqMWbAOIAKADrz6AJzTKIAKwZYAtgAIAYgEpuvEBmx4CRUcPH1mrRCDkGA+hpM8+lwUTJ21A5Szpxc4jBQAObwRKAAZuo6SGQgOBBIohKObIp4DLDA8Vwg1Ax0AEYwDAAK-FZCIAww8TilTVhgTiBQdHAAFpGmCUmZ1OlIAExBkt1yijpMHiZlldV1vtbOza3DIIkQyYipE4gAzDM5zsJunKtVtfV+zspYUf1t3vuj5+MZiNNsiF9h52uUHhsBFsQK93p8KFwgA
+\begin{tikzcd}
+B \arrow[r, "\tilde{f}", dashed] \arrow[d, "1_B"'] & G(\varprojlim F) \arrow[d, "G(\mu_j)"] \\
+B \arrow[r, "f_j"']                                & G(F_j)                                
+\end{tikzcd}.
+	\end{equation*}
+	For $\gamma: i\to j$ in $J$, this diagram also commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACEQBfU9TXfIRQBGclVqMWbAOIAKAGIB9LAEpuvEBmx4CRUcPH1mrRCDlKAVmp59tgomQPUjU05y7iYUAObwioADMAJwgAWyQyEBwIJFEJYzYA5RBqBjoAIxgGAAV+HSEQBhgAnBTCrDATEDgIBiwodUCQ8MQ46KQAJmdJKul5WQAdAe86UNC6NVSMrNy7XVMiksaQYLCI6nbEAGZuhNNhRU4pzJy8+1MgrG8AC1KbFeakHaiYxC741xXFCzK0k9mBPMQJcbncKFwgA
+\begin{tikzcd}
+B \arrow[r, "f_i"] \arrow[d, "1_B"'] & G(F_i) \arrow[d, "GF(\gamma)"] \\
+B \arrow[r, "f_j"']                  & G(F_j)                        
+\end{tikzcd}.
+	\end{equation*}
+	By (15.4), this implies the following commutes:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRABkAKAIQEoQAvqXSZc+QigCM5KrUYs2AcU4AxAPpZ+QkdjwEi0ybPrNWiEMvUArLcJAZd4omSPUTC81z6DZMKAHN4IlAAMwAnCABbJDIQHAgkaTlTNhCNAD0AHUy4AAs6MLQQagY6ACMYBgAFUT0JEAYYEJxihqwwMxA4CAYsKEE7cKjE6nikACY3eU6VTmz-OkjIun4S8sqax31zRuaB0IjoxFixxABmNYrq2qdzMKx-XJaplM9OSTU+AF4P4C9eAT7EBDI4XOIJRCTZIeYFqKxZHL5QqtUpXTZibYge6PFoCCgCIA
+\begin{tikzcd}
+L(B) \arrow[r, "f_i^\sharp"] \arrow[d, "L(1_B)=1_{L(B)}"'] & G(F_i) \arrow[d, "F(\gamma)"] \\
+L(B) \arrow[r, "f_j^\sharp"']                              & G(F_j)                       
+\end{tikzcd}.
+	\end{equation*}
+	By the universal mapping property of the limit, there exists a unique $\phi:L(B)\to\varprojlim F$ such that the following commutes for all $j\in J$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRABkAKAIQEoQAvqXSZc+QijIBGKrUYs2AHUX0ATmlUQAVgywBbAAQAxQcJAZseAkSmkZ1es1aIQRgPpbBsmFADm8IlAAM009JDIQHAgkACYHeWcQII8APWU4AAs6dVNg0KRbSOjEOLknJUU9Jg8QagY6ACMYBgAFUSsJEFUsXwycXKT8xAiogvjyl2U0DKxakHqm1vbxNm7e-rqsMESoOkyfLwEgA
+\begin{tikzcd}
+L(B) \arrow[rd, "f_j^\sharp"] \arrow[d, "\phi"', dashed] &     \\
+\varprojlim F \arrow[r, "\mu_j"']                        & F_j
+\end{tikzcd},
+	\end{equation*}
+	i.e. this commutes for all $j\in J$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRABkAKAIQEoQAvqXSZc+QigCM5KrUYs2AHUX0ATmlUQAVgywBbAAQAxQcJAZseAkWmTZ9Zq0QgjAfS2mRl8UTJ3qDgrOXHyCsjBQAObwRKAAZpp6SNIgOBBIAEwB8k4gynpM7iDUDHQARjAMAAqiVhIgDDBxOJ4gCRBJiGSp6YgpgbnKaAAWWMUN5ZU13tbOjc3jumC5UHRwwxGt7Z0AzNRpmdmObHHuAHrK63Tqi5PVtT7OqliRwy1C8YlI3QeIe3LHZySVzAEK8AS3Cr3Gb1Z6vd4UARAA
+\begin{tikzcd}
+L(B) \arrow[r, "\phi", dashed] \arrow[d, "1_{L(B)}"'] & \varprojlim F \arrow[d, "\mu_j"] \\
+L(B) \arrow[r, "f_j^\sharp"']                         & F_j                             
+\end{tikzcd},
+	\end{equation*}
+	so by (15.4) again this commutes for all $j\in J$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACEQBfU9TXfIRQBGclVqMWbAOIAKADrz6AJzTKIAKwZYAtgAIAYgEpuvEBmx4CRUcPH1mrRCDkGA+hpM8+lwUTJ21A5Szpxc4jBQAObwRKAAZuo6SKIgOBBIAExBkk4uCvI6TB4m1Ax0AEYwDAAK-FZCIAww8TimCUlIZGkZiKnBeYpoABZYAHqK8eVtZZXVdb7Wzs2tIGVYYHlwENpQ7SCJEMmIAMzU6Vk5jmzxHmtNc7X1fs7KWFHDbd4HnYjdF6criEQMI3JxZlUnotGm8Pl8KFwgA
+\begin{tikzcd}
+B \arrow[r, "\phi^\flat"] \arrow[d, "1_B"'] & G(\varprojlim F) \arrow[d, "G(\mu_j)"] \\
+B \arrow[r, "f_j"']                         & G(F_j)                                
+\end{tikzcd},
+	\end{equation*}
+	i.e. this commutes for all $j\in J$:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRACEQBfU9TXfIRRkAjFVqMWbAOIAKADrz6AJzTKIAKwZYAtgAIAYgEpuvEBmx4CREaTHV6zVohByDAfQ0mu4mFADm8ESgAGbqOki2IDgQSABMDpLOrgryOkyeJtQMdABGMAwACvxWQiDKWP4AFjimoeFIZNGxiFGOUi6KaFVYAHqKITm12XkFxZaCbBXVwyDaYMlQdHBVfnUgYRARiE0x8YlObCGe3BRcQA
+\begin{tikzcd}
+B \arrow[d, "\phi^\flat"', dashed] \arrow[rd, "f_j"] &        \\
+G(\varprojlim F) \arrow[r, "G(\mu_j)"']              & G(F_j)
+\end{tikzcd},
+	\end{equation*}
+	so $\phi^\flat$ is the $\tilde{f}$ we were looking for.
+\end{proof}
+
+\begin{para}
+	We now present an alternative proof which utilizes the Yoneda lemma.
+\end{para}
+
+\begin{lemma}
+	Let $F:J\to\cat{C}$ be a $J$-shaped diagram in $\cat{C}$. Then, for $C\in\cat{C}$,
+	\begin{equation*}
+		\cat{C}(C, \varprojlim F)\cong \varprojlim \cat{C}(C, F(-)).
+	\end{equation*}
+	In other words, $h^C$ preserves limits.
+\end{lemma}
+\begin{proof}
+	We know by the universal property of the limit:
+	\begin{align*}
+		\cat{C}(C, \varprojlim F)
+		=& \text{Cone}_F(C) \\
+		=& \{(f_i:C\to F_i)_{i\in J} : \forall(i \overset{\gamma}{\to}j)\in J,\ F(\gamma)\circ f_i=f_j \} \\
+		=& \{(f_i:C\to F_i)\in\prod_{i\in J}\cat{C}(C, F_i) : \dots \} \\
+		=& \varprojlim \cat{C}(C, F(-)).
+	\end{align*}
+\end{proof}
+
+\begin{proof}[Alternative proof]
+	$L\dashv G$, so 
+	\begin{equation*}
+		\cat{C}(L(B), C) \overset{\sim}{\leftrightarrow} \cat{B}(B, G(C)).
+	\end{equation*}
+	Let $F:J\to\cat{C}$ be a diagram with limit cone $(\mu_i: \varprojlim F\to F_i)_{i\in J}$. Then 
+	\begin{align*}
+		\cat{B}(-, G(\varprojlim F)) 
+		\cong& \cat{C}(C(-), \varprojlim F) \\
+		\cong& \varprojlim \cat{C}(L(-), F) \\
+		\cong& \varprojlim \cat{B}(-, G(F)) \\
+		\cong& \cat{B}(-, \varprojlim GF)
+	\end{align*}
+	so 
+	\begin{equation*}
+		h_{G(\varprojlim F)} \overset{\sim}{\Rightarrow} h_{\varprojlim GF}.
+	\end{equation*}
+	Hence $G(\varprojlim F)\cong\varprojlim GF$.
+\end{proof}
+
+\begin{proposition}
+	Any left-adjoint functor preserves colimits.
+\end{proposition}
+
+\begin{proposition}
+	Any left-adjoint functor between module categories (more generally, abelian categories) is right-exact. Any right-adjoint functor is left-exact.
+\end{proposition}
+\begin{proof}
+	For a functor to be right-exact it must preserve cokernels, which are a kind of coequalizer, hence a kind of colimit.
+\end{proof}
+
+\begin{example}
+	The tensor product of modules is right exact. Its adjoint, the hom functor, is left exact.
+\end{example}
+
+% limit-preserving functors }}}2
+
+\subsection{double limits} % {{{2 
+
+\begin{para}
+	Consider small index categories $I,J$. Let $F:I\times J\to\cat{C}$ be an $(I\times J)$-shaped diagram in $\cat{C}$. Fixing $i\in I$ yields a $J$-shaped diagram in $\cat{C}$, namely $F(i, -):J\to \cat{C}$. We can then consider the colimit of this diagram (if it exists):
+	\begin{equation*}
+		C_i = \varinjlim F(i, -) = \varinjlim_j F(i, j).
+	\end{equation*}
+	By functoriality, an arrow $i\to i'$ in $I$ yields an arrow 
+	\begin{equation*}
+		C_i = \varinjlim_j F(i, j) \to \varinjlim_j F(i', j) = C_{i'}.
+	\end{equation*}
+	We can thus consider $C_{(-)}$ itself as a functor, and consider its colimit:
+	\begin{equation*}
+		\varinjlim C = \varinjlim( \varinjlim_j F(-, j)) = \varinjlim_i (\varinjlim_j F(i, j)).
+	\end{equation*}
+	Since $\varinjlim$ is itself a left-adjoint functor, these limits commute:
+	\begin{equation*}
+		\varinjlim_i ( \varinjlim_j F(i, j)) = \varinjlim_j (\varinjlim_i F(i, j)).
+	\end{equation*}
+\end{para}
+
+% double limits }}}2
+
+% (co)limits }}}1
+
+\section{universal properties} % {{{1 
+
+\subsection{(co)products} % {{{2 
+
+\begin{para}
+	We will first define the universal property for the coproduct of two objects, and then extend it to the coproduct of an arbitrary family of objects.
+\end{para}
+
+\begin{definition}
+	Let $X_1,X_2\in\cat{C}$. The coproduct $X\coloneqq X_1\coprod X_2 \in \cat{C}$ is an object universal with respect to the following property: 
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAA0B9YgHR4GMIaAE7QABFwBMIAL6l0mXPkIoADOSq1GLNl2Kz5IDNjwEikjdXrNWiDp2lyFJ5UTKrN1nXYCaszTBQAObwRKAAZqIAtkhkIDgQSOpaNmxY3CDUDHQARjAMAAqKpiogwlhBABY4BhHRSBbxiYjJXrYg6Y6GkRAxiHEJSADMVtrt4RlOID19jYOIIyne0w6ZINl5hcWuduVVNVMzSdTziwxYYO1QdHCVgWttbOH+MkA
+\begin{tikzcd}
+                                        & Y                                     &                                         \\
+X_1 \arrow[r, "i_1"'] \arrow[ru, "f_1"] & X_1\coprod X_2 \arrow[u, "f", dashed] & X_2 \arrow[l, "i_2"] \arrow[lu, "f_2"']
+\end{tikzcd}
+	\end{equation*}
+\end{definition}
+
+\begin{definition}
+	Let $(X_j)_{j\in J}\subset \cat{C}$ be a family of objects. The coproduct $\coprod_{j\in J} X_j$ is an object universal with respect to the following property: for all $j\in J$,
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZARgBpiBdUkANwEMAbAVxiRAB12BjCNAJ2gB9YACtOWMAAIAUgF8AGoJEhZpdJlz5CKAAzkqtRizaLlq9djwEiZHQfrNWiEAE0VBmFADm8IqABmAgC2SGQgOBBIeoaObFhKINQMdABGMAwAChpW2iB8WF4AFjgqaiCBECGIYRFIAEzUDsbO-glJqelZllpsDDD+JeblwVHUtYgNIAwSTiBQdHCFnokxzeUryWmZ2T3O+UWDFLJAA
+\begin{tikzcd}
+                                        & Y                                           \\
+X_j \arrow[r, "i_j"'] \arrow[ru, "f_j"] & \coprod_{j\in J}X_j \arrow[u, "f"', dashed]
+\end{tikzcd}
+	\end{equation*}
+	Note the map $f$ is shared accross all diagrams.
+\end{definition}
+
+% (co)products }}}2
+
+\subsection{free objects} % {{{2 
+
+\begin{example}[free module]
+	We work over a commutative ring $A$. Let $S$ be a set. The free $A$-module on $S$, denoted $F(S)$, is the $A$-module satisfying the following universal property: for any $A$-module $M$ and any map \textit{of sets} $f:S\to M$, there exists a unique $A$-module map $\tilde{f}:F(S)\to M$ making the following diagram commute:
+	\begin{equation*}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAGUQBfU9TXfIRQBGclVqMWbAGIAKdgEpuvEBmx4CRUcPH1mrRCACy3cTCgBzeEVAAzAE4QAtkjIgcEJMJ53HLxKLunogATNQMWGAGIFB0cAAW5iDUelKGADrpeAywwLZcmZEABJk4MAAeOMBGEPZcsgCCpRVVNVBcSj4gDs6u1B5IYRL6bLaFYM2V1bX1k1XsMDgdySAMdABGMAwACvwaQiD2WBbxOKZcQA
+\begin{tikzcd}
+S \arrow[r] \arrow[rd, "f\in\text{Mor}(\text{Set})"'] & F(S) \arrow[d, "\tilde{f}\in \text{Mor}(A\text{Mod})", dashed] \\
+                                                      & M                                                             
+\end{tikzcd}
+	\end{equation*}
+\end{example}
+
+% free objects }}}2
+
+% universal properties }}}1
+
+\end{document}

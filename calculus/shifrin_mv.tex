@@ -1,0 +1,1051 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\setcounter{secnumdepth}{5}
+\newtheorem{para}[theorem]{}
+
+\title{Shifrin MV}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{the derivative} % {{{1 
+
+\subsection{partial, directional derivatives} % {{{2 
+
+\begin{para}
+	The goal is to understand a function by knowing how it varies with each variable.
+\end{para}
+
+\begin{definition}
+	Consider a function $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$, where $U\subset\mathbb{R}^n$ is open. Let $a\in U$. For $j=1,\dots, n$, define
+	\begin{equation*}
+		\frac{\partial f}{\partial x_j}(a) = D_jf(a) = \lim_{t\to 0}\frac{f(a+te_j)-f(a)}{t}
+	\end{equation*}
+	provided this limit exists.
+\end{definition}
+
+\begin{para}
+	The partial derivatives are measuring rate of change along the coordinate axes $e_j$. We can generalize the above definition to an arbitrary direction (vector!) $v$:
+\end{para}
+
+\begin{definition}
+	Let $f:U\subset \mathbb{R}^n\to\mathbb{R}^m$, where $U\subset\mathbb{R}^n$ is open. Let $a\in U$. For a nonzero $v\in\mathbb{R}^n$, define the \emph{directional derivative} of $f$ at $a$ in the direction of $v$ to be 
+	\begin{equation*}
+		D_vf(a) = \lim_{t\to 0}\frac{f(a+tv)-f(a)}{t}
+	\end{equation*}
+	provided this limit exists.
+\end{definition}
+
+\begin{remark}
+	$D_j f(a) = \frac{\partial f}{\partial x_j}(a) = D_{e_j}f(a)$.
+\end{remark}
+
+\begin{para}
+	The directional derivative depends not only on the direction of $v$, but also the magnitude of $v$:
+\end{para}
+
+\begin{proposition}
+	$D_{cv}f(a) = cD_vf(a)$.
+\end{proposition}
+\begin{proof}
+	\begin{align*}
+		D_{cv}f(a) =& \lim_{t\to 0} \frac{f(a+tv) - f(a)}{t} = c\lim_{t\to 0}\frac{f(a+tv) - f(a)}{ct} \\
+		=& c\lim_{s\to 0}\frac{f(a+sv) - f(a)}{s} = c D_vf(a).
+	\end{align*}
+\end{proof}
+
+\begin{remark}
+	So $D_vf(a)$ is not merely the instantaneous rate of change by an observer at $a$ in the direction of $v$, but perhaps the instantaneous rate of change of an observer at $a$ moving with velocity $v$ (not only the direction of the observer matters, but also their speed).
+\end{remark}
+
+\begin{remark}
+	In cases where $f:U\subset\mathbb{R}^n \to \mathbb{R}$ consists of functions we can easily differentiate using single-variable calculus rules, the following substitution can help in computing the $D_vf(a)$:
+	\begin{gather*}
+		\phi: \mathbb{R} \to \mathbb{R} \\
+		t \mapsto f(a+tv).
+	\end{gather*}
+	Then 
+	\begin{equation*}
+		D_vf(a) = \lim_{t\to 0}\frac{f(a+tv)-f(a)}{t} = \lim_{t\to 0}\frac{\phi(t)-\phi(0)}{t} = \phi'(0).
+	\end{equation*}
+\end{remark}
+
+% partial, directional derivatives }}}2
+
+\subsection{differentiability} % {{{2 
+
+\begin{example}
+	For a function $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$, the existence of all partial derivatives, even all directional derivatives, does not imply continuity.
+
+	Consider the function 
+	\begin{gather*}
+		f:\mathbb{R}^2 \to \mathbb{R} \\
+		(x, y) \mapsto \frac{xy^2}{x^2+y^4}.
+	\end{gather*}
+
+	\todo{finish}
+\end{example}
+
+\begin{para}
+	Recall that the derivative of $f:\mathbb{R}\to\mathbb{R}$ is the best (affine) linear approximation to the graph of $f$ at $a$: for $f'(a)=m$, 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a)-mh}{h} = 0.
+	\end{equation*}
+	This motivates the following:
+\end{para}
+
+\begin{definition}
+	For $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$, call $f$ \emph{differentiable} at $a\in U$ if there exists a linear map 
+	\begin{equation*}
+		Df(a): \mathbb{R}^n \to \mathbb{R}^m
+	\end{equation*}
+	such that 
+	\begin{equation*}
+		\lim_{h\to 0} \frac{f(a+h)-f(a)-Df(a)h}{\|h\|} = 0.
+	\end{equation*}
+\end{definition}
+
+\begin{definition}
+	Writing $x=a+h$ in the above, define 
+	\begin{equation*}
+		g(x) = f(a) + Df(a)(x-a)
+	\end{equation*}
+	to be the \emph{tangent plane} of the graph of $f$ at $a$. It is the best affine linear approximation to $f$ near $a$: by definition of $Df(a)$, 
+	\begin{equation*}
+		0 = \lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|}=\lim_{x\to a}\frac{f(x)-g(x)}{\|x-a\|}.
+	\end{equation*}
+\end{definition}
+
+\begin{remark}
+	The tangent plane is obtained by translating the graph $\Gamma(Df(a))\subset\mathbb{R}^n\times\mathbb{R}^m$ so that it passes through $(a, f(a))$.
+\end{remark}
+
+\begin{proposition}
+	If $Df(a)$ exists, it is unique.
+\end{proposition}
+\begin{proof}
+	Suppose there exists linear maps $T,T':\mathbb{R}^n\to\mathbb{R}^m$ such that 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a)-Th}{\|h\|} = \lim_{h\to 0}\frac{f(a+h)-f(a)-T'h}{\|h\|}=0.
+	\end{equation*}
+	Then subtracting gives 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{(T'-T)(h)}{\|h\|} = 0.
+	\end{equation*}
+	Let $h=te_i$ for any $i=1,\dots, n$. Then the above implies 
+	\begin{equation*}
+		\lim_{t\to 0^+}\frac{(T'-T)(te_i)}{t} = (T'-T)(e_i).
+	\end{equation*}
+	So $Te_i=T'e_i$ for all $i$, implying $T=T'$.
+\end{proof}
+
+\begin{proposition}
+	If $f$ is vector-valued, it is differentiable at $a$ if and only if each component $f_i$ is differentiable at $a$. Moreover, if say $f=(f_1,\dots, f_n)^T$, then $Df(a)=(Df_1(a),\dots, Df_n(a))^T$.
+\end{proposition}
+\begin{proof}
+	\todo{prove}
+\end{proof}
+
+\begin{para}
+	As suggseted, differentiability is a stronger condition than the existence of all partial derivatives, and all directional derivatives.
+\end{para}
+
+\begin{proposition}
+	If $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$ is differentiable at $a$, then the partials $\frac{\partial f_i}{\partial x_j}$ exist. Furthermore, 
+	\begin{equation*}
+		[Df(a)] = \left[\frac{\partial f_i}{\partial x_j}(a)\right] = [D_jf_i(a)].
+	\end{equation*}
+	This matrix is called the \emph{Jacobian} of $f$.
+\end{proposition}
+\begin{proof}
+	Since $f$ is differentiable at $a$, there exists a linear map $Df(a)$ such that 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|} = 0.
+	\end{equation*}
+	For any $j=1,\dots, n$, consider $h=te_j$ as $t\to 0$. Then 
+	\begin{equation*}
+		\lim_{t\to 0}\frac{f(a+te_j)-f(a)-Df(a)(te_j)}{|t|} = 0.
+	\end{equation*}
+	If $t>0$, by linearity we get 
+	\begin{gather*}
+		0=\lim_{t\to 0^+} \frac{f(a+te_j)-f(a)-Df(a)(te_j)}{t} = \lim_{t\to 0^+}\frac{f(a+te_j)-f(a)}{t}-Df(a)(e_j), \\
+		\lim_{t\to 0^+}\frac{f(a+te_j)-f(a)}{t} = Df(a)e_j.
+	\end{gather*}
+	Similarly, if $t<0$, 
+	\begin{gather*}
+		0=\lim_{t\to 0^-} \frac{f(a+te_j)-f(a)-df(a)(te_j)}{-t} = -\left( \lim_{t\to 0^-}\frac{f(a+te_j)-f(a)}{t}-df(a)(e_j) \right), \\
+		\lim_{t\to 0^-}\frac{f(a+te_j)-f(a)}{t} = Df(a)e_j.
+	\end{gather*}
+	thus
+	\begin{equation*}
+		Df(a)e_j = \lim_{t\to 0}\frac{f(a+te_j)-f(a)}{t} = \frac{\partial f}{\partial x_j}(a).
+	\end{equation*}
+	So the $j$th column of $[Df(a)]$ is the row vector $[D_jf(a)]_j$. But also, for a fixed $j$, we have $D_jf(a)$ is equal to the column vector $[D_jf_i(a)]_i$. So the $(i,j)$ entry of $[Df(a)]$ is $D_jf_i(a)$ as desired.
+\end{proof}
+
+\begin{proposition}
+	If $f:U:\mathbb{R}^n\to\mathbb{R}^m$ is differentiable at $a\in U$, then $f$ is continuous at $a$.
+\end{proposition}
+\begin{proof}
+	Suppose $f$ is differentiable at $a$. We want to show $\lim_{x\to a}f(x)=f(a)$, i.e. that $\lim_{h\to 0}f(a+h)=f(a)$. Well
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|}=0,
+	\end{equation*}
+	so 
+	\begin{equation*}
+		\lim_{h\to 0}f(a+h)-f(a)-Df(a)h=\lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|}\|h\|= 0.
+	\end{equation*}
+	But also $\lim_{h\to 0} Df(a)h = 0$, since $Df(a)$ is a linear map and hence continuous, hence the result.
+\end{proof}
+
+\begin{example}
+	The following is an example of a function whose partials exist at a point but no other directional derivatives exist at that point and it is not even continuous there:
+	\begin{gather*}
+		f: \mathbb{R}^2 \to \mathbb{R} \\
+		(x,y)^T \mapsto \frac{xy}{x^2+y^2} \\
+		(0, 0)^T \mapsto 0
+	\end{gather*}
+	at $(0, 0)^T$.
+\end{example}
+
+\begin{example}
+	The following is an example of a function whose partials exist at a point, who is continuous at that point, but not differentiable there:
+	\begin{gather*}
+		f: \mathbb{R}^2 \to \mathbb{R} \\
+		(x, y)^T \mapsto \frac{x^2y}{x^2+y^2} \\
+		(0,0)^T \mapsto 0
+	\end{gather*}
+	at $(0, 0)^T$.
+\end{example}
+
+\begin{proposition}
+	Let $f$ be differentiable at $a$. Then for all $v\in\mathbb{R}^n$, 
+	\begin{equation*}
+		D_vf(a) = Df(a)v.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	We know 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|}=0.
+	\end{equation*}
+	Letting $h=tv$ and $t\to 0$, we get 
+	\begin{equation*}
+		0 = \lim_{t\to 0}\frac{f(a+tv)-f(a)-Df(a)(tv)}{|t|}
+	\end{equation*}
+	(we can pull out and discard the constant $\frac{1}{\|v\|}$). By linearity, as before, 
+	\begin{align*}
+		Df(a)v =& \lim_{t\to 0^+}\frac{f(a+tv)-f(a)}{t} = \lim_{t\to 0^-}\frac{f(a+tv)-f(a)}{t} \\
+		=& \lim_{t\to 0}\frac{f(a+tv)-f(a)}{t} = D_vf(a).
+	\end{align*}
+\end{proof}
+
+\begin{definition}
+	A function $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$ with partials which are continuous on $U$ is called \emph{$C^1$}.
+\end{definition}
+
+\begin{theorem}
+	If $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$ is $C^1$, then $f$ is differentiable.
+\end{theorem}
+\begin{proof}
+	The idea is the following. Fundamentally, continuity of the partials allows us to apply the mean value theorem to the partials. First recall that $f$ is differentiable if and only if each component $f_i$ is differentiable. Now if $f$ is $C^1$ then so it each $f_i$, so it suffices to prove the following simplified claim: if $f:U\subset\mathbb{R}^n\to\mathbb{R}$ is $C^1$, then $f$ is differentiable. 
+
+	We know that if the derivative exists at $a\in U$, then it must be $B=[D_jf(a)]_{j}$. So what we really want to show is that 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{f(a+h)-f(a) - Bh}{\|h\|} = 0.
+	\end{equation*}
+	Letting $h=\sum_{j=1}^n h_je_j$, we see $Bh=\sum_{j=1}^n D_jf(a)h_j$. If we can show 
+	\begin{equation*}
+		\lim_{h\to 0}f(a+h) - f(a) = \sum_{j=1}^n D_jf(a)h_j
+	\end{equation*}
+	then we would be done.
+
+	The sum on the right is ``partitioning'' the difference on the left dimension-wise. Consider the elements
+	\begin{equation*}
+		\left\{p_j = a + \sum_{k=1}^j h_ke_k \right\}_{j=0}^n,
+	\end{equation*}
+	where $p_0=a$. Then 
+	\begin{equation*}
+		\sum_{j=1}^m f(p_j) - f(p_{j-1}) = f(a+h) - f(a)
+	\end{equation*}
+	provided $f$ is defined on these points; to ensure this, consider a closed cube $C\subset U\subset \mathbb{R}^n$ centered at $a$ with radius $\epsilon$. Since $f$ is $C^1$, we have that $f$ is defined for all points in $C$ and its partials are continuous at all points in $C$. Now the limit in question takes $h\to 0$, so we may restrict our focus to $h$ such that $\|h\|<\epsilon$. For each such $h$, let $C_h\subset C$ be the cube of radius $\|h\|$ centered at $a$. Then each $p_j$ lies on the boundary of $C_h$, and the above sum makes sense. 
+
+	Fixing $j$, consider the function 
+	\begin{equation*}
+		\phi(t) = f(p_{j-1}+te_j) = f(q_j)
+	\end{equation*}
+	where $t\in [0, h_j]$. We see that $p_{j-1}+te_j$ ranges in a line over $[p_{j-1}, p_j]$, and this line is in (on the boundary of) $C_h$. So $\phi(t)$ is well-defined and in fact differentiable: the line is aligned with the coordinate axis $e_j$, so that $\phi(t):\mathbb{R} \to \mathbb{R}$ has derivative $\phi'(t)=D_jf(p_{j-1}+te_j)$. 
+
+	There are two cases. If $h_j=0$, then 
+	\begin{equation*}
+		f(p_j) - f(p_{j-1}) = f(p_{j-1})-f(p_{j-1})=0 = D_j(q_j)h_j
+	\end{equation*}
+	where, say, $q_j=a$. If $h_j\neq 0$, then $\phi(t)$ is continuous (it is differnetiable) on $[0, h_j]$ and differentiable on $(0, h_j)$ so by the mean value theorem there exists $c_j\in (0, h_j)$ such that $\phi(h_j)-\phi(0)=\phi'(c_j)h_j$. Letting $q_j=p_{j-1}+c_je_j$, this is equivalent to 
+	\begin{equation*}
+		f(p_j)-f(p_{j-1}) = D_j(q_j)h_j.
+	\end{equation*}
+	In both cases, $c_j\in C_h$. We can now write 
+	\begin{equation*}
+		f(a+h)-f(a) = \sum_{j=1}^m D_jf(q_j)h_j.
+	\end{equation*}
+	As $h\to 0$, the radius of $C_h$ goes to 0 as well, so that $q_j\to a$. Thus 
+	\begin{equation*}
+		\lim_{h\to 0}f(a+h)-f(a) = \sum_{j=1}^m D_jf(a)h_j,
+	\end{equation*}
+	where we have used the continuity of $D_jf$ on $C_h$.
+\end{proof}
+
+\begin{example}
+	The following is a function which is differentiable but not $C^1$:
+	\begin{gather*}
+		f: \mathbb{R} \to \mathbb{R} \\
+		x \mapsto \begin{cases} x^2\sin(\frac{1}{x}), & x\neq 0 \\ 0, & x=0 \end{cases}
+	\end{gather*}
+	Then $f'(0)=0$ but $f'(x)$ is not continuous at $0$.
+\end{example}
+
+% differentiability }}}2
+
+\subsection{differentiation rules} % {{{2 
+
+\begin{proposition}
+	Let $U\subset\mathbb{R}^n$ be open. Let $f,g:U\to\mathbb{R}^m$ and $k:U\to\mathbb{R}$. Suppose $f,g,k$ are differnetiable at $a\in U$. Then, for any $v\in\mathbb{R}^n$,
+	\begin{enumerate}
+		\item $D(f+g)(a) = Df(a)+Dg(a)$.
+		\item $D(kf)(a)v = (Dk(a)v)f(a) + k(a)Df(a)v$.
+		\item $D(fg)(a)v = (Df(a)v)g(a) + f(a)(Dg(a)v)$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	We plug in the candidate and check that it satisfies the definition.
+
+	(2) We calculate
+	\begin{align*}
+		\lim_{h\to 0}& \frac{(kf)(a+h)-(kf)(a)- ((Dk(a)h)f(a)+k(a)(Df(a)h))}{\|h\|} \\
+		=& \lim_{h\to 0}\frac{(k(a+h)-k(a))f(a+h) + k(a)(f(a+h)-f(a))}{\|h\|} \\ \quad& -\lim_{h\to 0} \frac{((Dk(a)h)f(a)+k(a)(Df(a)h))}{\|h\|} \\
+		=& \lim_{h\to 0}\frac{(k(a+h)-k(a))f(a+h)-(Dk(a)h)f(a)}{\|h\|} \\ \quad& + k(a)\lim_{h\to 0}\frac{f(a+h)-f(a)-Df(a)h}{\|h\|}
+	\end{align*}
+	where the second term is 0 by definition of the derivative, and 
+	\begin{align*}
+		\lim_{h\to 0}& \frac{(k(a+h)-k(a))f(a+h)-(Dk(a)h)f(a)}{\|h\|} \\
+		=& f(a+h)\lim_{h\to 0}\frac{(k(a+h)-k(a)-(Dk(a)h))}{\|h\|} + \lim_{h\to 0}\frac{(Dk(a)h)(f(a+h)-f(a))}{\|h\|}
+	\end{align*}
+	where the first term is 0, and 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{(Dk(a)h)(f(a+h)-f(a))}{\|h\|} = \lim_{h\to 0}\left( Dk(a)\frac{h}{\|h\|} \right)(f(a+h)-f(a)).
+	\end{equation*}
+	Now 
+	\begin{align*}
+		0 \leq& \lim_{h\to 0}\left\| Dk(a)\frac{h}{\|h\|} \right\|\cdot \|f(a+h)-f(a)\| \\
+		\leq& \lim_{h\to 0}\|Dk(a)\|\cdot \|f(a+h) - f(a)\| \\
+		=& 0
+	\end{align*}
+	where we have used the boundedness of the linear operator $Dk(a)$.
+\end{proof}
+
+\begin{corollary}
+	Differntion is a linear operator.
+\end{corollary}
+
+\begin{theorem}[chain rule]
+	Suppose 
+	\begin{equation*}
+		\mathbb{R}^n \overset{g}{\to} \mathbb{R}^m \overset{f}{\longrightarrow} \mathbb{R}^\ell
+	\end{equation*}
+	and $g$ is differentiable at $a$ and $f$ is differentiable at $g(a)$. Then $f\circ g$ is differentiable at $a$ and 
+	\begin{equation*}
+		D(f\circ g)(a) = Df(g(a))Dg(a).
+	\end{equation*}
+\end{theorem}
+\begin{proof}
+	We want to show 
+	\begin{equation*}
+	\label{pf_chain_rule_to_show}
+		\lim_{h\to 0}\frac{f(g(a+h))-f(g(a))-(Df(g(a))Dg(a))h}{\|h\|} = 0.\tag{$\ast$}
+	\end{equation*}
+	Letting $b=g(a)$, we know 
+	\begin{gather*}
+		\lim_{h\to 0}\frac{g(a+h)-g(a)-Dg(a)h}{\|h\|} = 0 \\
+		\lim_{k\to 0}\frac{f(b+k)-f(b)-Df(b)k}{\|k\|} = 0.
+	\end{gather*}
+	Given $\epsilon>0$, there exists $\delta_1,\eta>0$ such that 
+	\begin{gather*}
+	\label{pf_chain_rule_hk_ineq}
+		\|h\|<\delta_1 \quad \Rightarrow \quad \|g(a+h)-g(a)-Dg(a)h\|<\epsilon\|h\|,\tag{$\ast\ast$} \\
+		\|k\|<\eta \quad \Rightarrow \quad \|f(b+k)-f(b)-Df(b)k\| < \epsilon\|k\|.
+	\end{gather*}
+	Setting $k=g(a+h)-g(a)$,
+	\begin{equation*}
+		\|h\|<\delta_1 \quad \Rightarrow \quad \|k-Dg(a)h\|<\epsilon\|h\|.
+	\end{equation*}
+	By the reverse triangle inequality,
+	\begin{equation*}
+		\|k\|-\|Dg(a)h\| \leq \big| \|k\|-\|Dg(a)h\| \big| \leq \|k-Dg(a)h\|
+	\end{equation*}
+	so 
+	\begin{equation*}
+	\label{pf_chain_rule_k_ineq}
+		\|k\| < \|Dg(a)h\| + \epsilon\|h\| < (\|Dg(a)\| + \epsilon)\|h\|,\tag{$\ast\ast\ast$}
+	\end{equation*}
+	where we have used the fact that $\|Dg(a)h\|\leq \|Dg(a)\|\cdot \|h\|$. Now let 
+	\begin{equation*}
+		\delta_2 = \frac{\eta}{\|Dg(a)\|+\epsilon}, \quad \delta=\min(\delta_1,\delta_2).
+	\end{equation*}
+	The numerator of (\ref{pf_chain_rule_to_show}) is 
+	\begin{align*}
+		f(b+k)-f(b)-& (Df(b)Dg(a))h \\
+		=& (f(b+k)-f(b)-Df(b)k) + (Df(b)k-Df(b)Dg(a)h) \\
+		=& (f(b+k)-f(b)-Df(b)k) + Df(b)(k-Dg(a)h).
+	\end{align*}
+	Considering $0<\|h\|<\delta$, we get 
+	\begin{align*}
+		\|f(b+k)-f(b)& -Df(b)Dg(a)h\| \\
+		\leq& \|f(b+k)-f(b)-Df(b)k\| + \|Df(b)\|\cdot \|k-Dg(a)k\| \\
+		\leq& \epsilon\|k\| + \|Df(b)\|\cdot \epsilon\|h\|
+	\end{align*}
+	where we have used (\ref{pf_chain_rule_hk_ineq}) and the definitions of $k$ and $Dg(a)$. Continuing,
+	\begin{align*}
+		\|f(b+k)-f(b)& -Df(b)Dg(a)h\| \\
+		\leq& \epsilon\|k\| + \|Df(b)\|\cdot \epsilon\|h\| \\
+		<& \epsilon\|h\|\left(\frac{\|k\|}{\|h\|}+\|Df(b)\|\right).
+	\end{align*}
+	Now 
+	\begin{equation*}
+		\|k\| \leq \epsilon\|h\| + \|Dg(a)h\| \leq \epsilon\|h\|+\|Dg(a)\|\cdot \|h\|
+	\end{equation*}
+	by (\ref{pf_chain_rule_k_ineq}), so 
+	\begin{align*}
+		\|f(b+k)-f(b)& -Df(b)Dg(a)h\| \\
+		<& \epsilon\|h\|\left(\frac{\|k\|}{\|h\|}+\|Df(b)\|\right) \\
+		\leq& \epsilon\|h\|\big( \|Dg(a)\|+\epsilon+\|Df(b)\|\big).
+	\end{align*}
+	So whenever $0<\|h\|<\delta$, we have 
+	\begin{equation*}
+		\frac{\|f(g(a+h))-f(g(a))-Df(g(a))Dg(a)h\|}{\|h\|} < \epsilon(\|Dg(a)\| + \epsilon + \|Df(b)\|).
+	\end{equation*}
+	Since $\epsilon$ is arbitrary, the limit goes to 0 as $h\to 0$.
+\end{proof}
+
+\begin{remark}
+	Suppose $f:\mathbb{R}^n\to\mathbb{R}^m$ is differentiable at $a$, and we want to evaluation $D_vf(a)$ for some $v\in\mathbb{R}^n$. 
+
+	Define $g:\mathbb{R}\to\mathbb{R}^n$ by $g(t)=a+tv$, and consider $\phi(t)=(f\circ g)(t)$. Then by definition $D_vf(a)=\phi'(0)$. By the chain rule,
+	\begin{equation*}
+		D_vf(a)=\phi'(0)=(f\circ g)'(0)=Df(a)g'(0)=Df(a)v
+	\end{equation*}
+	confirming our earlier result.
+\end{remark}
+
+% differentiation rules }}}2
+
+\subsection{gradient} % {{{2 
+
+\begin{definition}
+	Let $f:\mathbb{R}^n\to\mathbb{R}$ be differentiable at $a$. The \emph{gradient} of $f$ at $a$ is the vector 
+	\begin{equation*}
+		\nabla f(a) = (Df(a))^T = \begin{pmatrix} D_1f(a) \\ \vdots \\ D_nf(a) \end{pmatrix}.
+	\end{equation*}
+\end{definition}
+
+\begin{para}
+	Now the directional derivative is 
+	\begin{equation*}
+		D_vf(a)=Df(a)v=\nabla f(a)\cdot v.
+	\end{equation*}
+	In particular, this is saying that $\nabla f(a)$ is orthogonal to $v$ where $D_vf(a)=0$, i.e. $\nabla f(a)$ is orthogonal to the $v$ along which $f$ remains constant (instantaneously).
+
+	If $v$ is a unit vector, the Cauchy-Schwartz inequality implies 
+	\begin{equation*}
+		D_vf(a) \leq \|\nabla f(a)\|,
+	\end{equation*}
+	and there is equality if and only if $\nabla f(a)$ is a positive scalar multiple of $v$. This implies the following:
+\end{para}
+
+\begin{proposition}
+	Suppose $f:\mathbb{R}^n\to\mathbb{R}$ is differentiable at $a$. Then 
+	\begin{equation*}
+		\|\nabla f(a)\|=\max_{\|v\|=1}D_vf(a),
+	\end{equation*}
+	i.e. 
+	\begin{itemize}
+		\item $\nabla f(a)$ points in the direction in which $f$ increases at the greatest rate.
+		\item $\|\nabla f(a)\|$ is the greates possible (instantaneous) rate of change.
+	\end{itemize}
+\end{proposition}
+
+% gradient }}}2
+
+\subsection{curves} % {{{2 
+
+\begin{proposition}
+	Suppose $g:(a,b)\to\mathbb{R}^n$ is a differentiable parametric curve with the property that $g$ has constant length (i.e. $\|g(t)\|$ is constant for all $t\in (a,b)$). Then $g(t)\cdot g'(t)=0$ for all $t\in (a,b)$.
+\end{proposition}
+\begin{proof} 
+	We know $g(t)\cdot g(t)=c$ for some $c\in\mathbb{R}$. Then, utilizing the product rule,
+	\begin{equation*}
+		g'(t)\cdot g(t) + g(t)\cdot g'(t) = 2g(t)\cdot g'(t) = 0.
+	\end{equation*}
+\end{proof}	
+
+\begin{remark}
+	The condition above is that the curve lies on a sphere centered at the origin.
+\end{remark}
+
+\begin{definition}
+	Suppose $g:[a,b]\to \mathbb{R}^n$ is continuous, except perhaps at finitely many points. Define 
+	\begin{equation*}
+		\int_a^b g(t)dt = \begin{pmatrix} \int_a^b g_1(t)dt \\ \cdots \\ \int_a^b g_n(t)dt \end{pmatrix}.
+	\end{equation*}
+\end{definition}
+
+\begin{lemma}
+	Suppose $g:[a,b]\to \mathbb{R}^n$ is continuous, except perhaps at finitely many points. Then 
+	\begin{equation*}
+		\left\|\int_a^b g(t)dt \right\| \leq \int_a^b \|g(t)\|dt.
+	\end{equation*}
+\end{lemma}
+\begin{proof} 
+	Let $v=\int_a^b g(t)dt$. If $v=0$ then we are done. Otherwise, first note that $|v\cdot g(t)|\leq\|v\|\cdot\|g(t)\|$ by Cauchy Schwartz. Then 
+	\begin{align*}
+		\|v\|^2 
+		=& v\cdot \int_a^b g(t)dt = \int_a^b v\cdot g(t) dt \\
+		\leq& \int_a^b \|v\|\cdot \|g(t)\|dt = \|v\|\int_a^b \|g(t)\|dt.
+	\end{align*}
+	Since $v\neq 0$, we can divide by $\|v\|$ to get the result.
+\end{proof}	
+
+\begin{definition}
+	Let $g:[a,b]\to\mathbb{R}^n$ be a continuous parameterized curve. Given a partition 
+	\begin{equation*}
+		\mathcal{P}=\{a=t_0<t_1<\cdots <t_k =b\}
+	\end{equation*}
+	of $[a,b]$, let 
+	\begin{equation*}
+		\ell_\mathcal{P}(g) = \sum_{i=1}^k \|g(t_i)-g(t_{i-1})\|.
+	\end{equation*}
+	Define the \emph{arclength} of $g$ to be 
+	\begin{equation*}
+		\ell(g) = \sup_\mathcal{P} \ell_\mathcal{P}(g),
+	\end{equation*}
+	provided this quantity is finite.
+\end{definition}
+
+\begin{proposition}
+	Let $g:[a,b]\to\mathbb{R}^n$ be a piecewise-$C^1$ paramaterized curve. Then 
+	\begin{equation*}
+		\ell(g) = \int_a^b \|g'(t)\|dt.
+	\end{equation*}
+\end{proposition}
+\begin{remark}
+	This says the distance a particle travels is the integral of its speed.
+\end{remark}
+\begin{proof} 
+	By the lemma, for any $\mathcal{P}$ we have 
+	\begin{align*}
+		\ell_\mathcal{P}(g) 
+		=& \sum_{i=1}^k \|g(t_i)-g(t_{i-1})\| \\
+		=& \sum_{i=1}^k \left\|\int_{t_{i-1}}^{t_i}g'(t)dt\right\| \\
+		\leq& \sum_{i=1}^k \int_{t_{i-1}}^{t_i} \|g'(t)\|dt = \int_a^b \|g'(t)\|dt,
+	\end{align*}
+	where we have use the fundamental theorem of calculus which requires the $g_i$ to be continuous on $[t_i,t_{i-1}]$ and differentiable on $(t_i,t_{i-1})$ which is implied by the piecewise $C^1$ hypothesis, and so 
+	\begin{equation*}
+		\ell(g) \leq \int_a^b\|g'(t)\|dt.
+	\end{equation*}
+
+	Now for $a\leq t\leq b$, define $s(t)$ to be the arclength of the curve $g$ on the interval $[a,t]$. Then, for $h>0$,
+	\begin{equation*}
+		\frac{\|g(t+h)-g(t)\|}{h} \leq \frac{s(t+h)-s(t)}{h} \leq \frac{1}{h} \int_{t}^{t+h}\|g'(u)\|du;
+	\end{equation*}
+	where the first inequality utilizes the fact that $s(t+h)-s(t)$ is the arclength of $g$ on $[t,t+h]$, which is at least the shortest possible path length $\|g(t+h)-g(t)\|$. The second inequality additionally uses the previous inequality above. 
+
+	First suppose $t<b$. Taking limits, as $h\to 0^+$ the left is 
+	\begin{equation*}
+		\lim_{h\to 0^+}\frac{\|g(t+h)-g(t)\|}{h} = \|g'(t)\|.
+	\end{equation*}
+	The right is 
+	\begin{equation*}
+		\lim_{h\to 0^+}j\frac{1}{h}\int_t^{t+h}\|g'(u)\|du = \|g'(t)\|,
+	\end{equation*}
+	which can be deduced, for example, by L'Hopital's rule. Hence 
+	\begin{equation*}
+		\lim_{h\to 0^+} \frac{s(t+h)-s(t)}{h} = \|g'(t)\|
+	\end{equation*}
+	for all $t\in [a,b)$. Similarly, for $t\in (a,b]$, we can show 
+	\begin{equation*}
+		\lim_{h\to 0^-} \frac{s(t+h)-s(t)}{h} = \|g'(t)\|.
+	\end{equation*}
+	Thus on $t\in (a,b)$ we have 
+	\begin{equation*}
+		\lim_{h\to 0}\frac{s(t+h)-s(t)}{h}=s'(t)=\|g'(t)\|, \quad s(t)=\int_a^t \|g'(u)\|du.
+	\end{equation*}
+	But $g$ is piecewise continuous on $[a,b]$, hence so is $s(t)$ (ref). Since limits are unique, it follows 
+	\begin{gather*}
+		\lim_{t\to a}s(t) = \lim_{t\to a}\int_a^t \|g'(u)\|du = 0, \\
+		\lim_{t\to b}s(t) = \lim_{t\to a}\int_a^t \|g'(u)\|du = \int_a^b\|g'(u)\|du.
+	\end{gather*}
+\end{proof}	
+
+\begin{definition}
+	We say a parameterized curve $g(t)$ is \emph{arclength-parameterized} if $\|g'(t)\|=1$ for all $t$.
+\end{definition}
+
+\begin{remark}
+	If $g$ is arclength-parameterized, then $s'(t)=\|g'(t)\|=1$, so $s(t)=t+c$ for some constant $c$. In this case, we often use $s$ as the parameter. But note this is just a matter of notation; if given an arclength-parameterized curve $g:[a,b]\to\mathbb{R}^n$ you can assume that $s$ varies over the domain $[a,b]$ and not over the domain plus some constant.
+\end{remark}
+
+In what follows, let $g$ be arclength-parameterized.
+
+\begin{definition}
+	Call $g'(s)$ the \emph{unit tangent vector}, and denote it $T(s)$. If $g$ is twice differentiable, let the \emph{curvature} be $\kappa(s)=\|T'(s)\|$. If $g:[0,L]\to\mathbb{R}^n$ is closed, i.e. $g(0)=g(L)$, then the \emph{total curvature} is $\int_0^L \kappa(s)ds$.
+
+	If $T'(s)\neq 0$, define the \emph{principal normal vector} to be $N(s)=T'(s)/\|T'(s)\|$.
+\end{definition}
+
+\begin{remark}
+	By (ref), $T(s)\cdot T'(s)=0$.
+\end{remark}
+
+\begin{proposition}
+	For any convex plane curve, total curvature is $2\pi$.
+\end{proposition}
+
+% curves }}}2
+
+\subsection{higher order partial derivatives} % {{{2 
+
+\begin{theorem}
+	Let $f:U\subset\mathbb{R}^n \to\mathbb{R}^m$ be $C^2$. Then, for any $i,j$, we have 
+	\begin{equation*}
+		\frac{\partial^2 f}{\partial x_i\partial x_j} = \frac{\partial^2 f}{\partial x_j \partial x_i}.
+	\end{equation*}
+\end{theorem}
+\begin{proof} 
+	It suffices to show the result for $m=1$, since we go component-by-component, and for $n=2$, since we can repeat the argument for any two $i,j$ and fixing all other variables as partials do. Without loss of generality, let $i=1, j=2$. Define 
+	\begin{gather*}
+		\delta\begin{pmatrix} h \\ k \end{pmatrix} = f\begin{pmatrix}a+h \\ b+k \end{pmatrix} - f\begin{pmatrix}a+h \\ b\end{pmatrix} - f\begin{pmatrix} a\\ b+k \end{pmatrix} + f\begin{pmatrix} a \\ b\end{pmatrix}, \\
+		q(s) = f\begin{pmatrix}s \\ b+k\end{pmatrix} - f\begin{pmatrix}s \\ b\end{pmatrix}, \\
+		r(t) = f\begin{pmatrix} a+h \\ t\end{pmatrix} - f\begin{pmatrix}a \\ t\end{pmatrix}.
+	\end{gather*}
+	The picture is as follows:
+
+	By the mean value theorem, there exists $\xi\in (a,a+h)$ and $\eta\in (b,b+k)$ such that 
+	\begin{align*}
+		\delta\begin{pmatrix}h\\k \end{pmatrix}
+		=& q(a+h)-q(a) = hq'(\xi) \\
+		=& h\left(\frac{\partial f}{\partial x}\begin{pmatrix}\xi \\ b+k\end{pmatrix} - \frac{\partial f}{\partial x}\begin{pmatrix}\xi \\ b\end{pmatrix}\right) \\
+		=& hk \frac{\partial^2f}{\partial y\partial x}\begin{pmatrix}\xi \\ \eta\end{pmatrix}.
+	\end{align*}
+	Our application of the mean value theorem required $f$ to be $C^1$ and twice differentiable. Likewise, there exists $\tau\in (b,b+k)$ and $\sigma\in (a,a+h)$ such that 
+	\begin{equation*}
+		\delta\begin{pmatrix}h\\ k\end{pmatrix} = hk\frac{\partial^2f}{\partial x\partial y}\begin{pmatrix}\sigma \\ \tau\end{pmatrix}.
+	\end{equation*}
+	As $h,k\to 0$ we have $\zeta,\sigma\to a$ and $\eta,\tau\to b$. By the continuity of the second partials (using the fact that $f$ is $C^2$), we get the desired equality.
+\end{proof}	
+
+% higher order partial derivatives }}}2
+
+% The Derivative }}}1
+
+\section{implict/explicit solutions} % {{{1 
+
+\begin{para} 
+	Any subspace $V\subset\mathbb{R}^n$ can be represented in two ways: 
+	\begin{itemize}
+		\item (explicit) as the span of a collection of vectors.
+		\item (implicit) as the space of solutions to an equation $Ax=0$.
+	\end{itemize}
+	Let's look at the second in more detail. Note $x$ is a solution of $Ax=0$ if and only if $A_{i,\bullet}\cdot x=0$ for all $i$. The equation $A_{i,\bullet}\cdot x=0$ defines a hyperplane in $\mathbb{R}^n$ with normal $(A_{i,\bullet})^T$. Hence the solution space to $Ax=0$ is the intersection of the hyperplanes $A_i\cdot x=0$.
+\end{para}	
+
+\subsection{Gaussian elimination} % {{{2 
+
+\begin{definition}
+	We call the first nonzero entroy of a row (reading left to right) its \emph{leading entry}.
+\end{definition}
+
+\begin{definition}
+	A matrix is in \emph{echelon form} if
+	\begin{itemize}
+		\item the leading entries move right in successive rows.
+		\item the entries in the column of each leading entry, below the leading entry, are all $0$.
+		\item all rows of zeros are at the bottom of the matrix.
+	\end{itemize}
+	It is in \emph{reduced echelon form} if it is in echelon form and, additionally, 
+	\begin{itemize}
+		\item every leading entry is $1$.
+		\item all entries of the column above each leading entry are 0 (as well as below).
+	\end{itemize}
+\end{definition}
+
+\begin{definition}
+	A leading entry is called a \emph{pivot} if there is no leading entry above it in the same column. Columns where (a single) pivot appears are called \emph{pivot columns}, and the corresponding variable in the system of equations is called a \emph{pivot variable}. A variable which is not a pivot variable is called a \emph{free variable}.
+\end{definition}
+
+\begin{remark}
+	When a matrix is in reduced echelon form, we can determine the general solution by expressing each of the pivot variables in terms of the free variables.
+\end{remark}
+
+\begin{theorem}
+	Suppose $A$ and $B$ are echelon forms of the same nonzero matrix $M$. Then all of their pivots appear in the same positions. Therefore, if they are in reduced echelon form, then they are equal, i.e. the reduced echelon form of the matrix $M$ is unique.
+\end{theorem}
+
+\begin{para} 
+	Consider $Ax=b$, where $A$ is $m\times n$. Then a solution $c=(c_1\cdots c_n)^T$ has the property that $Ac=b$. As discussed, this means $A_{i,\bullet}\cdot c=b$ for all $i$. Combining this into aa single equation we can also write 
+	\begin{equation*}
+		b=c_1A_{\bullet, 1}+\cdots +c_nA_{\bullet, n}.
+	\end{equation*}
+	Thus a solution to $Ax=b$ gives a representation of $b$ as a linear combination of column vectors of $A$.
+\end{para}	
+
+\begin{example}
+	Suppose we want to express $b$ as a linear combination of vectors $v_1,v_2,v_3$, where 
+	\begin{equation*}
+		b=\begin{pmatrix}4\\ 3\\ 1\\ 2\end{pmatrix},\quad v_1=\begin{pmatrix}1\\ 0\\ 1\\ 2\end{pmatrix},\quad v_2=\begin{pmatrix}1\\ 1\\ 1\\ 1\end{pmatrix},\quad v_3=\begin{pmatrix}2\\ 1\\ 1\\ 2\end{pmatrix}.
+	\end{equation*}
+	We want to see if there are solutions $(x_1,x_2,x_3)$ to the equation 
+	\begin{equation*}
+		x_1v_1+x_2v_2+x_3v_3=b.
+	\end{equation*}
+	This is the same as solving $Ax=b$ where 
+	\begin{equation*}
+		A = \begin{pmatrix} 1&1&2 \\ 0&1&1 \\ 1&1&1 \\ 2&1&2 \end{pmatrix}.
+	\end{equation*}
+\end{example}
+
+\begin{definition}
+	Consider a system $Ax=b$. There are two possibilities:
+	\begin{itemize}
+		\item (\emph{inconsistent}) no solutions. 
+		\item (\emph{consistent}) solutions exist.
+	\end{itemize}
+\end{definition}
+
+\begin{corollary}
+	A system in echelon form is inconsistent if and only if there is a row of the form 
+	\begin{equation*}
+		\begin{bmatrix} 0 & \cdots & 0 & | & c \end{bmatrix}
+	\end{equation*}
+	for $c\neq 0$. Similarly, a system in echelon form is consistent if and only if any zero row has $c=0$.
+\end{corollary}
+
+\begin{corollary}
+	If $\text{rank}(A)=m$ then $Ax=b$ is consistent for all $b\in\mathbb{R}^m$.
+\end{corollary}
+
+\begin{remark}
+	Corresponding to our previous viewpoint:
+	\begin{itemize}
+		\item (implicit) $Ax=b$ is consistent when the intersection of hyperplanes $A_{i,\bullet}\cdot x=b_i$ is nonempty.
+		\item (explicit) $Ax=b$ is consistent when $b$ is in the span of the column vectors $A_{\bullet,j}$.
+	\end{itemize}
+\end{remark}
+
+\begin{example}
+	(constraint equations) We wish to find all $b$ for which $Ax=b$ is consistent. Suppose 
+	\begin{equation*}
+		A = \begin{pmatrix} 1 & -1 & 1 \\ 3&2&-1 \\ 1&4&-3 \\ 3&-3&3 \end{pmatrix}.
+	\end{equation*}
+	By the Corollary, we can let $b=(b_1\ b_2\ b_3\ b_4)^T$ can calculate the echelon form of the augmented matrix:
+	\begin{equation*}
+		[A|b] = \begin{pmatrix} 1 & -1 & 1&b_1 \\ 3&2&-1&b_2 \\ 1&4&-3&b_3 \\ 3&-3&3&b_4 \end{pmatrix} \quad \to \quad \begin{pmatrix} 1 & -1 & 1&b_1 \\ 0&5&-4&b_2-3b_1 \\ 0&0&0&b_3-b_2+2b_1 \\ 0&0&0&b_4-3b_1 \end{pmatrix}.
+	\end{equation*}
+	So $b$ must satisfy as many constraints as there are rows of zeros in the echelon form (recall by theorem this number is unique).
+\end{example}
+
+% Gaussian elimination }}}2
+
+\subsection{existence and uniqueness of solutions} % {{{2
+
+\begin{definition}
+	The rank $r$ of a matrix is the number of nonzero rows (i.e. the number of pivots) in its echelon form. 
+\end{definition}
+
+\begin{remark}
+	Note $r\leq n$ and $r\leq m$. We get that $r\leq n$ since there cannot be more pivots than columns, and $r\leq m$ since there cannot be more nonzero rows than there are total rows.
+\end{remark}
+
+We now turn to how many solutions a given consistent system has.
+
+\begin{definition}
+	A system $Ax=b$ is \emph{inhomogeneous} when $b\neq 0$ and \emph{homogeneous} when $b=0$.
+\end{definition}
+
+\begin{proposition}
+	Suppose $Ax=b$ is consistent. Let $u_1$ be an arbitrary solution. Then all solutions are of the form 
+	\begin{equation*}
+		u = u_1+v
+	\end{equation*}
+	for some solution $v$ (which is dependent on $u$) of the associated homogeneous system $Ax=0$.
+\end{proposition}
+\begin{proof}
+	First let's show $u$ is a solution:
+	\begin{equation*}
+		Au = A(u_1+v) = Au_1+Av = b+0=b.
+	\end{equation*}
+	Now let's show every solution has this form: we need to show $u-u_1$ is always a solution to $Ax=0$:
+	\begin{equation*}
+		Av = A(u-u_1) = Au-Au_1 = b-b=0.
+	\end{equation*}
+\end{proof}
+
+\begin{remark}
+	This is saying that when the inhomogeneous system $Ax=b$ is constent, its solutions are obtained by translating the set of solutions of the associated homogeneous equation by a "particular solution" $u$.
+\end{remark}
+
+\begin{para} 
+	Note a homogeneous system is always consistent, since it has the trivial solution $x=0$. If $\text{rank}(A)=n$, then there are $n$ pivot variables and $n-n=0$ free variables. To summarize: the system $Ax=0$ has
+	\begin{itemize}
+		\item ($\text{rank}(A)=n$) a unique solution, since there are 0 free variables.
+		\item ($\text{rank}(A)<n$) infinite solutions, since there are $>0$ free variables.
+		\item ($n>m$) infinite solutions, since $\text{rank}(A)\leq m < n$ and above.
+	\end{itemize}
+\end{para}	
+
+\begin{corollary}
+	Suppose $Ax=b$ is consistent. It has a unique solution if and only if $Ax=0$ has a unique (the trivial) solution, which happens if and only if $\text{rank}(A)=n$.
+\end{corollary}
+
+\begin{definition}
+	An $n\times n$ matrix of rank $n$ is called \emph{nonsingular}. Otherwise, it is called \emph{singular}.
+\end{definition}
+
+Recall that if $\text{rank}(A)=m$ then $Ax=b$ is consistent for all $b\in\mathbb{R}^m$.
+
+\begin{theorem}
+	Let $A$ be $n\times n$. The following are equivalent:
+	\begin{itemize}
+		\item $A$ is nonsingular.
+		\item $Ax=0$ has only the trivial solution.
+		\item $Ax=b$ has a unique solution for all $b\in\mathbb{R}^n$.
+	\end{itemize}
+\end{theorem}
+
+% existence and uniqueness }}}2
+
+\subsection{elementary matrices, inverses} % {{{2 
+
+\begin{para} 
+	There are two interpretations of matrix multiplication $AB$:
+	\begin{itemize}
+		\item $(AB)_{\bullet, j} = A(B_{\bullet, j})$, i.e. the $j$th column of $AB$ is $A$ times the $j$th column of $B$.
+		\item $(AB)_{i,\bullet}=(A_{i,\bullet})B$, i.e. the $i$th row of $AB$ is the $i$th row of $A$ times $B$.
+	\end{itemize}
+	In particular, 
+	\begin{gather*}
+		\begin{bmatrix} \vdots & & \vdots \\ a_1 & \cdots & a_n \\ \vdots & & \vdots \end{bmatrix} \begin{bmatrix} x_1 \\ \vdots \\ x_n \end{bmatrix} = x_1a_1 + \cdots + x_n a_n, \\
+		\begin{bmatrix} x_1 & \cdots & x_m \end{bmatrix} \begin{bmatrix} \cdots & A_1 & \cdots \\ & \vdots & \\ \cdots & A_m & \cdots \end{bmatrix} = x_1A_1 + \cdots + x_mA_m.
+	\end{gather*}
+\end{para}	
+
+\begin{proposition}
+	Consider the elementary row operations
+	\begin{enumerate}
+		\item interchangerows $i$ and $j$
+		\item multiply row $i$ by a nonzero scalar $c$
+		\item row $j$ plus equals $c$ times row $i$.
+	\end{enumerate}
+	To apply these to an $m\times n$ matrix $A$, multiply $A$ on the left by $I_m'$, where $I_m'$ is the result of having applied the desired row operations to the identity matrix $I_m$.
+\end{proposition}
+
+\begin{corollary}
+	Consider the augmented matrix $[A|b]$ with echelon form $[U|c]$. Then there exists a matrix $E$ such that 
+	\begin{equation*}
+		[EA|Eb] = [U|c],
+	\end{equation*}
+	and moreover $E$ is a product of elementary matrices.
+\end{corollary}
+
+\begin{theorem}
+	An $n\times n$ matrix is \emph{nonsingular} if and only if it is invertible.
+\end{theorem}
+\begin{proof} 
+	If $A$ is invertible and $Ax=b$, then $x$ can only be $A^{-1}b$.
+
+	Conversely, suppose $A$ is nonsingular. Then $Ax=c$ has a unique solution for all $c$. In particular, there exists a unique $b_j$ such that $Ab_j=e_j$. Let $B=(b_1 \cdots b_n)$. Then $AB=I_n$, so that $B$ is a solution to the equation $AX=I_n$. Then the reduced echelon form of $[A|I_n]$ is $[I_n|B]$, where we have used the fact that $A$ is nonsingular to determine that its reduced echelon form is $I_n$. By the corollary, there exists a product of elementary matrices $E$ such that $E[A|I_n]=[I_n|B]$. Then $EA=I_n$ and $E=B$, so $BA=I_n$.
+\end{proof}	
+
+\begin{corollary}
+	If $A,B$ are $n\times n$ matrices such that $BA=I_n$, then $B=A^{-1}$ and $A=B^{-1}$, i.e. for square matrices every left inverse is an inverse.
+\end{corollary}
+\begin{proof} 
+	We first claim the homogeneous equation $Ax=0$ has only the trivial solution. To see this, consider that if $x$ is a solution then $BAx=x=0=B(0)$. Now this implies by the proposition that $A$ is nonsingular, hence invertible by the theorem. Then since $BA=I_n$ and inverses are unique, it must be that $B=A^{-1}$.
+\end{proof}	
+
+\begin{corollary}
+	Given a square matrix $A$, its inverse, if it exists, is the matrix $E$ such that 
+	\begin{equation*}
+		E[A|I_n] = [I_n | C] 
+	\end{equation*}
+	for some matrix $C$. In particular, one can apply Gaussian elimination 
+	\begin{equation*}
+		[A | I_n] \quad \to \quad [I_n | C] 
+	\end{equation*}
+	and then $A^{-1}=C$, provided we can actually perform such a reduction.
+\end{corollary}
+
+\begin{corollary}
+	For 
+	\begin{equation*}
+		A = \begin{pmatrix} a & b \\ c & d \end{pmatrix},
+	\end{equation*}
+	$A^{-1}$ exists if and only if $ad-bc\neq 0$. In that case, 
+	\begin{equation*}
+		A^{-1} = \frac{1}{ad-bc} \begin{pmatrix} b & -b \\ -c & a \end{pmatrix}.
+	\end{equation*}
+\end{corollary}
+
+\begin{proposition}
+	A nonsquare matrix never has both a left and right inverse.
+\end{proposition}
+
+% elementary matrices, inverses }}}2
+
+\subsection{linear independence, dimension} % {{{2 
+
+\begin{para} 
+	We are interested in whether $v\in\text{span}\{v_1,\dots,v_k\}$. Recall that this is asking where the system $Ax=v$ has a solution, where $A_{\bullet, j}=v_j$. We are also interested in whether this solution is unique. Equivalently, this is asking whether (the linear map represented by) $A$ is injective.
+\end{para}	
+
+\begin{definition}
+	The $\{v_1,\dots, v_k\}$ are \emph{linearly independent} if 
+	\begin{equation*}
+		c_1v_1 + \cdots c_k v_k = 0 
+	\end{equation*}
+	implies $c_1=\cdots =c_k=0$. Otherwise, they are called \emph{linearly dependent}.
+\end{definition}
+
+\begin{proposition}
+	Let $v_1,\dots, v_k\in\mathbb{R}^n$ and let $V=\text{span}\{v_1,\dots, v_k\}$. Then an arbitrary $v\in V$ has a unique expression as a linear combination of $v_1,\dots, v_k$ if and only if the $v_i$ are linearly independent. 
+\end{proposition}
+\begin{proof}
+	($\Leftarrow$) Suppose $v$ is not uniquely expressed, i.e. 
+	\begin{equation*}
+		v = c_1v_1 + \cdots c_kv_k = d_1v_1 + \cdots d_kv_k
+	\end{equation*}
+	where $\{c_i\}\neq \{d_i\}$. Then 
+	\begin{equation*}
+		0 = (c_1-d_1)v_1 + \cdots + (c_k-d_k)v_k 
+	\end{equation*}
+	and at least one of the coefficients is nonzero. Thus the $\{v_i\}$ are linearly dependent.
+
+	($\Rightarrow$) Suppose $\{v_k\}$ is not linearly independent. Then there exists a nontrivial linear combination 
+	\begin{equation*}
+		s_1v_1 + \cdots + s_kv_k = 0.
+	\end{equation*}
+	For any $v\in V$, we can write 
+	\begin{equation*}
+		v = c_1v_1 + \cdots c_kv_k.
+	\end{equation*}
+	But also 
+	\begin{equation*}
+		v = (c_1+s_1)v_1 + \cdots (c_k+s_k)v_k 
+	\end{equation*}
+	and there exists $i$ such that $s_i\neq 0$ so $c_i+s_i\neq c_i$. So the representation is not unique.
+\end{proof}
+
+\begin{remark}
+	Recall that a solution to $Ax=b$ is unique if and only if $Ax=0$ has only the trivial solution. By definition, $v\in V$ if and only if $Ax=v$ is consistent. Then uniqueness follows if and only if $Ax=0$ has the trivial solution, which is equivalent to the columns being linearly independent.
+\end{remark}
+
+\begin{proposition}
+	Suppose $v_1,\dots, v_k\in\mathbb{R}^n$ are linearly independent, and let $x\in\mathbb{R}^n$. Then $\{v_1,\dots,v_k,x\}$ is linearly independent if and only if $x\not\in\text{span}\{v_1,\dots,v_k\}$.
+\end{proposition}
+\begin{proof} 
+	It suffices to show that $\{v_1,\dots,v_k\}$ is linearly dependent if and only if $x\in\text{span}\{v_1,\dots,v_k\}$. 
+
+	($\Leftarrow$) Suppose $x\in\text{span}\{v_1,\dots,v_k\}$. Then $x=c_1v_1+\cdots + c_kv_k$ for some scalaras $c_1,\dots, c_k$. Then 
+	\begin{equation*}
+		c_1v_1+\cdots +c_kv_k - x = 0
+	\end{equation*}
+	which is a nontrivial linearly combination, hence $\{v_1,\dots,v_k,x\}$ is linearly dependent.
+
+	($\Rightarrow$) Suppose $\{v_1,\dots,v_k,x\}$ is linearly dependent. Then there exists a nontrivial collection $\{c_k\}$ such that 
+	\begin{equation*}
+		c_1v_1 + \cdots c_kv_k + cx = 0.
+	\end{equation*}
+	Note $c\neq 0$, for otherwise the $v_1,\dots,v_k$ would be linearly dependent which is a contradiction to our assumptions. Thus 
+	\begin{equation*}
+		x = \frac{-1}{c}(c_1v_1 + \cdots + c_kv_k)
+	\end{equation*}
+	and $x\in\text{span}\{v_1,\dots,v_k\}$.
+\end{proof}	
+
+\begin{definition}
+	Let $V\subset\mathbb{R}^n$ be a subspace. The set $\{v_1,\dots,v_k\}$ is a basis for $V$ if 
+	\begin{itemize}
+		\item $v_1,\dots, v_k$ span $V$, and 
+		\item $v_1,\dots, v_k$ are linearly independent.
+	\end{itemize}
+\end{definition}
+
+\begin{corollary}
+	Let $V\subset\mathbb{R}^n$ and $v_1,\dots,v_k\in V$. Then $\{v_i\}$ is a basis for $V$ if and only if every vector in $V$ can be written uniquely as a linear combination of $v_1,\dots,v_k$.
+\end{corollary}
+
+\begin{definition}
+	When we write 
+	\begin{equation*}
+		v= c_1v_1 + \cdots + c_kv_k,
+	\end{equation*}
+	we call the $\{c_i\}$ the \emph{coordinates} of $V$ with respect to the ordered basis $\{v_1,\dots,v_k\}$.
+\end{definition}
+
+\begin{corollary}
+	Let $A$ be $n\times n$. Then $A$ is nonsingular if and only if its column vectors form a basis for $\mathbb{R}^n$.
+\end{corollary}
+
+\begin{theorem}
+	Any nonzero subspace $V\subset\mathbb{R}^n$ has a basis.
+\end{theorem}
+
+\begin{proposition}
+	Let $V\subset\mathbb{R}^n$ be a subspace with a basis $\{v_1,\dots,v_k\}$. Let $w_1,\dots, w_l\in V$. If $l>k$, then $\{w_1,\dots, w_l\}$ is linearly dependent.
+\end{proposition}
+\begin{proof}
+	Each $w_j$ can be written uniquely as
+	\begin{equation*}
+		w_j=\sum_{i=1}^k a_{ij}v_i.
+	\end{equation*}
+	Now for any $c\in \mathbb{R}^l$, we have 
+	\begin{equation*}
+		\sum_{j=1}^l c_jw_j = \sum_{j=1}^l c_j (\sum_{i=1}^k c_{ij}v_i) = \sum_{i=1}^k (\sum_{j=1}^l a_{ij}c_j)v_i = 0.
+	\end{equation*}
+	Since $l>k$, there exists a nonzero $c$ such that $Ac=0$.
+\end{proof}
+
+\begin{theorem}
+	Let $V\subset\mathbb{R}^n$ be a subspace. Let $\{v_1,\dots,v_k\}$ and $\{w_1,\dots,w_l\}$ be two bases for $V$. Then $k=l$.
+\end{theorem}
+
+\begin{definition}
+	The \emph{dimension} of a subspace $V\subset\mathbb{R}^n$ is the number of vectors in any basis for $V$. By convention, $\dim\{0\}=0$.
+\end{definition}
+
+\begin{lemma}
+	Suppose $V,W$ are subspaces of $\mathbb{R}^n$ with the property that $W\subset V$. If $\dim(V)=\dim(W)$, then $V=W$.
+\end{lemma}
+
+\begin{proposition}
+	Let $V\subset\mathbb{R}^n$ be a $k$-dimensional subspace. Then any $k$ vectors that span $V$ must be linearly independent, and any $k$ linearly independent vectors must span $V$.
+\end{proposition}
+
+% linear independence, dimension }}}2
+
+% Implict/explicit solutions }}}1
+
+\section{appendix} % {{{1 
+
+Given a plane $n\cdot x=d$ and a point $x_0$, the vector $x_0-x$ is a vector from the plane to the point. To get the perpindicular distance, we project $x_0-x$ onto $n$:
+\begin{equation*}
+	\text{proj}_n(x_0-x)=\frac{n\cdot (x_0-x)}{n\cdot n}n = \frac{n\cdot x_0-d}{n\cdot n}n.
+\end{equation*}
+Taking signed magnitude, 
+\begin{equation*}
+	D = \left\| \frac{n\cdot x_0-d}{n\cdot n}n\right\| = \frac{n\cdot x_0-d}{n\cdot n}\|n\|=\frac{n\cdot x_0-d}{\|n\|}.
+\end{equation*}
+
+% appendix }}}1
+
+\end{document}

@@ -1,0 +1,1443 @@
+\documentclass{dcthesis}
+
+%This version of the thesis template has been updated for the February 2017 thesis guidelines provided by the School of Graduate and Advanced Studies by David Freund and Daryl DeFord.
+
+%  Some good options are draft and singlespacing, for drafts, and *final*,
+%for the final cut, and noheadings, for a printout without headings.  
+%You can also use the copyright option to add a copyright.  Note:
+%final will enforce a bunch of different options, like oneside, 12pt
+%and doublespacing, as well as make the margins correct.   Draft, has
+%larger margins and is appropriate for twosided printing.   
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%    IMPORTANT     %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%  Because dvips doesn't know/care about the page size of the dvi file
+%  its working on, and because its so important that the margins of
+%  your thesis are correct you have to make sure that you are using
+%  the command dvi -t letter *thesisnamehere*
+%
+%  If you are using a terminal this is straightforward, but if you are
+%  using a tex editing program it make take a little bit of searching
+%  before you figure out how to make this work. 
+%  
+%  Alternatively, you might consider compiling using pdflatex, which
+%  compiles straight to a PDF and doesn't have this problem.  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Some Defaults
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\school{Dartmouth College}{Hanover, New Hampshire}
+\degree{Bachelor of Arts}
+\field{Mathematics}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Additional Packages (add as desired)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fullpage}
+\usepackage{colonequals}
+\usepackage{tikz-cd}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{adjustbox}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue,citecolor=blue,linkcolor=blue}
+\usepackage{xcolor}
+\usepackage{mathtools}
+
+\usepackage{enumitem}
+
+\allowdisplaybreaks
+
+\renewcommand{\arraystretch}{1.5}
+\RequirePackage{multirow}
+\RequirePackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\RequirePackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\PoneC}{\mathbb{P}^1(\C)}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\Qbar}{\overline{\Q}}
+
+\numberwithin{equation}{section}
+
+\newcommand{\jv}[1]{{\color{red} \sf JV: [#1]}}
+\newcommand{\zc}[1]{{\color{blue} \sf ZC: [#1]}}
+
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator{\sep}{sep}
+\DeclareMathOperator{\PSL}{PSL}
+
+\newtheorem*{theorem*}{Theorem}
+
+
+%\usepackage{mkindex} %Uncomment if you would like to have an index. Compiling with an index takes more work than compiling without one. You will have to look up how to use the index package.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Formatting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Change or add to as desired. 
+%  These two commands make the first enumerations look like (a)
+%  And the second level like (i).  
+\renewcommand{\labelenumi}{(\alph{enumi})}
+\renewcommand{\labelenumii}{(\roman{enumii})}
+%  These commands make the section headings Boldface and not all
+%  caps. It also removes the chapter numbers  
+\renewcommand{\chaptermark}[1]{\markboth{{\sc #1}}{{\sc #1}}}
+\renewcommand{\sectionmark}[1]{\markright{{\sc \thesection\ #1}}}
+%  These commands have lowercase headings with chapter numbers. 
+%\renewcommand{\chaptermark}[1]{markboth{#1}{}}
+%\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}} 
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Theorem Declarations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A basic set of theorem declarations.  Add or remove as desired. 
+\numberwithin{equation}{section}
+
+\theoremstyle{definition}
+\newtheorem{proposition}[equation]{Proposition}
+\newtheorem{theorem}[equation]{Theorem}
+\newtheorem{lemma}[equation]{Lemma}
+\newtheorem{corollary}[equation]{Corollary}
+
+\newtheorem{definition}[equation]{Definition}
+\newtheorem{example}[equation]{Example}
+\newtheorem{alg}[equation]{Algorithm}
+
+\newtheorem{remark}[equation]{Remark}
+
+\newenvironment{enumalg}
+{\begin{enumerate}\renewcommand{\labelenumi}{\arabic{enumi}.}}
+{\end{enumerate}}
+
+\newcommand{\defi}[1]{\textsf{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Indicies
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%This is for an index.  More work is neede for a notation index
+%\makeindex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Macros
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Add your math macros here
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title Page Information
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Your personal info goes here!
+\title{Bounded, Adjointable Operators on Dense Subspaces of Separable Hilbert Spaces \vspace{0.5in}}
+\author{Varun Malladi \\ \ \\ Advisor \\ John D. Trout \\ \ }
+\date{May 2023}
+\field{Mathematics}
+\degree{Bachelor of Arts}
+%As an optional arguement to \committee you can specify the dean of graduate studies.
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Front end of thesis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frontmatter
+
+\newgeometry{left=1.5in,top=2.5in,bottom=1in,right=1in}
+\maketitle
+\restoregeometry
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Abstract
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%NOTE:  Must be less than 350 words.  
+\chapter*{Abstract}
+%This is so the abstract appears in the ToC
+\addcontentsline{toc}{section}{Abstract}
+
+Among inner product spaces, separable Hilbert spaces stand out in their amenability. In this paper, we begin considering how the theory of separable Hilbert spaces influences certain incomplete inner product spaces $W$, namely those that arise as proper dense subspaces of a separable Hilbert space $\mathcal{H}$. By the Riesz-Fr\'echet theorem, every bounded operator $T\in B(\mathcal{H})$ posseses an adjoint $T^\ast\in B(\mathcal{H})$. The existence of an adjoint is not gaurenteed for bounded operators on $W$; rather than studying the algebra $B(W)$ of bounded operators on $W$, we instead restrict our focus to the algebra $BA(W)$ of bounded, \textit{adjointable} operators on $W$. This is a $\ast$-subalgebra of $B(\mathcal{H})$, whose operator norm closure $\overline{BA(W)}\coloneqq C^\ast(W)$ is a $C^\ast$-subalgra of $B(\mathcal{H})$. The main focus of this paper is to determine wither $C^\ast(W)=B(\mathcal{H})$. We find this to be true when $W$ is the span of an orthonormal basis for $\mathcal{H}$, and provide an example where this is false when $W$ is not the span of an orthonormal basis.
+
+\chapter*{Acknowledgments}
+
+\addcontentsline{toc}{section}{Acknowledgments}
+
+I would like to thank my advisor, Professor Jody Trout. Through this experience I have become enchanted by operator algebras, captivated by analysis, and have fallen in love with math all over agin. I want to thank Professor Dana Williams, for his encouragement and for connecting me with Professor Trout. I would also like to thank Professor John Voight, for providing feedback on my initial ideas.
+
+Lastly, none of this would be possible without the support of my family and friends. Thank you.
+
+% When I took functional analysis with Professor Jody Trout two springs ago, I didn't think I would encounter the subject again as an undergraduate, much less write my senior thesis in it. It was a given, in my mind, that my thesis would also be in that area. Evidently it wasn't meant to be.
+
+% I would like to thank all the faculty that made this thesis possible. While we didn't end up working together, I appreciate the time Professors Asher Auel and John Voight took to discuss and provide feedback on my ideas. I'm also truly grateful for Professor Dana Williams's advice, advocacy, and, most importantly, kindness. He had a direct impact on my decision to write a thesis at all; I might not be doing mathematics anymore if not for his support.
+
+% Finally, I want to sincerely thank my advisor, Professor Jody Trout. When I first met with him to discuss possible research topics, I was far-removed from, and apprehensive about, functional analysis. Nonetheless, after every meeting with Professor Trout I walked away excited to look up some high-powered theory or nifty (counter)example. Together we posed a series of questions that really challenged me. When I flip through a book on operator algebras now, I'm completely inspired by the potential applications and extensions of this work. That's what research is all about, I think. Through this experience I have become enchanted by operators, captivated by analysis, and have fallen in love with math all over again. Thank you.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Table of Contents
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tableofcontents
+
+%Add a list of tables
+%\listoftables
+
+%Add a list of figures
+%\listoffigures
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Main Portion of Thesis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\mainmatter
+
+
+\chapter{Motivation and Summary}  
+
+\section{Introduction} % {{{1
+
+On a Hilbert space $\mathcal{H}$, every bounded operator $T\in B(\mathcal{H})$ posseses an adjoint $T^\ast\in B(\mathcal{H})$ by the Riesz-Fr\'echet theorem. This property is of great utility in the theory, and settings in which bounded operators fail to have an adjoint are generally more difficult to analyze. In these situations, we ask how much of the Hilbert space theory can be recovered by restricting our attention to bounded, adjointable operators, i.e. bounded operators whose adjoint exists. 
+
+In this paper, we will consider certain subspaces $W\subset\mathcal{H}$. It is precisely because $W$ may fail to be complete that its bounded operators may fail to have an adjoint. However, there are generalizations when, roughly speaking, completeness of an ``inner product'' space is not enough to ensure the existence of adjoints. For example, a \textit{Hilbert module} is a (complex) vector space which is complete in the norm defined by a certain sequilinear form taking values in a $C^\ast$-algebra (acting like a generalized inner product). It is already commonplace to restrict study from bounded operators to bounded, adjointable operators in this situation. Taking inspiration from this, our goal is to apply this perspective to proper dense subspaces of Hilbert spaces.
+
+Specifically, we will consider proper, dense subspaces of seperable Hilbert spaces. For the rest of this paper, unless otherwise specified, let $\mathcal{H}$ be a separable, infinite-dimensional, complex Hilbert space and $W\subset\mathcal{H}$ be a proper dense subspace. Let $B(\mathcal{H})$ denote the ($C^\ast$-algebra of) bounded operators on $\mathcal{H}$. We say call a bounded operator $T:W\to W$\textit{adjointable} on $W$ if there exists a bounded operator $T^\ast: W\to W$ such that $\langle Tx, y\rangle = \langle x, T^\ast y\rangle$ for all $x,y\in W$. The set of all bounded, adjointable operators on $W$ is denoted as $BA(W)$.  
+
+% Introduction }}}1
+
+\section{Summary of Results} % {{{1 
+
+We begin by showing compatibility between $BA(W)$ and $B(\mathcal{H})$, for example:
+\begin{enumerate}
+	\item Every operator $T\in BA(W)$ extends uniquely to an operator $\tilde{T}\in B(\mathcal{H})$.
+	\item Adjoints extend to adjoints: for $T\in BA(W)$, $\widetilde{T^\ast} = (\tilde{T})^\ast$.
+	\item Normal operators extend to normal operators: if $T\in BA(W)$ is normal, then $\tilde{T}\in B(\mathcal{H})$ is normal.
+\end{enumerate}
+
+We then consider how the spectra between $T$ and $\tilde{T}$ differ. By the spectrum of $T\in BA(W)$ we mean the operator spectrum $\sigma(T)$, which we define and show to be distinct from the algebraic spectrum $\sigma_{BA(W)}(T)$. For operators in $B(\mathcal{H})$, the operator spectrum and algebraic spectrum coincide. In both cases, we can partition the spectrum into the point, continuous, and residual spectra, i.e. $\sigma(T)=\sigma_p(T)\sqcup \sigma_c(T)\sqcup \sigma_r(T)$. The notion of approximate eigenvalue $\lambda\in\sigma_{ap}(T)$ also makes sense in both cases. We show the following:
+\begin{enumerate}
+	\item $\sigma(T)\supset\sigma(\tilde{T})$.
+	\item $\sigma_p(T)\subset\sigma_p(\tilde{T})$.
+	\item $\sigma_{ap}(T) = \sigma_{ap}(\tilde{T})$.
+	\item If $T$ is normal, then $\sigma_{ap}(T)=\sigma(\tilde{T})$.
+\end{enumerate}
+
+Next, we observe the non-functoriality of $BA(-)$: given a sequence of subspace inclusions $W_0\subset W\subset\mathcal{H}$, it is possible that
+\begin{enumerate}
+	\item $BA(W_0)\not\subset BA(W)$.
+	\item $BA(W)\not\subset BA(W_0)$.
+\end{enumerate}
+Nonetheless, the closure $C^\ast(W)$ for any dense subspace $W$ always contains the compact operators, i.e. $K(\mathcal{H})\subset C^\ast(W)$.
+
+Finally, we consider the question of whether $BA(W)\subset B(\mathcal{H})$ is dense. Our main results are as follows:
+\begin{enumerate}
+	\item If $W$ is the span of an orthonormal basis, then $BA(W)\subset B(\mathcal{H})$ is dense. 
+	\item As a counterexample of where this fails to hold when $W$ is not the span of an orthonormal basis, $BA(\ell^1)$ is not dense in $B(\ell^2)$.
+\end{enumerate}
+
+% Summary of Results }}}1
+
+\chapter{Linear and Algebraic Structure}
+
+\section{Linear Structure} % {{{1
+
+To begin, we recall the following:
+
+\begin{lemma}[]
+\label{rmk-on_basis}
+A countable orthonormal basis $\{e_n\}_{n\in\mathbb{N}}\subset\mathcal{H}$ is a collection of orthonormal vectors that is \emph{complete}. Completeness in this situation can be characterized in the following equivalent ways:
+	\begin{itemize}
+		\item for any vector $y$, if $\langle y, e_n\rangle = 0$ for all $n\in\mathbb{N}$, then $y=0$
+		\item $\text{span}\{e_\alpha\}_{n\in\mathbb{N}}$ is dense 
+	\end{itemize}
+	If $\mathcal{H}$ posseses a countable orthonormal basis, then  
+	\begin{equation*}
+		x=\sum_{n=1}^\infty\langle x, e_n\rangle e_n.
+	\end{equation*}
+	for any $x\in\mathcal{H}$. 
+\end{lemma}
+\begin{proof}
+	See, for example, Theorem 4.14 and Theorem 4.15 in \cite{young_1988}.
+\end{proof}
+
+\begin{lemma}
+	A Hilbert space is separable (in the topological sense) if and only if it has a countable, orthonormal basis.
+\end{lemma}
+\begin{proof}
+	See, for example, Chapter 6.4 Theorem 9' in \cite{lax_2002}.
+\end{proof}
+
+The following allows us to consider such a basis to be contained in $W$:
+\begin{proposition}
+\label{prop_en_in_w}
+	There exists a countable orthonormal basis for $\mathcal{H}$ contained in $W$.
+\end{proposition}
+\begin{proof}
+	Since $\mathcal{H}$ is separable (in the topological sense), and $W\subset\mathcal{H}$ is a proper dense subset, it follows that $W$ is separable. By definition, this means that $W$ contains a countable dense subset $\{a_n\}\subset W$. By applying the Gram-Schmidt process to the linearly independent elements in this subset, we obtain an orthonormal sequence $\{e_n\}\subset W$. Now
+	\begin{equation*}
+		\text{span}\{a_n\} = \text{span}\{e_n\} \subset W,
+	\end{equation*}
+	and by taking closures we see that $\text{span}\{e_n\}$ is dense in $\mathcal{H}$. By Lemma \ref{rmk-on_basis}, this shows that $\{e_n\}$ is a countable orthonormal basis. 
+\end{proof}
+
+We now state basic facts in Hilbert space theory which still hold on dense subspaces.
+
+\begin{proposition}
+\label{prop_im_perp_ker_ast}
+	Let $T\in BA(W)$. Then $\text{Im}(T)^\perp = \text{Ker}(T^\ast)$.	
+\end{proposition}
+\begin{proof}
+	First we show $\text{Im}(T)^\perp \subset \text{Ker}(T^\ast)$. Let $y\in\text{Im}(T)^\perp$. Then, for any $x\in W$, we have $\langle T(x), y \rangle = 0$. Then $\langle x, T^\ast (y)\rangle = \langle T(x), y \rangle = 0$. By the nondegeneracy of the inner product, it follows that $T^\ast(y)=0$. Hence $y\in\text{Ker}(T^\ast)$.
+
+	Showing $\text{Ker}(T^\ast)\subset\text{Im}(T)^\perp$ is analagous. Let $y\in\text{Ker}(T^\ast)$. Then $\langle x, T^\ast(y) \rangle = 0$ for all $x\in W$, and hence $\langle T(x), y \rangle = 0$ for all $x\in W$, which implies $y\in\text{Im}(T)^\perp$.
+\end{proof}
+
+\begin{proposition}
+\label{prop_normal_same_kernel}
+	If $T\in BA(W)$ is normal, then $T$ and $T^\ast$ have the same kernel.
+\end{proposition}
+\begin{proof}
+	We will show $\text{Ker}(T)\subset\text{Ker}(T^\ast)$, and the other direction is completely analagous. Let $x\in\text{Ker}(T)$. Then $T(x) = 0$, and since $T^\ast T(x)= TT^\ast(x)=0$, it follows that $T^\ast(x)\in\text{Ker}(T)$.
+
+	Now let $y\in W$. We claim that $\langle y, T^\ast(x) \rangle=0$, and hence $T^\ast(x)=0$ implying $x\in \text{Ker}(T^\ast)$. To prove the claim, first suppose $y\in\text{Ker}(T)$. Then $\langle y, T^\ast(x) \rangle = \langle T(y), x \rangle = 0$. On the other hand, suppose $y\not\in\text{Ker}(T)$. Recall that the kernel of a continuous linear operator on a normed vector space is closed, so $\text{Ker}(T)$ is closed. But then $y$ is orthogonal to $\text{Ker}(T)$, and since $T^\ast(x)\in\text{Ker}(T)$ by the previous paragraph, it follows that $\langle y, T^\ast(x) \rangle = 0$. 
+\end{proof}
+
+% }}}1
+
+\section{The Algebra \texorpdfstring{$BA(W)$}{BA(W)}} % {{{1
+
+Recall that the set $B(\mathcal{H})$ of bounded linear operators $\mathcal{H}\to\mathcal{H}$ naturally posseses the structure of a $C^\ast$-algebra by taking the $\ast$-operation to be ``taking adjoints'' and the topology to be the operator norm topology. Furthermore, every closed subalgebra of $B(\mathcal{H})$ which is also closed under adjoints is also a $C^\ast$-algebra (see the remarks preceding Theorem 4.27 in \cite{douglas_1998}). 
+
+\begin{proposition}
+\label{prop_extension}
+	Any $T\in B(W)$ has a unique extension $\tilde{T}\in B(\mathcal{H})$. Moreover, $\|T\|=\|\tilde{T}\|$.
+\end{proposition}
+\begin{proof}
+	We begin by defining this extension. Let $x\in\mathcal{H}$. Since $W\subset\mathcal{H}$ is dense, there exists a sequence $\{x_n\}$ converging (in $\mathcal{H}$) to $x$. We claim $\{T(x_n)\}$ is also a convergent sequence. To see this, note that, for all $n,m>N$,
+	\begin{equation*}
+	\label{prop_3_1_cauchy}
+		\|T(x_n) - T(x_m)\|=\|T(x_n-x_m)\|\leq\|T\|\|x_n-x_m\|,
+	\end{equation*}
+	which shows that $\{T(x_n)\}$ is Cauchy, hence convergent by the completeness of Hilbert spaces. Finally, define 
+	\begin{equation*}
+		\tilde{T}(x) = \lim_{n\to\infty}T(x_n).
+	\end{equation*}
+	We now verify the validity of this definition.
+
+	\textit{Well-defined:} Write $y=\lim_{n\to\infty} T(x_n)$. We need to show that if $\{x_n'\}\subset W$ is another sequence converging to $x$, then $\lim_{n\to\infty}T(x_n')=y$. Since $x_n-x_n'\to 0$, we know from \ref{prop_3_1_cauchy} that $\|T(x_n)-T(x_n')\|\to 0$, and so $T(x_n)-T(x_n')\to 0$. This implies $\lim_{n\to\infty}T(x_n')=\lim_{n\to\infty}T(x_n)=y$ as desired.
+
+	\textit{An extension:} Given $v\in W$, we wish to show $\tilde{T}(v)=T(v)$. But this is immediate if we just take the sequence $\{x_n\}$ in the definition above to be the constant sequence $\{v_n\}$, where each $v_n=v$.
+
+	\textit{Linear:} Follows from the linearity of limits.
+
+	\textit{Bounded:} To see this, calculate
+	\begin{align*}
+		\|\tilde{T}(x)\| =& \|\lim_{n\to\infty}T(x_n)\| = \lim_{n\to\infty} \|T(x_n)\| \\
+		\leq& \lim_{n\to\infty} \|T\|\|x_n\| = \|T\|\|\lim_{n\to\infty} x_n\| \\
+		=& \|T\|\|x\| < \infty,
+	\end{align*}
+	where we have repeatedly used the continuity of the norm.
+
+	\textit{Norm preserving:} The above calculation shows that $\|\tilde{T}\|\leq \|T\|$. In detail, let 
+	\begin{equation*}
+		C=\{c\geq 0 : \|\tilde{T}(x)\|\leq c\|x\| \ \forall x\in\mathcal{H}\}.
+	\end{equation*} 
+	Then $\|T\|\in C$, but $\tilde{T}=\inf(C)$. Now, let 
+	\begin{equation*}
+		C'=\{c\geq 0 : \|T(v)\|\leq c\|v\| \ \forall v\in W\}.
+	\end{equation*}
+	Since $\tilde{T}$ is an extension of $T$, $C\subset C'$. Thus $\|T\|\leq \|\tilde{T}\|$, since 
+	\begin{equation*}
+		\|T\|=\inf(C')\leq \inf(C) = \|\tilde{T}\|.
+	\end{equation*}
+	Combining both inequalities gives us $\|T\|=\|\tilde{T}\|$.
+\end{proof}
+
+\begin{corollary}
+	The $C^\ast$-algebra structure on $B(\mathcal{H})$ determines a natural (unital) $\ast$-algebra structure on $BA(W)$.
+\end{corollary}
+
+\begin{corollary}
+	The completion $C^\ast(W)\coloneqq \overline{BA(W)}\subset B(\mathcal{H})$ is a $C^\ast$-algebra.
+\end{corollary}
+
+\begin{proposition}[properties of extensions]
+\label{prop_extension_properties}
+	For $T\in B(W)$, let $T'$ be its unique extension to $\mathcal{H}$. Then:
+	\begin{enumerate}
+		\item $(T-\lambda I)' = T' - \lambda I$.
+		\item $(T^\ast)' = (T')^\ast$.
+		\item If $T^{-1}\in B(W)$, then $(T^{-1})' = (T')^{-1}$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\hfill
+	\begin{enumerate}
+		\item Let $x\in\mathcal{H}$ and $\{w_n\}\subset W$ a sequence converging to $x$. Then 
+			\begin{equation*}
+				(T-\lambda I)'(x) = \lim_{n\to\infty} (T-\lambda I)(w_n) = \lim_{n\to\infty} (T(w_n) - \lambda w_n) = T'(x) - \lambda x = (T'-\lambda I)(x).
+			\end{equation*}
+		\item It suffices to show that for any $x,y\in\mathcal{H}$, we have
+			\begin{equation*}
+				\langle T'(x), y \rangle = \langle x, (T^\ast)'(y) \rangle.
+			\end{equation*}
+			Let $\{x_n\}, \{y_n\}\subset W$ be sequences converging to $x$ and $y$, respectively. Then 
+			\begin{align*}
+				\langle T'(x), y \rangle =& \langle \lim_{n\to\infty}T(x_n), \lim_{m\to\infty}y_m \rangle \\
+				=& \lim_{n\to\infty} \lim_{m\to\infty} \langle T(x_n), y_m \rangle \\
+				=& \lim_{n\to\infty} \lim_{m\to\infty} \langle x_n, T^\ast(y_m) \rangle \\
+				=& \langle \lim_{n\to\infty} x_n, \lim_{m\to\infty} T^\ast(y_m) \rangle \\
+				=& \langle x, (T^\ast)'(y) \rangle.
+			\end{align*}
+		\item Let $x\in \mathcal{H}$, and let $\{w_n\}\subset W$ be a sequence converging to $x$. Then 
+			\begin{equation*}
+				T'((T^{-1})'(x))=T'(\lim_{n\to\infty}T^{-1}(w_n))=\lim_{n\to\infty} T'(T^{-1}(w_n)).
+			\end{equation*}
+			Since $T^{-1}\in B(W)$ and $w_n\in W$, we have that $T^{-1}(w_n)\in W$ and so $T'(T^{-1}(w_n))=T(T^{-1}(w_n))= w_n.$. Hence 
+			\begin{equation*}
+				T'((T^{-1})'(x)) = \lim_{n\to\infty} w_n = x.
+			\end{equation*}
+			Conversely, a similar argument shows $(T^{-1})'(T'(x)) = x$, and so $(T^{-1})' = (T')^{-1}$.
+	\end{enumerate}
+\end{proof}
+
+\begin{proposition}
+	If $T\in BA(W)$ is normal, then its extension $T'\in B(\mathcal{H})$ is normal.
+\end{proposition}
+\begin{proof}
+	We need to show that for any $x\in\mathcal{H}$, we have an equality $T'((T')^\ast(x))=(T')^\ast(T'(x))$. By Proposition \ref{prop_extension_properties}, this is equivalent to showing $T'((T^\ast)') = (T^\ast)'(T'(x))$. Let $\{w_n\}\subset W$ be a sequence converging to $x$. Then 
+	\begin{align*}
+		T'((T^\ast)'(x)) =& T'(\lim_{n\to\infty}T^\ast(w_n)) = \lim_{n\to\infty}T'T^\ast(w_n) \\
+		=& \lim_{n\to\infty}TT^\ast(w_n) = \lim_{n\to\infty}T^\ast T(w_n) \\
+		=& \lim_{n\to\infty} (T^\ast)'( T'(w_n) ) = (T^\ast)'(\lim_{n\to\infty}T'(w_n)) \\
+		=& (T^\ast)'(T'(x)).
+	\end{align*}
+\end{proof}
+
+% the algebra BA(W) }}}1
+
+\chapter{Spectral Theory}
+
+% {{{1
+
+\section{Introduction} % {{{2
+
+We introduce spectral theory here in the more general context of (not necessarily complete) normed vector spaces $X$. We write $I$ for the identity operator.
+
+Let $U\subset X$ , and let $T:U \to X$ be a linear operator.
+
+\begin{definition} % regular values
+\label{def_regular}
+	$\lambda\in\mathbb{C}$ is called \emph{regular} if the following conditions hold:
+	\begin{enumerate}[label=R\arabic*.,ref=R\arabic*]
+		\item\label{def_regular_exists} $(T-\lambda I)^{-1}$ exists.
+		\item\label{def_regular_bounded} $(T-\lambda I)^{-1}$ is bounded.
+		\item\label{def_regular_dense} $(T-\lambda I)^{-1}$ has a dense (in $X$) domain, i.e. $\text{Im}(T-\lambda I)$ is dense in $X$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition} % resolvent set
+\label{def_resolvent_set}
+	The set of regular values is called the \emph{resolvent set} of $T$, and is denoted $\rho(T)$.
+\end{definition}
+
+\begin{definition} % resolvent function
+	The function $R_T$ mapping $\lambda \mapsto (T-\lambda I)^{-1}$ is callend the \emph{resolvent function}.
+\end{definition}
+
+\begin{definition} % spectrum
+\label{def_spectrum}
+	The \emph{spectrum} of $T$ is defined as $\sigma(T) \coloneqq \mathbb{C} \setminus \rho(T)$. 
+\end{definition}
+
+\begin{remark}
+\label{rmk_banach_space_spectrum_def_equivalent}
+	What we have defined above is the ``operator spectrum'' as presented in, for example, Chapter 7.2 in \cite{kreyszig_1989}. It is apparently defined specifically with regards to a linear operator, and makes no reference to the algebra to which that operator belongs. On the other hand, for a (complex) unital algebra $A$ we can define the ``algebraic spectrum'' of an element $a\in A$:
+	\begin{equation*}
+		\sigma_A(a) \coloneqq \{\lambda\in\mathbb{C} : (x-\lambda 1_A)^{-1}\not\in A\},
+	\end{equation*}
+	i.e. the set of $\lambda\in\mathbb{C}$ for which $x-\lambda 1_A$ is not invertible in $A$.
+
+	If $X$ is a Banach space, then the operator spectrum of a bounded linear operator $T:X\to X$ coincides with the algebraic spectrum of $T\in B(X)$. 
+
+	First suppose $\lambda$ is regular. Then $(T-\lambda I)^{-1}$ extends uniquely to a bounded linear operator $X\to X$ by Proposition \ref{prop_extension}. Hence $(T-\lambda I)^{-1}\in B(X)$ and $\lambda\not\in\sigma_{B(X)}(T)$ according to the definition above. Conversely, suppose $\lambda$ is such that $(T-\lambda I)^{-1}\in B(X)$. Then immediately $\lambda$ is regular.
+
+	Also for Banach spaces, the resolvent set is sometimes defined as 
+	\begin{equation*}
+		\rho(T) = \{ \lambda\in\mathbb{C} : (T-\lambda 1) \text{ is bijective} \}.
+	\end{equation*}
+	This is equivalent to Definition \ref{def_resolvent_set}. To see this, first suppose $T-\lambda I$ is bijective. Then by the bounded inverse theorem (e.g. 4.12-2 in \cite{kreyszig_1989}), we get that $(T-\lambda 1)^{-1}$ is also bounded. Thus $\lambda$ is regular. Conversely, suppose $\lambda$ is regular. Then as above, $(T-\lambda I)^{-1}$ extends uniquely to a bounded linear operator $X\to X$, so in particular $(T-\lambda 1)$ is bijective.
+\end{remark}
+
+\begin{remark}
+	For non-Banach spaces, the algebraic and operator spectra may differ. Consider the Hilbert space $\mathcal{H}=L^2[a,b]$ where $0<a<b$, and consider the proper dense subset of polynomials $P[a,b]$ (it is dense by the Weierstrass approximation theorem, see e.g. \cite{moragues}). 
+
+	Consider the self adjoint multiplication operator $T=M_x\in BA(W)\subset B(\mathcal{H})$. Now $T^{-1}=M_{1/x}\in C[a,b]\subset \mathcal{H}$, however $T^{-1}\not\in BA(W)$ since, for example, $\frac{1}{x}\cdot 1 = \frac{1}{x}$ is not a polynomial, hence $T^{-1}$ does not preserve $W$. This shows that $0\in\sigma_{BA(W)}(T)$. But we claim $0\not\in\sigma(T)$ with respect to $W$. It suffices to show 0 is regular (Definition \ref{def_regular}). We have already shown $T^{-1}$ exists, and it is bounded because it is a continuous function with compact domain. Its range is dense by the M\"{u}ntz-Sz\'{a}sz theorem (see again \cite{moragues}). Thus $0$ is regular, hence $0\not\in\sigma(T)$. 
+
+	In fact, for analagous reasons as the case $\lambda=0$, we can see that $\sigma_{BA(W)}(T)=\mathbb{C}$. Also, $\lambda$ fails to be a regular value of $T\in BA(W)$ if and only if $T-\lambda I$ is not invertible, which occurs only when $\lambda\in[a,b]$. The same is true regarding $T\in B(\mathcal{H})$, and so $\sigma(T)=[a,b]$ on both $BA(W)$ and $B(\mathcal{H})$.
+\end{remark}
+
+The spectrum of a linear operator $T$ can be decomposed as follows:
+
+\begin{center}
+\begin{tabular}{ | C{1cm} | C{1cm} | C{1cm} || C{2.5cm} |  }
+	\hline
+	\multicolumn{3}{|c||}{property of $\lambda$}& \multirow{2}{=}{\centering $\lambda$ belongs to:} \\
+	\cline{1-3}
+	\ref{def_regular_exists} & \ref{def_regular_bounded} & \ref{def_regular_dense} & {} \\
+	\hline
+	\xmark & \xmark & \xmark & $\sigma_p(T)$ \\
+	\hline
+	\cmark & \xmark & \cmark & $\sigma_c(T)$ \\
+	\hline
+	\cmark & \cmark & \xmark & \multirow{2}{=}{\centering $\sigma_r(T)$} \\
+	\cmark & \xmark & \xmark & \\
+	\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+	\ref{def_regular_bounded} and \ref{def_regular_dense} can only be satisfied if \ref{def_regular_exists} is satisfied.
+\end{remark}
+
+\begin{definition}
+	$\sigma(T)$ can be decomposed into the following disjoint sets:
+	\begin{itemize}
+		\item the \emph{point spectrum}, denoted $\sigma_p(T)$.
+		\item the \emph{continuous spectrum}, denoted $\sigma_c(T)$.
+		\item the \emph{residual spectrum}, denoted $\sigma_r(T)$.
+	\end{itemize}
+\end{definition}
+
+\begin{definition} % approximate eigenvalues
+	Let $X$ be a Banach space, and $T\in B(X)$. A scalar $\lambda$ is called an \emph{approximate eigenvalue} of $T$ if $T-\lambda I$ is not bounded below, i.e. there exists a sequence of unit vectors $(x_n)$ such that $Tx_n-\lambda x_n \to 0$. Such a sequence $(x_n)$ is called a \emph{Weyl sequence}. The set of approximate eigenvalues of $T$ is denoted $\sigma_{\text{ap}}(T)$.
+\end{definition}
+
+\begin{proposition}
+	Approximate eigenvalue lie in the spectrum. 
+\end{proposition}
+\begin{proof}
+	Let $\lambda$ be an approximate eigenvalue, and $(x_n)$ a Weyl sequence. If $T-\lambda I$ is not injective, then $\lambda\in\sigma_p(T)\subset\sigma(T)$. So it suffices to consider the case when $T-\lambda I$ is injective. In that case, suppose $(T-\lambda I)^{-1}$ is bounded (hence continuous). But then $\lim_{n\to\infty} \|x_n\| = 1$ contradicts the computation
+	\begin{align*}
+		\lim_{n\to\infty} x_n 
+		=& \lim_{n\to\infty} (T-\lambda I)^{-1}(T-\lambda I)x_n \\
+		=& (T-\lambda I)^{-1}\lim_{n\to\infty} (T-\lambda I)x_n \\
+		=& (T - \lambda I)^{-1} (0) = 0.
+	\end{align*}
+	In other words, if $\lambda$ satisfies \ref{def_regular_exists} then it fails \ref{def_regular_bounded}. Thus $\lambda\in\sigma(T)$.
+\end{proof}
+
+\begin{corollary}
+	$\sigma_p(T) \cup \sigma_c(T) \subset \sigma_{\text{ap}}(T)$.
+\end{corollary}
+
+\begin{remark}
+\label{rmk_eigenvalues_are_approximate}
+	Every eigenvalue is an approximate eigenvalue by considering the Weyl sequence to be constant, with each term equal to the (normalization of) a chosen eigenvector.
+\end{remark}
+
+\begin{remark}
+	It is still possible for approximate eigenvalues to be in the residual spectrum. Consider $\ell^2$, and the operator
+\begin{equation*}
+	T(x_1,x_2,\dots)=(0,x_1,\frac{x_2}{2},\frac{x_3}{3},\dots).
+\end{equation*}
+We claim $0\in\sigma_r(T)\cap\sigma_{ap}(T)$. 
+
+	First let us show that it is even in the spectrum. That is, for $\lambda=0$, $T-\lambda I=T$ is not invertible. We can explicitly determine that
+\begin{equation*}
+	T^{-1}(x_1,x_2,\dots) = (x_2, 2x_3, 3x_4 \dots).
+\end{equation*}
+This is not bounded, as $\|T^{-1}(e_n)\| = n-1 \to \infty$.
+
+	Next we will show $0\in\sigma_r(T)$. We need to show that $0\not\in\sigma_p(T)$ and $0\not\in\sigma_c(T)$. By inspecting its definition we can see that $T$ is injective, so $0\not\in\sigma_p(T)$. Also, $\text{Im}(T)\subset\ell^2$ is not dense. To see this, consider the element $e_1\not\in\text{Im}(T)$. For any $x\in\text{Im}(T)$, we have that $|x-e_1|\geq 1$, and so no sequence in $\text{Im}(T)$ converges to $e_1$. Thus $0\not\in\sigma_c(T)$. 
+
+	Finally, we will show $0\in\sigma_{ap}(T)$. We calculate that 
+	\begin{equation*}
+		\|T(e_n) - 0\cdot e_n\| = \|T(e_n)\| = \frac{1}{n}\to 0,
+	\end{equation*}
+	and so $\{e_n\}$ is a Weyl sequence for $\lambda=0$.
+\end{remark}
+
+% intro }}}2
+
+\section{On Dense Subspaces} % {{{2
+
+Let $\mathcal{H}$ be a separable Hilbert space, and $W\subset\mathcal{H}$ a proper dense subspace. Let $T\in BA(W)$, and let $\tilde{T}\in B(\mathcal{H})$ be its unique extension.
+
+The following are some preliminary observations, some of which will be strengthened in the following sections.
+\begin{proposition}
+\label{prop_basic_spectrum_inclusions}
+	\hfill
+	\begin{enumerate}
+		\item $\sigma(T)\supset\sigma(\tilde{T})$.
+		\item $\sigma_p(T)\subset \sigma_p(\tilde{T})$.
+		\item $\sigma_{ap}(T)\subset\sigma_{ap}(\tilde{T})$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\hfill
+	\begin{enumerate}
+		\item We show the contrapositive. Suppose $\lambda$ is a regular value of $T$. Then $(T-\lambda I)^{-1}$ exists, is bounded, and its domain is a dense subset of $W$, hence a dense subset of $\mathcal{H}$. Thus by Proposition \ref{prop_extension_properties} its unique extension to $H$ is also bounded, and an inverse for $\tilde{T}-\lambda I$. Thus $\lambda$ is a regular value of $\tilde{T}$.  
+		\item If $\lambda\in\sigma_p(T)$ then $T-\lambda I$ is not injective, i.e. there exists $w\in W$ such that $T(w)=\lambda w$. Since $\tilde{T}$ is an extension of $T$, it must also be the case that $\tilde{T}(w)=\lambda w$, i.e. $\tilde{T}-\lambda I$ is not injective. Hence $\lambda\in\sigma_p(\tilde{T})$.
+		\item A Weyl sequence in $W$ for $T$ will also be a Weyl sequence for $\tilde{T}$.
+	\end{enumerate}
+\end{proof}
+
+\begin{remark}
+	An operator $T\in BA(W)$ may be injective but have non-injective extension $\text{T}\in B(\mathcal{H})$. Consider the Hilbert space $\ell^2$, and let $\{e_i\}$ denote the standard orthonormal basis. Consider the element 
+	\begin{equation*}
+		x_1 = (1, \frac{1}{2}, \frac{1}{3}, \dots) \in \ell^2.
+	\end{equation*}
+	Let $W = \text{span}\{x_1\cup \{e_i\}_{i\geq 2}\}$. We claim $W\subset \ell^2$ is dense. It suffices to show there is a sequence in $W$ converging (in $\ell^2$) to $e_1$. Note that 
+	\begin{equation*}
+		\left( x_1 - \sum_{k=2}^{i}\frac{1}{k}e_k \right)_i = \left( x_1, x_1 - \frac{1}{2}e_2, x_1 - \frac{1}{2}e_2 - \frac{1}{3}e_3, \dots \right)
+	\end{equation*}
+	is such a sequence. Now consider the projection operator 
+	\begin{equation*}
+		P(a_1,a_2,a_3,\dots) = (0, a_2, a_3, \dots).
+	\end{equation*}
+	Then $\text{ker}(P)=\text{span}\{e_1\}$, which does not lie inside $W$.
+\end{remark}
+
+In the following subsections we turn the the question of \emph{spectral permanence}. A deep result of this kind is the following:
+
+\begin{theorem}
+	Let $A\subset B$ be unital $C^\ast$-algebras with the same unit, and let $x\in A$. Then $\sigma_A(x)=\sigma_B(x)$.
+\end{theorem}
+\begin{proof}
+	See Corollary 3.10 in \cite{wilde_cstar}.
+\end{proof}
+
+\begin{remark}
+	Because of this, even if $C^\ast(W)\neq B(\mathcal{H})$, we at least have ``algebraic'' spectral permanence. One should be cautious, however, to note that the algebras in the above theorem have the same unit. A situation where this may not be the case is if we consider the unitization of a $C^\ast$-subalgebra. For example, the compact operators $K(\mathcal{H})$ are a $C^\ast$-subalgebra of $B(\mathcal{H})$ (see, for example, Example 3.3.10 in \cite{wilde_cstar}), the subalgebra contains a unit if and only if $\mathcal{H}$ is finite-dimensional. We may however formally attach a unit in a minimal way while retaining the $C^\ast$-structure: this process is called unitization. It is not a priori clear though, that this unit is the same unit in $B(\mathcal{H})$. This turns out to be the case, however, for example because the multiplier algebra of $K(\mathcal{H})$ is $B(\mathcal{H})$ (e.g. Example 13.2.4.2 in \cite{farah_2019}).
+\end{remark}
+
+% dense subspaces }}}2
+
+\section{Permanence of Approximate Eigenvalues} % {{{2
+
+\begin{proposition}
+\label{prop_weyl_sequence_in_dense}
+	Consider an operator $T\in B(\mathcal{H})$. For any $\lambda\in\sigma_{ap}(T)$, there exists a Weyl sequence for $\lambda$ completely contained in $W$.
+\end{proposition}
+\begin{proof}
+	By assumption, there exists a Weyl sequence for $\lambda$ in $\mathcal{H}$, call it $\{x_n\}$. Since $W\subset\mathcal{H}$ is dense, we can construct a sequence $\{w_n'\}$ such that $\|x_n-w_n'\|<\frac{1}{n}$. Since $\|x_n-w_n'\|\to 0$, and $\|1-\|w_n'\|\|\leq\|x_n-w_n'\|$ (by the reverse triangle inequality), it follows that $\|w_n'\|\to 1$.
+
+	We claim the normalization of $\{w_n'\}$, which we will write as $\{w_n\}$, is a Weyl sequence for $\lambda$. To see this, let $k>0$ be such that $\|(T-\lambda I)(x)\|\leq k\|x\|$ for all $x$ (such a $k$ exists since $T-\lambda I$ is bounded). Then:
+	\begin{align*}
+		\|(T-\lambda I)(w_n)\| =& \frac{1}{\|w_n'\|}\|(T-\lambda I)(w_n')\| \\
+		\leq& \frac{1}{\|w_n'\|}(\|(T-\lambda I)(w_n' - a_n)\| + \|(T-\lambda I)(a_n)\|) \\
+		\leq&  \frac{1}{\|w_n'\|}(k\|w_n'-a_n\| + \|(T-\lambda I)(a_n)\|) \\
+		<& \frac{1}{\|w_n'\|}\left(\frac{k}{n}+\|(T-\lambda I)(a_n)\|\right).	
+	\end{align*}
+	Taking limits, we see that $\|(T-\lambda I)(w_n)\| \to 0$ as desired.
+\end{proof}
+
+\begin{corollary}
+\label{cor_approximate_same}
+	Consider an operator $T\in BA(W)$ and its unique extension $\tilde{T}\in B(\mathcal{H})$. Then $\sigma_{ap}(T)=\sigma_{ap}(\tilde{T})$
+\end{corollary}
+\begin{proof}
+	Proposition \ref{prop_weyl_sequence_in_dense} implies that $\sigma_{ap}(\tilde{T})\subset\sigma_{ap}(T)$. The reverse inclusion is discussed in Proposition \ref{prop_basic_spectrum_inclusions}.
+\end{proof}
+
+% approximate eigenvalues }}}2
+
+\section{Spectral Permanence for Normal Operators} % {{{2
+
+\begin{proposition}
+\label{prop_normal_residual_empty}
+	If $T\in B(\mathcal{H})$ is normal, then $\sigma_r(T)=\emptyset$.
+\end{proposition}
+\begin{proof}
+	It suffices to show that if $\lambda\in \sigma(T)\setminus\sigma_p(T)$, then $\lambda\in\sigma_c(T)$. So let $\lambda\in \sigma(T)\setminus\sigma_p(T)$.
+
+	By Remark \ref{rmk_banach_space_spectrum_def_equivalent}, $T-\lambda I$ is injective (yet fails to be surjective). It suffices to show that the $E\coloneqq \text{Im}(T-\lambda I)$ is dense. Suppose otherwise. 
+
+	We first observe that there must exist a nonzero $z\in E^\perp$. To see this, note that $\overline{E}\neq \mathcal{H}$ by assumption that $E$ is not dense. We then recall the fact from Hilbert spaces that any $x\in\mathcal{H}$ can be expressed as $x=y+z$ for $y\in \overline{E}$ and $z\in \overline{E}^\perp$. Thus $\overline{E}^\perp$ is nonempty, and so $E^\perp \supset \overline{E}^\perp$ is also nonempty.
+
+	Next, we claim that
+	\begin{equation*}
+		E^\perp = \text{Ker}(T^\ast - \overline{\lambda}I)= \text{Ker}(T-\lambda I).
+	\end{equation*}
+	This is because of the following facts:
+	\begin{itemize}
+		\item $(\text{Im}(T))^\perp = \text{Ker}(T^\ast)$ (Proposition \ref{prop_im_perp_ker_ast})
+		\item $\text{Ker}(T)=\text{Ker}(T^\ast)$ (Proposition \ref{prop_normal_same_kernel})
+	\end{itemize}
+
+	All together, we have asserted the existence of a nonzero $z\in\text{Ker}(T-\lambda I)$, contradicting the fact that $T$ is injective.
+\end{proof}
+
+\begin{corollary}
+\label{cor_normal_spectrum_is_approx}
+	For a normal operator $T\in B(\mathcal{H})$, $\sigma(T)=\sigma_{ap}(T)$.
+\end{corollary}
+
+\begin{corollary}
+	Consider an operator $T\in BA(W)$ and its unique extension $\tilde{T}\in B(\mathcal{H})$. If $\tilde{T}$ is normal, then $\sigma_{ap}(T)=\sigma(\tilde{T})$.
+\end{corollary}
+\begin{proof}
+	By Corollary \ref{cor_normal_spectrum_is_approx}, we have that $\sigma(\tilde{T})=\sigma_{ap}(\tilde{T})$. Then Corollary \ref{cor_approximate_same} implies $\sigma(\tilde{T}) = \sigma_{ap}(T)$.
+\end{proof}
+
+% spectrum of normal operator }}}2
+
+% spectral theory }}}1
+
+\chapter{Approximation Results}
+
+\section{Approximation of Compact Operators} % {{{1
+
+% intro {{{2
+
+Again let $\mathcal{H}$ be a separable Hilbert space, and $W\subset\mathcal{H}$ a proper dense subset. Whenever mentioned, a countable orthonormal basis for $\mathcal{H}$ will be assumed to lie in $W$ (according to Proposition \ref{prop_en_in_w}, we lose no generality).  
+
+The main goal of this section is to show that every compact operator $T\in\mathcal{H}$ can be approximated by operators in $BA(W)$, i.e. $T$ can be expressed as a limit of operators in $BA(W)$ with respect to the operator norm. Yet another way of viewing this is that $K(\mathcal{H})$ is an ideal of $C^\ast(W)$.
+
+\begin{definition}
+\label{def_compact_operator}
+	An operator $T$ called \emph{compact} if, for every bounded sequence $\{x_n\}\subset\mathcal{H}$, the sequence $\{T(x_n)\}$ contains a convergent subsequence.
+\end{definition}
+
+\begin{proposition}
+\label{prop_equiv_compact_defs}
+	The following are equivalent:
+	\begin{enumerate}
+		\item $T$ is compact (in the sense of Definition \ref{def_compact_operator}).
+		\item $T(B(0,1))$ is relatively compact, where $B(0,1)$ is the unit ball. In other words, $\overline{T(B(0,1))}$ is compact.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	See Theorem 8.1-3 in \cite{kreyszig_1989}.
+\end{proof}
+
+We will write $K(\mathcal{H})$ for the class of compact operators on $\mathcal{H}$.
+
+\begin{proposition}
+\label{prop_compact_ideal}
+	$K(\mathcal{H})$ is the unique proper closed 2-sided ideal of $B(\mathcal{H})$. It is also a $\ast$-ideal.
+\end{proposition}
+\begin{proof}
+	See Corollary 5.11 in \cite{douglas_1998}.
+\end{proof}
+
+% intro }}}2
+
+\subsection{Finite Rank Operators} % {{{2
+
+\begin{definition}
+	An operator $T$ is called \emph{finite rank} if it is bounded and its image is a finite-dimensional vector space. 
+\end{definition}
+
+We will write $F(\mathcal{H})$ for the set of finite rank operators on $\mathcal{H}$. We say $T\in F(W)$ if $T$ is finite rank and $T\in B(W)$. Similarly, we write $FA(W)$ for the bounded, adjointable, finite rank operators on $W$.
+
+\begin{lemma}
+	$F(\mathcal{H})\subset K(\mathcal{H})$.
+\end{lemma}
+\begin{proof}
+	Let $T\in F(\mathcal{H})$, and let $\{x_n\}\subset\mathcal{H}$ be a bounded sequence. Then $\{T(x_n)\}$ is also bounded, and hence must contains a convergent subsequence by the Bolzano-Weierstrass theorem.
+\end{proof}
+
+For $x,y\in\mathcal{H}$, we define the operator $\theta_{x,y}$ as follows:
+\begin{equation*}
+	\theta_{x,y}(-)=\langle -, x\rangle y.
+\end{equation*}
+
+\begin{proposition}
+\label{prop_finite_rank_as_theta}
+	If $T\in F(\mathcal{H})$, write $\{e_i\}_1^n$ for an orthonormal basis of $\text{Range(T)}$. Then there exist $\{z_i\}_1^n\in\mathcal{H}$ such that 
+	\begin{equation*}
+		T(x)=\sum_{i=1}^n\langle x, z_i\rangle e_i = \sum_{n=1}^n \theta_{z_i,e_i}.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	For $\{e_i\}$ as in the statement of the claim, we can write
+	\begin{equation*}
+		T(x) = \sum_{i=1}^n c_i(x)e_i,
+	\end{equation*}
+	where each $c_i$ is a function $\mathcal{H}\to \mathbb{C}$. First we check that the $c_i$ are linear:
+	\begin{equation*}
+		\sum_{i=1}^n c_i(x+y)e_i = T(x+y) = T(x) + T(y) = \sum_{i=1}^n (c_i(x)+c_i(y))e_i,
+	\end{equation*}
+	which shows that $c_i(x+y)=c_i(x)+c_i(y)$ for all $i$. Additionally, the $c_i$ are bounded:
+	\begin{equation*}
+		|c_i(x)|=\|c_i(x)e_i\|\leq\|\sum_{i}c_i(x)e_i\|=\|T(x)\|\leq \|T\|\cdot\|x\|.
+	\end{equation*}	
+	Since the $c_i$ are thus all bounded linear functionals, by the Riesz-Fr\'echet theorem there exists $z_i\in \mathcal{H}$ such that $c_i(x)=\langle x,z_i\rangle$. In other words,
+	\begin{equation*}
+		T(x)= \sum_{i=1}^n \langle x, z_i\rangle e_i=\sum_{i=1}^n \theta_{z_i, e_i},
+	\end{equation*}
+	as desired.
+\end{proof}
+
+\begin{corollary}
+	$F(\mathcal{H})\subset\text{span}\{\theta_{x,y} : x,y\in\mathcal{H}\}$.
+\end{corollary}
+
+\begin{proposition}
+\label{prop_theta_adjoint}
+	$(\theta_{x,y})^\ast = \theta_{y,x}$
+\end{proposition}
+\begin{proof}
+	For $a,b\in \mathcal{H}$, 
+\begin{gather*}
+	\langle \theta_{x,y}(a), b\rangle = \langle \langle a, x\rangle y, b\rangle = \langle a,x\rangle\cdot\langle y,b\rangle = \langle y,b\rangle\cdot\langle a, x\rangle = \langle a, \langle b,y\rangle x\rangle = \langle a, \theta_{y,x}(b)\rangle.
+\end{gather*}
+\end{proof}
+
+\begin{corollary}
+	If $T\in F(\mathcal{H})$, then $\text{Rank}(T) = \text{Rank}(T^\ast)$.
+\end{corollary}
+\begin{proof}
+	By the Propositions \ref{prop_finite_rank_as_theta} and \ref{prop_theta_adjoint}, we can write 
+	\begin{equation*}
+		T(x)=\sum_{i=1}^n\langle x, z_i\rangle e_i,\quad T^\ast x=\sum_{i=1}^n\langle x, e_i\rangle z_i,
+	\end{equation*}
+	where $\{e_i\}_1^n$ is an orthonormal basis for $\text{Range}(T)$. It suffices to show that the $z_i$ are linearly independent. Suppose otherwise. Without loss of generality, assume $z_1=\sum_{i=2}^n d_iz_i$. Then $\{e_1+e_i\}_{2}^n$ would span the range of $T$, since
+	\begin{align*}
+		T(x) =& \sum_{i=1}^n \langle x, z_i \rangle e_i \\
+		=& \langle x, \sum_{i=2}^n d_iz_i \rangle e_1 + \sum_{i=2}^n \langle x, z_i \rangle e_i \\
+		=& \sum_{i=2}^n \langle x, (d_i+1)z_i\rangle (e_1 + e_i).
+	\end{align*}
+	But the cardinality of the set $\{e_1 + e_i\}_2^n$ contradicts the assumption that $\{e_i\}_{1}^n$ is a basis for the $\text{Range}(T)$.
+\end{proof}
+
+% finite rank operators }}}2
+
+\subsection{Projection Operators} % {{{2
+
+For $n>0$, the projection operator $P_n\in B(\mathcal{H})$ with respect to the countable orthonormal basis $\{e_i\}$ maps an element onto its first $n$ components: 
+\begin{equation*}
+	P_n(x)=P_n\left(\sum_{i=1}^\infty \langle x,e_i \rangle e_i\right) = \sum_{i=1}^n \langle x, e_i \rangle e_i.
+\end{equation*} 
+
+\begin{proposition}[basic facts about $P_n$]
+\label{prop_pn_basic_facts}
+	\hfill
+	\begin{enumerate}
+		\item $\|P_n\|=1$.
+		\item $P_n=P_n^\ast$.
+		\item $P_n\in FA(W)$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\hfill
+	\begin{enumerate}
+		\item Notice that $\|P_n(x)\|\leq \|x\|$ and $\|P_n(e_n)\|=\|e_n\|=1$, and so $\|P_n\|=1$.
+		\item We calculate:
+			\begin{gather*}
+				\langle P_nx,y \rangle =\langle \sum_{i=1}^n \langle x,e_i \rangle e_i,\sum_{j=1}^\infty \langle y,e_j \rangle e_j \rangle  = \sum_{i=1}^n \langle \langle x,e_i \rangle e_i, \langle y,e_i \rangle e_i \rangle, \\
+				\langle x,P_ny \rangle = \langle \sum_{j=1}^\infty \langle x,e_j \rangle e_j,\sum_{i=1}^n \langle y,e_n \rangle e_n \rangle =\sum_{j=1}^n \langle \langle x,e_j \rangle e_j, \langle y,e_j \rangle e_j \rangle .
+			\end{gather*}
+		\item $\text{Im}(P_n)$ is contained in the span of the $\{e_i\}\subset W$, as is its adjoint by the previous fact.
+	\end{enumerate}
+\end{proof}
+
+
+\begin{proposition}
+	For any $x\in \mathcal{H}$, we have that $P_n(x)\to x$. 	
+\end{proposition}
+\begin{proof}
+	We compute
+	\begin{align}
+		\|P_n(x) - x\|^2=& \left\|\sum_{i=1}^\infty \langle P_n(x) - x, e_i \rangle e_i\right\|^2 \nonumber \\
+		=& \left\| \sum_{i=1}^\infty \langle \sum_{j=1}^n \langle x, e_j \rangle - \sum_{k=1}^\infty \langle x, e_k \rangle e_k, e_i \rangle e_i \right\|^2 \nonumber \\
+		=& \left\|\sum_{i=1}^\infty \langle -\sum_{k=n+1}^\infty \langle x,e_k \rangle e_k,e_i \rangle e_i \right\|^2 \nonumber \\
+		=& \left\|-\sum_{i=n+1}^\infty \langle x,e_i \rangle e_i\right\|^2 \nonumber \\
+		\label{eq_pnx_minus_x_squared}
+		=& \sum_{i=n+1}^\infty \|\langle x,e_i \rangle \|^2.
+	\end{align}
+	Pulling the sum out of the norm is justified since all summands are orthogonal. The right hand side tends to 0 as $n\to \infty$ since $\|x\|$ is finite.
+\end{proof}
+
+\begin{lemma}
+\label{lemma_pn_1_uniformly}
+	On a compact subset $K\subset \mathcal{H}$, we have that $P_n\to 1$ uniformly (with respect to the operator norm).
+\end{lemma}
+\begin{proof}
+Since $K$ is compact, we may cover it with finitely many $\sqrt{\epsilon /2}$-balls. This means that there is a finite set $\{x_1,\dots, x_N\}\subset K$ such that for any $x\in K$ there exists $1\leq k\leq N$ such that $\|x-x_k\|<\sqrt{\epsilon /2}$. 
+
+	If we fix $x\in K$ and choose an $x_k$ as above, then, recalling Equation \ref{eq_pnx_minus_x_squared},
+	\begin{align*}
+		\|P_n(x)-x\|^2 =& \sum_{i=n+1}^\infty\|\langle x,e_i \rangle\|^2 = \sum_{i=n+1}^\infty \|\langle x-x_k+x_k,e_i \rangle\|^2 \\
+		=& \sum_{i=n+1}^\infty\|\langle x-x_k,e_i \rangle + \langle x_k,e_i \rangle \|^2 \\
+		\leq& \sum_{i=n+1}^\infty (\| \langle x-x_k,e_i \rangle \|+\| \langle x_k,e_i \rangle \|)^2 \\
+		\leq& \sum_{i=n+1}^\infty \| \langle x-x_k,e_i \rangle \|^2 + \sum_{i=n+1}^\infty \| \langle x_k,e_i \rangle \|^2 \\
+		\leq& \|x-x_k\|^2 + \sum_{i=n+1}^\infty \| \langle x_k,e_i \rangle \|^2 \\
+		\leq& \frac{\epsilon}{2} + \sum_{i=n+1}^\infty \| \langle x_k,e_i \rangle \|^2.
+	\end{align*}
+	Since there are only finitely many possible $x_k$, we get that, for any $x\in K$,
+	\[
+		\|P_n(x)-x\|^2 \leq \frac{\epsilon}{2}+ \max_{k}\sum_{i=n+1}^\infty \|(x_k,e_i)\|^2.
+	\]
+	Taking $n\to\infty$, we get the desired convergence. It does not depend on $x$, so the convergence is uniform.
+\end{proof}
+
+\begin{corollary}
+\label{cor_pnt_t}
+If $T\in K(\mathcal{H})$, then $P_nT\to T$ uniformly (with respect to the operator norm).
+\end{corollary}
+\begin{proof}
+	Since $T$ is compact, $\overline{T(B(0,1))}$ is compact (by Proposition \ref{prop_equiv_compact_defs}), where $B(0,1)$ is the unit ball. Then we can apply Lemma \ref{lemma_pn_1_uniformly}:
+	\begin{align*}
+		\lim_{n\to\infty}\|P_n T-T\| =& \lim_{n\to\infty}\sup_{\|x\|\leq 1} \|P_nT(x) - T(x)\| \\
+		=& \sup_{\|x\|\leq 1}\lim_{n\to\infty}\|P_n(T(x))-T(x)\| \\
+		=& 0,
+	\end{align*}
+	where we can interchange the supremum and limit since we are working on the compact subspace $\overline{T(B(0,1))}$, and hence the convergence inside the norm is uniform. Thus, the convergence $P_nT\to T$ is uniform.
+\end{proof}
+
+\begin{corollary}
+\label{cor_tpn_t}
+	If $T\in K(\mathcal{H})$, then $TP_n\to T$ uniformly (with respect to the operator norm).
+\end{corollary}
+\begin{proof}
+	In the compact subspace $\overline{B(0,1)}$, we have that $P_n(x)-x\to 0$ uniformly (by Lemma \ref{lemma_pn_1_uniformly}). Hence $T(P_n(x)-x)$ converges uniformly, and a similar method as above of switching the supremum and limit yields 
+	\begin{equation*}
+		\lim_{n\to\infty}\|TP_n-T\|=\lim_{n\to\infty}\sup_{\|x\|\leq 1}\|T(P_n(x)-x)\|=\sup_{\|x\|\leq 1}\lim_{n\to\infty}\|T(P_n(x)-x)\|=0.
+	\end{equation*}
+\end{proof}
+
+\begin{corollary}
+\label{cor_pntpn_t}
+	If $T\in K(\mathcal{H})$, then $P_nTP_n\to T$ uniformly (with respect to the operator norm).
+\end{corollary}
+\begin{proof}
+	Observe that
+	\begin{align*}
+		\|P_nTP_n - T\| =& \|P_nTP_n - P_nT + P_nT - T\| \\
+		\leq & \|P_nTP_n - P_nT\| + \|P_nT - T\| \\
+		=& \|P_n\|\cdot\|TP_n-T\| + \|P_nT-T\|. 
+	\end{align*}
+	By Corollaries \ref{cor_pnt_t} and \ref{cor_tpn_t}, we get that $\|P_nTP_n-T\|\to 0$, so the result follows. (Recall from Proposition \ref{prop_pn_basic_facts} that $\|P_n\|=1$ for any $n$.)
+\end{proof}
+
+\begin{corollary}
+\label{cor_pntpn_adjoint}
+	$(P_nTP_n)^\ast = (P_n T^\ast P_n)$.
+\end{corollary}
+\begin{proof}
+	$(P_nTP_n)^\ast = P_n^\ast T^\ast P_n^\ast$, and the result follows from the fact $P_n^\ast=P_n$ (Proposition \ref{prop_pn_basic_facts}).
+\end{proof}
+
+\begin{corollary}
+\label{cor_pntpn_in_jaw}
+	$P_nTP_n\in FA(W)$.
+\end{corollary}
+\begin{proof}
+	This follows from the fact that $P_n\in FA(W)$ (by Propostion \ref{prop_pn_basic_facts}) and Corollary \ref{cor_pntpn_adjoint}.
+\end{proof}
+
+% projection operators }}}2
+
+\subsection{Approximation Result} % {{{2 
+
+\begin{corollary}
+	Every $T\in K(\mathcal{H})$ is a limit of finite rank operators on $T_n\in FA(W)$.
+\end{corollary}
+\begin{proof}
+	$\{P_nTP_n \}\subset FA(W)$ (by Corollary \ref{cor_pntpn_in_jaw}) converges to $T$ (by Corollary \ref{cor_pntpn_t}).
+\end{proof}
+
+\begin{proposition}
+	$K(\mathcal{H})$ is an ideal of $C^\ast(W)$. 
+\end{proposition}
+\begin{proof}
+	$K(\mathcal{H})\subset C^\ast(W)$ by the previous result, and the ideal structure follows immediately from the fact that $K(\mathcal{H})$ is an ideal of $B(\mathcal{H})$ (Proposition \ref{prop_compact_ideal}). 
+\end{proof}
+
+% approximation }}}2
+
+% }}}1
+
+\section{Operators on the Span of an ON basis} % {{{1 
+
+Now consider the subspace $W_0=\text{span}\{e_n\}$. Then $W_0\subset W\subset\mathcal{H}$ and $W_0\subset\mathcal{H}$ is dense.
+
+\subsection{Compatability $BA(W_0)$ and $BA(W)$} % {{{2 
+
+Since $BA(W)\subset BA(\mathcal{H})=B(\mathcal{H})$, it is natural to ask whether $BA(-)$ is ``functorial'' with respect to inclusions. For example: is it true that $BA(W_0)\subset BA(W)$, or $BA(W)\subset BA(W_0)$? The answer in both cases, interestingly, is not necessarily.
+
+\begin{example}[$BA(W)\not\subset BA(W_0)$]
+	Let $\mathcal{H}=L^2[0,1]$. Let $W=C[0,1]$ and $W_0=\text{span}\{1, x, x^2, \dots\}$. It is also well known that $W\subset\mathcal{H}$ is dense (e.g. Consequence (i) of Lemma 4.9 in \cite{legall_2022}). $W_0\subset W$ is dense by the Weierstrass approximation theorem, hence $W_0$ is a span of a (countable) orthonormal basis, e.g. the Hermite polynomials. Thus we satisfy the conditions we want.
+
+	Consider the multiplication operator $M_{e^x}$. It preserves $W$ since the product of two continuous functions is continuous, and is also self-adjoint, so $M_{e^x}\in BA(W)$. However, $1\cdot e^x = e^x$ is not in the span of the polynomials, and so $M_{e^x}\not\in BA(W_0)$.
+\end{example}
+
+\begin{example}[$BA(W_0)\not\subset BA(W)$]
+	Let $\mathcal{H}$ and $W_0$ be as in the previous example, but now let 
+	\begin{equation*}
+		W=\text{span}(W_0\cup\{\text{simple functions in } \mathcal{H}\}).
+	\end{equation*} 
+	$W_0$ is already dense in $\mathcal{H}$ by our previous remarks, so $W$ is as well and we satisfy the condition we want.
+
+	But consider the self-adjoint multiplication operator $M_x$. Then $M_x\in BA(W_0)$. But consider the simple function $f=\mathbf{1}_{[0,1/3]}+\mathbf{1}_{[2/3, 1]}$. Then $xf(x)$ is neither simple nor continuous (and since it is not continuous, it is not spanned by the polynomials). Hence $M_x\not\in BA(W)$.
+\end{example}
+
+% \begin{remark}
+% 	Examples of where $BA(W_0)\subset BA(W)$ and $BA(W)\subset BA(W_0)$?
+% \end{remark}
+% 
+% \begin{remark}
+% 	Can we approximate operators in $BA(W)$ with operators in $BA(W_0)$?
+% \end{remark}
+
+% BA(W_0) and BA(W) }}}2
+
+\subsection{Density of $BA(W_0) \subset B(\mathcal{H})$} % {{{2
+
+The tractable linear structure of $W_0$ allows us to prove the following result, due to \cite{szwarc_2022}. The idea is to show that, given any $T\in B(\mathcal{H})$, we can find a $B\in BA(W_0)$ that is arbitarily close to $T$ (with respect to the operator norm).
+
+Fix a nonzero $A\in B(\mathcal{H})$. Let $Q_n\coloneqq I - P_n$, i.e. 
+	\begin{equation*}
+		Q_n(x) = \sum_{i=n+1}^\infty \langle x, e_i \rangle e_i.
+	\end{equation*}
+	Since $A(e_n)$ and $A^\ast(e_n)$ have finite norm, for any $\epsilon>0$ and $n\geq 1$ we can find $k_n > n$ such that 
+	\begin{equation*}
+		\|Q_{k_n}A(e_n)\| \leq \frac{\epsilon}{3\cdot 2^{n/2}} \quad \text{and} \quad \|Q_{k_n}A^\ast(e_n)\| \leq \frac{\epsilon}{3\cdot 2^{n/2}}.
+	\end{equation*}
+	Now define the operator $R\in B(\mathcal{H})$ as follows:
+	\begin{equation*}
+		R(x) = \sum_{n=1}^\infty \Big( \langle x, e_n \rangle Q_{k_n}A(e_n) + \langle x, Q_{k_n}A^\ast(e_n) \rangle e_n \Big).
+	\end{equation*}
+
+\begin{proposition}
+\label{prop_r_bh}
+	$R\in B(\mathcal{H})$.
+\end{proposition}
+\begin{proof}
+	By the Cauchy-Schwartz inequality, we have on the one hand
+	\begin{align*}
+		\left\| \sum_{n=1}^\infty \langle x, e_n \rangle Q_{k_n}A(e_n) \right\| \leq&
+		\sum_{n=1}^\infty \| \langle x, e_n \rangle Q_{k_n}A(e_n) \| 
+		= \sum_{n=1}^\infty | \langle x, e_n \rangle | \cdot \|Q_{k_n}A(e_n)\| \\
+		\leq& \sum_{n=1}^\infty \|x\| \cdot \frac{\epsilon}{3\cdot 2^{n/2}} 
+		\leq \|x\| \left( \sum_{n=1}^\infty \left( \frac{\epsilon}{3\cdot 2^{n/2}} \right)^2 \right)^{1/2} \\
+		=& \frac{\epsilon \|x\|}{3} \cdot \left( \sum_{n=1}^\infty 2^{-n} \right)^{1/2} 
+		= \frac{\epsilon \|x\|}{3}.
+	\end{align*}
+
+	On the other hand,
+	\begin{align*}
+		\left\| \sum_{n=1}^\infty \langle x, Q_{k_n}A^\ast(e_n) \rangle e_n \right\| 
+		=& \left( \sum_{n=1}^\infty |\langle x, Q_{k_n}A^\ast(e_n) \rangle | \right)^{1/2} 
+		\leq \|x\| \cdot \left( \sum_{n=1}^\infty \| Q_{k_n}A^\ast(e_n) \| \right)^{1/2} \\
+		\leq& \frac{\epsilon \|x\|}{3}
+	\end{align*}
+	by an analagous argument. Combining these inequalities shows that $R$ is bounded:
+	\begin{align*}
+		\|R(x)\|  
+		=& \left\| \sum_{n=1}^\infty \Big( \langle x, e_n \rangle Q_{k_n}A(e_n) + \langle x, Q_{k_n}A^\ast(e_n) \rangle e_n \Big) \right\| \\
+		\leq& \left\| \sum_{n=1}^\infty \langle x, e_n \rangle Q_{k_n}A(e_n) \right\| + 	\left\| \sum_{n=1}^\infty \langle x, Q_{k_n}A^\ast(e_n) \rangle e_n \right\| \\
+		\leq& \frac{\epsilon \|x\|}{3} + \frac{\epsilon \|x\|}{3} \\
+		<& \epsilon \|x\|.
+	\end{align*}
+\end{proof}
+
+\begin{proposition}
+\label{prop_r_adjoint}
+	\begin{equation*}
+		R^\ast(x) = \sum_{n=1}^\infty \big( \langle x, Q_{k_n}A(e_n) \rangle e_n + \langle x, e_n \rangle Q_{k_n}A^\ast (e_n) \Big).
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	One the one hand, 
+	\begin{align*}
+		\langle \sum_{n=1}^\infty \langle x, e_n \rangle Q_{k_n}A(e_n), y \rangle
+		=& \sum_{n=1}^\infty \langle x, e_n \rangle \cdot \langle Q_{k_n}A(e_n), y \rangle \\
+		=& \sum_{n=1}^\infty \langle x, \langle y, Q_{k_n}A(e_n) \rangle e_n \rangle
+	\end{align*}
+	and so 
+	\begin{equation*}
+		\left( \sum_{n=1}^\infty \langle -, e_n \rangle Q_{k_n}A(e_n) \right)^\ast = \sum_{n=1}^\infty \langle -, Q_{k_n}A(e_n) \rangle e_n.
+	\end{equation*}
+	On the other hand,
+	\begin{align*}
+		\langle \sum_{n=1}^\infty \langle x, Q_{k_n}A^\ast e_n \rangle e_n, y \rangle
+		=& \sum_{n=1}^\infty \langle x, Q_{k_n}A^\ast e_n \rangle \cdot \langle e_n, y \rangle \\
+		=& \sum_{n=1}^\infty \langle x, \langle y, e_n \rangle Q_{k_n}A^\ast e_n \rangle
+	\end{align*}
+	and so 
+	\begin{equation*}
+		\left(\sum_{n=1}^\infty \langle -, Q_{k_n}A^\ast e_n\rangle e_n \right)^\ast = \sum_{n=1}^\infty \langle -, e_n \rangle Q_{k_n}A^\ast (e_n).
+	\end{equation*}
+	Summing the two gives the desired result.
+\end{proof}
+
+\begin{theorem}
+	$BA(W_0)\subset B(\mathcal{H})$ is dense.
+\end{theorem}
+\begin{proof}
+	Let $B = A - R$. The fact that $B\in B(\mathcal{H})$ follows from Proposition \ref{prop_r_bh}. We claim that $\|A-B\|\leq \epsilon$ and $B\in BA(W_0)$. With regards to the first claim,
+	\begin{equation*}
+		\|A-B\|=\|R\| < \epsilon
+	\end{equation*}
+	by the previous calculation that $R$ is bounded. 
+
+	To show $B\in BA(W_0)$, we first show $B(W_0)\subset W_0$. Since $W_0$ is the span of the $\{e_n\}$, it suffices to show that $B(e_n)\in W_0$ for all $n$:
+	\begin{align*}
+		B(e_n)
+		=& A(e_n) - R(e_n) \\
+		=& A(e_n) - \left( \sum_{i=1}^\infty \Big( \langle e_n, e_i \rangle Q_{k_i}A(e_i) + \langle e_n, Q_{k_i}A^\ast(e_i) \rangle e_i \Big) \right) \\
+		=& A(e_n) - Q_{k_n}A(e_n) - \sum_{i=1}^{n-1} \langle e_n, Q_{k_i}A^\ast(e_i) \rangle e_i \\
+		=& (I-Q_{k_n})A(e_n) - \sum_{i=1}^{n-1} \langle e_n, Q_{k_i}A^\ast(e_i) \rangle e_i \\
+		=& P_{k_n}A(e_n) - \sum_{i=1}^{n-1} \langle e_n, Q_{k_i}A^\ast(e_i) \rangle e_i \in W_0,
+	\end{align*}
+	where  in the third line the sum cuts off at $n$ becuase $Q_{k_i}$ projects onto the $\{e_{j>k_i}\}$, hence will vanish when taking an inner product with against an $e_{m\leq k_i}$.
+
+	All that remains is to show $B^\ast(W_0)\subset W_0$. Using Proposition \ref{prop_r_adjoint}, we carry out an analagous computation:
+	\begin{align*}
+		B^\ast(e_n)
+		=& A^\ast(e_n) - R^\ast(e_n) \\
+		=& A^\ast(e_n) - \left(\sum_{i=1}^\infty \big( \langle e_n, Q_{k_i}A(e_i) \rangle e_i + \langle e_n, e_i \rangle Q_{k_i}A^\ast (e_i) \Big)\right) \\
+		=& A^\ast(e_n) - Q_{k_n}A^\ast(e_n) - \sum_{i=1}^{n-1}\langle e_n, Q_{k_i}A^\ast(e_i)\rangle e_i \\
+		=& P_{k_n}A^\ast(e_n) - \sum_{i=1}^{n-1}\langle e_n, Q_{k_i}A^\ast(e_i)\rangle e_i \in W_0.
+	\end{align*}
+
+	Hence $B\in BA(W_0)$.
+\end{proof}
+
+% }}}2
+
+% dense spans }}}1
+
+\section{Example: $BA(W)\subset B(\mathcal{H})$ not Dense} % {{{1
+
+We have seen that for proper dense subspaces $W_0\subset\mathcal{H}$ which are linear spans of an orthonormal basis, it is true that $BA(W_0)\subset BA(\mathcal{H})$ is dense. However, we have also seen that, given an arbitrary proper dense subspace $W\subset\mathcal{H}$ and the linear span of an orthonormal basis contained in it $W_0\subset W$, operators which preserve $W_0$ need not preserve $W$, and vice versa. Thus we might be pessimistic as to whether $BA(W)\subset B(\mathcal{H})$ is dense in general. The purpose of this section is to provide such a counterexample.
+
+The setup is the following: let $\mathcal{H}=\ell^2$ and $W=\ell^1$ ($W\subset\mathcal{H}$ is dense because, for example, the set of eventually 0 sequences is in both of them). The idea is to construct $V\in B(\mathcal{H})$ such that $\|T-V\|>1/2$ for all $T\in BA(W)$. In the following, $\{e_i\}_1^\infty$ will denote the canonical orthonormal basis for $\ell^2$.
+
+The proof idea is due to \cite{choi_heller_2017}, but executed and corrected here in full detail, in recognition of the necessity of considering bounded \textit{adjointable} operators on the subspace rather than simply bounded operators.
+
+\subsection{An Orthogonal Sequence: $(\xi_n)$} % {{{2
+
+Let 
+\begin{equation*}
+	\xi_n\coloneqq 2^{-n/2}\sum_{i=0}^{2^n-1}e_{2^n+i}.
+\end{equation*}
+
+\begin{remark}[]
+	We write the first few $\xi_n$ explicitly:
+	\begin{align*}
+		\xi_1 = 2^{-1/2}\cdot &(0,1,1,0,\dots) \\
+		\xi_2 = 2^{-1}\cdot &(0,0,0,1,1,1,1,0\dots) \\
+		\xi_3 = 2^{-3/2}\cdot &(0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,\dots)
+	\end{align*}
+	Note $2^{-1/2} > 2^{-1} > 2^{-3/2} > \dots$, i.e. $2^{-n/2}$ is a monotonically decreasing sequence.  
+\end{remark}
+
+\begin{proposition}[]
+	The $\xi_n$ are mutually orthogonal in $\ell^2$, i.e. $\langle \xi_n,\xi_m \rangle=0$ whenever $n\neq m$.
+\end{proposition}
+\begin{proof}
+	Assume, without loss of generality, that $n<m$. Then $2^n+i<2^m$ for any $0\leq i \leq 2^n-1$. (Indeed, even if $m=n+1$, the closest these values get is $2^n+(2^n-1)=2^{n+1}-1=2^m-1<2^m$.) We thus proceed as follows: 
+	\begin{align*}
+		\langle 2^{-n/2}\sum_{i=0}^{2^n-1}e_{2^n+i}, 2^{-m/2}\sum_{j=0}^{2^m-1}e_{2^m+i} \rangle 
+		=& 2^{-n/2}\sum_{i=0}^{2^n-1} \langle e_{2^n+i}, 2^{-m/2}\sum_{j=0}^{2^m-1}e_{2^m+i} \rangle \\
+		=& 2^{-n/2}\sum_{i=0}^{2^n-1} \left( \overline{ 2^{-m/2}\sum_{j=0}^{2^m-1} \langle e_{2^m+j}, e_{2^n+i} \rangle } \right) \\
+		=& 2^{-n/2}\sum_{i=0}^{2^n-1} \left( \overline{ 2^{-m/2}\sum_{j=0}^{2^m-1} 0 } \right) \\
+		=& 0.
+	\end{align*}
+\end{proof}
+
+\begin{proposition}[]
+	For all $n$,
+	\begin{equation*}
+		\|\xi_n\|_p = 
+		\begin{cases}
+			\left( 2^{\frac{n(2-p)}{2}} \right)^{1/p} & 1\leq p < \infty \\
+			2^{-n/2} & p=\infty
+		\end{cases}.
+	\end{equation*}
+\end{proposition}
+
+\begin{proof}
+	Note 
+	\begin{align*}
+		\xi_n =& 2^{-n/2}\sum_{i=0}^{2^n-1}e_{2^n+i} \\
+		=& 2^{-n/2}\cdot (\dots, 0, \underbrace{1,\dots,1}_{2^n\text{ copies}}, 0,\dots) \\
+		=& (\dots, 0, \underbrace{2^{-n/2},\dots,2^{-n/2}}_{2^n\text{ copies}}, 0,\dots),
+	\end{align*}
+	and so 
+	\begin{equation*}
+		\|\xi_n\|_p^p = 2^n\cdot (2^{-n/2})^p = 2^{\frac{n(2-p)}{2}}
+	\end{equation*}
+	for $1\leq p < \infty$, and $\|\xi_n\|_\infty=2^{-n/2}$.
+\end{proof}
+
+\begin{corollary}[]
+	\begin{gather*}
+		\|\xi_n\|_1 = 2^{n/2} \\
+		\|\xi_n\|_2 = 1 \\
+	\end{gather*}
+\end{corollary}
+
+\begin{corollary}[]
+	\begin{equation*}
+		\lim_{n\to\infty}\|\xi_n\|_p =
+		\begin{cases}
+			\infty & 1\leq p < 2, \\
+			1 & p = 2, \\
+			0 & p > 2
+		\end{cases}.
+	\end{equation*}
+\end{corollary}
+
+% xi_n }}}2
+
+\subsection{The Operator $V$} % {{{2
+
+Now define the operator 
+\begin{equation*}
+	V(x) \coloneqq V\left(\sum_{n=1}^\infty \langle x, e_n\rangle e_n\right) = \sum_{n=1}^\infty \langle x, e_n\rangle \xi_n
+\end{equation*}
+for all $x\in \ell^2$. 
+
+\begin{proposition}[]
+	$V(e_i)=\xi_i$ for all $i$.
+\end{proposition}
+
+\begin{proof}
+	\begin{equation*}
+		V(e_i)=\sum_{n=1}^\infty\langle e_i,e_n\rangle \xi_n=\langle e_i,e_i\rangle \xi_n=\xi_n.
+	\end{equation*}
+\end{proof}
+
+\begin{proposition}[]
+	$V$ is a (partial) isometry. In particular, $V\in B(\ell^2)$.
+\end{proposition}
+
+\begin{proof}
+	For any $x\in\ell^2$,
+	\begin{align*}
+		\|V(x)\|_2^2 
+		=& \left\|\sum_{n=1}^\infty \langle x,e_n\rangle \xi_n\right\|_2^2 \\
+		=& \sum_{n=1}^\infty \|\langle x,e_n\rangle \xi_n\|_2^2, \\
+		\intertext{by the Pythagorean theorem, since the $\xi_n$ are mutually orthonormal,}
+		=& \sum_{n=1}^\infty |\langle x,e_n\rangle |^2 \\
+		=& \|x\|_2^2 \\
+		\intertext{by Parseval's identity.}
+	\end{align*}
+\end{proof}
+
+% inequality {{{3
+
+\begin{proposition}
+\label{prop_ineq}
+	For $T\in B(W)$, if $\|T-V\|_2<1/2$, then 
+	\[
+		\sum_{i=0}^{2^n-1} | \langle e_{2^n+i},Te_n\rangle | \geq \frac{2^{n/2}}{2}.
+	\]
+\end{proposition}
+\begin{proof}
+	We first show that 
+	\begin{equation*}
+		\sum_{i=0}^{2^n-1}|\langle e_{2^n+i}, T(e_n)\rangle|
+		\geq 2^{n/2} - \left| \sum_{i=0}^{2^n-1} \left( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \right) \right|.
+	\end{equation*}
+	To see this, first observe that
+	\begin{align*}
+		\left| \sum_{i=0}^{2^n-1} \left( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \right) \right|
+		=& \left| \left( \sum_{i=0}^{2^n-1} \langle e_{2^n+i},T(e_n) \rangle \right) - 2^{n/2} \right| \\
+		\geq& \left| \big| \sum_{i=0}^{2^n-1} \langle e_{2^n+i}, T(e_n) \rangle \big| - |2^{n/2}| \right| \\
+		=& \left| 2^{n/2} - \big| \sum_{i=0}^{2^n-1} \langle e_{2^n+i}, T(e_n) \rangle \big| \right| \\
+		\geq&  2^{n/2} - \left| \sum_{i=0}^{2^n-1} \langle e_{2^n+i}, T(e_n) \rangle \right|.
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		2^{n/2} - \left| \sum_{i=0}^{2^n-1} \left( \langle e_{2^n+i},T(e_n) \rangle - 2^{-n/2} \right) \right| 
+		\leq& 2^{n/2} - \left( 2^{n/2} - \left| \sum_{i=0}^{2^n-1} \langle e_{2^n+i}, T(e_n) \rangle \right| \right) \\
+		=& \left| \sum_{i=0}^{2^n-1} \langle e_{2^n+i}, T(e_n) \rangle \right| \\
+		\leq& \sum_{i=0}^{2^n-1}|\langle e_{2^n+i},T(e_n)\rangle|
+	\end{align*}
+	as desired.
+
+	Now we will show that
+	\begin{equation*}
+		2^{-n/2} \left| \sum_{i=0}^{2^n-1} \big( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \big) \right|
+		\leq \|T(e_n)-\xi_n\|_2.
+	\end{equation*}
+
+	We calculate 
+	\begin{align*}
+		2^{-n/2} \left| \sum_{i=0}^{2^n-1} \big( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \big) \right|
+		=& \left|\sum_{i=0}^{2^n-1}\left( 2^{-n/2}\langle e_{2^n+i},T(e_n)\rangle - 2^{-n} \right) \right| \\
+		=& |\langle \xi_n,T(e_n) \rangle -1| \\
+		=& |\langle\xi_n,T(e_n)\rangle - \langle\xi_n,\xi_n\rangle| \\
+		=& |\langle\xi_n, T(e_n)-\xi_n\rangle| \\
+		\leq& \|T(e_n)-\xi_n\|_2,
+	\end{align*}	
+	where we have used the Cauchy-Schwartz inequality and the fact that $\|\xi_n\|_2=1$.
+
+	We also claim that 
+	\begin{equation*}
+		\|T(e_n)-\xi_n\|_2\leq 1/2.
+	\end{equation*}
+	This is because $\|T-V\|_2<1/2$ by assumption, and since $e_n$ is unit size (in the 2-norm), we get from the properties of the norm that $\|T(e_n) - V(e_n)\|_2=\|T(e_n)-\xi_n\|_2<1/2$. 
+
+	Pulling it all together, we calculate that 
+	\begin{align*}
+		\sum_{i=0}^{2^n-1}|\langle e_{2^n+i}, T(e_n)\rangle|
+		\geq& 2^{n/2} - \left| \sum_{i=0}^{2^n-1} \big( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \big) \right| \\
+		=& 2^{n/2}\left( 1 - 2^{-n/2} \left| \sum_{i=0}^{2^n-1} \big( \langle e_{2^n+i},T(e_n)\rangle - 2^{-n/2} \big) \right| \right) \\
+		\geq& 2^{n/2}(1-\|T(e_n)-\xi_n\|_2) \\
+		\geq& 2^{n/2}\left(1-\frac{1}{2}\right) \\
+		=& \frac{2^{n/2}}{2}.
+	\end{align*}
+\end{proof}
+
+% }}}3
+
+% the operator V }}}2
+
+\subsection{Two Sequences} % {{{2
+
+\begin{proposition}
+\label{prop_two_sequences}
+	There exist two nonnegative, monotonically increasing sequences of integers $(\alpha)_0^\infty$, $(\beta)_1^\infty$ such that 
+	\[
+		\sum_{i\not\in [\alpha_{r-1}, \alpha_r-1]}|\langle e_i, T(e_{\beta_r})\rangle |<1
+	\]
+for all $r\in\mathbb{N}$. We can pick these such that $\alpha_0=\beta_1=1$ and $\beta_i\geq i^2$.
+\end{proposition}
+\begin{proof}
+	We will construct the two sequences inductively. Let $\alpha_0=\beta_1=1$. Since $e_{\beta_r}\in\ell^1$, $T(e_{b_r})\in\ell^1$ and 
+	\[
+		\|T(e_{\beta_r})\|_1=\sum_{i=1}^\infty |\langle e_i,T(e_{\beta_r})\rangle |<\infty.
+	\]
+Therefore, there must exist $\alpha_1>1$ such that all coordinates of $T(e_{\beta_r})$ outside the range $[\alpha_0, \alpha_1]$ sum to less than 1. In other words, there must be an $\alpha_1>\alpha_0$ such that
+	\[
+		\sum_{i\not\in[\alpha_0,\alpha_1]}|\langle e_i, T(e_{\beta_r})\rangle |<1.
+	\]
+
+	For the induction step, suppose we have constructed $(\alpha)_0^r$ and $(\beta)_1^r$. First we will construct $\beta_{r+1}$. Note that $e_q\in\ell^1$ for any $q\in\mathbb{N}$, so $T(e_q)$ and $T^\ast (e_q)$ are both in $\ell^1$. Thus
+	\[
+	\sum_{i=1}^{\alpha_r-1}|\langle e_i, T(e_q)\rangle |=\sum_{i=1}^{\alpha_r-1}|\langle T^\ast (e_i), e_q\rangle |.
+	\]
+	The expression $\langle T^\ast (e_i), e_q\rangle $ picks out the $q$th coordinate of an element in $\ell^1$. Therefore, we may pick $q=\beta_{r+1}>\beta_r$ such that
+	\begin{equation*}
+		\max_{i\in[1,\alpha_r-1]}|\langle T^\ast (e_i),e_q\rangle |<\frac{1}{2\alpha_r}.
+	\end{equation*}
+	This will ensure that
+	\[
+		\sum_{i=1}^{\alpha_r-1}|\langle e_i, T(e_{\beta_{r+1}})\rangle |<\frac{1}{2}.
+	\]
+	Nothings prevents us from picking such that $\beta_{r+1}\geq (r+1)^2$ as well.
+
+	Outside of $[1,\alpha_r-1]$, which is the range $[\alpha_r, \infty)$, the sum is still finite. Thus we can once again find an upper bound $\alpha_{r+1}>\alpha_r$ such that the above sum is $<1/2$ on $[\alpha_{r+1},\infty)$. Pulling this all together, we have found $\alpha_{r+1}>\alpha_r$ such that 
+	\[
+		\sum_{i\not\in[\alpha_{r}, \alpha_{r+1}-1]}|\langle e_i, T(e_{\beta_{r+1}})\rangle |<1.
+	\]
+	This completes the induction step.
+\end{proof}
+
+% two sequences }}}2
+
+\subsection{Failure to Approximate $V$} % {{{2
+
+\begin{theorem}
+	Taking $\mathcal{H}=\ell^2$ and $W=\ell^1$ as above, $BA(W)\subset B(\mathcal{H})$ is not dense.
+\end{theorem}
+\begin{proof}
+	Suppose there exists $T\in BA(\ell^1)$ such that $\|T-V\|_2<1/2$. Consider the element 
+	\[
+		w=\sum_{n=1}^\infty\frac{1}{n^2}e_{\beta_k}\in\ell^1.
+	\]
+	This element is indeed in $\ell^1$ as $\sum_n 1/n^2=\pi/6<\infty$. 
+
+	Our first claim is that the series
+	\[
+		\sum_{n=1}^\infty \left(\frac{2^{\beta_n/2}}{2n^2} -\frac{\pi^2}{6}\right)
+	\]
+	diverges. Indeed, 
+	\begin{equation*}
+		\lim_{n\to\infty} \left(\frac{2^{\beta_n/2}}{2n^2} -\frac{\pi^2}{6}\right)\to\infty
+	\end{equation*}
+	since in particular $\beta_n\geq n^2$.
+
+	Now 
+	\begin{align*}
+		\|Tw\|_1
+		=& \sum_i\left|\left\langle e_i,\sum_k\frac{1}{k^2}T(e_{\beta_k})\right\rangle \right| \\
+		=& \sum_n \sum_{i=\alpha_{n-1}}^{\alpha_n-1}\left|\left\langle e_i,\sum_k\frac{1}{k^2}T(e_{\beta_k})\right\rangle \right| \\
+		=& \sum_n \sum_{i=\alpha_{n-1}}^{\alpha_n-1} \left|\frac{1}{n^2}\langle e_i,T(e_{\beta_n})\rangle + \sum_{k\neq n}\frac{1}{k^2}\langle e_i,T(e_{\beta_k})\rangle \right| \\	
+		\geq& \sum_n \sum_{i=\alpha_{n-1}}^{\alpha_n-1} \left(\left|\frac{1}{n^2}\langle e_i,T(e_{\beta_n})\rangle \right|-\left|\sum_{k\neq n}\frac{1}{k^2}\langle e_i,T(e_{\beta_k})\rangle \right|\right), \\
+		\intertext{by an application of the triangle inequality,}
+		\geq& \sum_n \sum_{i=\alpha_{n-1}}^{\alpha_n-1} \left(\frac{1}{n^2}|\langle e_i,T(e_{\beta_n})\rangle |-\sum_{k\neq n}\frac{1}{k^2}\left|\langle e_i,T(e_{\beta_k})\rangle \right|\right) \\
+	=& \sum_n\left(\sum_{i=\alpha_{n-1}}^{\alpha_n-1}\frac{1}{n^2}|\langle e_i,T(e_{\beta_n})\rangle | - \sum_{i=\alpha_{n-1}}^{\alpha_n-1}\sum_{k\neq n}\frac{1}{k^2}|\langle e_i,T(e_{\beta_k})\rangle |\right) \\
+		=& \sum_n\left(\sum_{i=\alpha_{n-1}}^{\alpha_n-1}\frac{1}{n^2}|\langle e_i,T(e_{\beta_n})\rangle | - \sum_{k\neq n}\frac{1}{k^2}\sum_{i=\alpha_{n-1}}^{\alpha_n-1}|\langle e_i,T(e_{\beta_k})\rangle |\right), \\
+		\intertext{by Tonelli's theorem for series,}
+		\geq& \sum_n\left(\sum_{i=\alpha_{n-1}}^{\alpha_n-1}\frac{1}{n^2}|\langle e_i,T(e_{\beta_n})\rangle | - \sum_{k\neq n}\frac{1}{k^2}\right), \\
+		\intertext{by Proposition \ref{prop_two_sequences}, since $k\neq n$,}
+		=& \sum_n\left(\sum_{i=\alpha_{n-1}}^{\alpha_n-1}\frac{1}{n^2}|\langle e_i,T(e_{\beta_n})\rangle | - \frac{\pi^2}{6} + \frac{1}{n^2}\right) \\
+		=& \sum_n\left(\frac{1}{n^2}\sum_{i=\alpha_{n-1}}^{\alpha_n-1}|\langle e_i,T(e_{\beta_n})\rangle | - \frac{\pi^2}{6} + \frac{1}{n^2}\right) \\
+		\geq& \sum_n\left(\frac{1}{n^2}\left(\sum_{i}|\langle e_i,T(e_{\beta_n})\rangle | - 1\right) - \frac{\pi^2}{6} + \frac{1}{n^2}\right), \\
+		\intertext{by Proposition \ref{prop_two_sequences},}
+		\geq& \sum_n\left(\frac{1}{n^2}\sum_{i}|\langle e_i,T(e_{\beta_n})\rangle | - \frac{\pi^2}{6}\right) \\
+		\geq& \sum_n\left(\frac{1}{n^2}\sum_{i=2^{\beta_n}}^{2^{\beta_{n+1}}-1}|\langle e_i,T(e_{\beta_n})\rangle | - \frac{\pi^2}{6}\right) \\
+		=& \sum_n\left(\frac{1}{n^2}\sum_{i=0}^{2^{\beta_{n}}-1}|\langle e_{2^{\beta_n}+i},T(e_{\beta_n})\rangle | - \frac{\pi^2}{6}\right) \\
+		\geq& \sum_n\left(\frac{2^{\beta_n/2}}{2n^2}-\frac{\pi^2}{6}\right), \\
+		\intertext{by Proposition \ref{prop_ineq},}
+		=& \infty.
+	\end{align*}
+
+	This shows that $\|T(w)\|_1$ is bounded below by a divergent series, hence $\|T(w)\|_1$ is also divergent. This slight abuse of notation nonetheless demonstrates that $T(w)\not\in\ell^1$. But this is a contradiction since $T\in BA(\ell^1)$. Hence $\|T-V\| > 1/2$ for all $T\in BA(\ell^1)$.
+\end{proof}
+
+% proof of theorem }}}2
+
+% counterex }}}1
+
+\chapter{Future Directions}
+
+We have shown $BA(\ell^1)\subset B(\ell^2)$ is not dense, and would like to extend these results to $\ell^p$ for $1<p<2$. We conjecture that $BA(\ell^p)\subset B(\mathcal{H})$ is dense. In the case of $\ell^1$, we have the following nontrivial extension:
+\begin{equation*}
+	0 \to K(\ell^2) \to C^\ast(\ell^1) \to \frac{C^\ast(\ell^1)}{K(\ell^2)} \to 0.
+\end{equation*}
+One could apply $K$-theory to this sequence to see whether the $K$-theory detects the fact that $C^\ast(\ell^1)\neq B(\ell^2)$. More generally, one can compare properties of the Calkin algebra $B(\ell^2)/K(\ell^2)$ to the properties of this distinct algebra $C^\ast(\ell^1)/K(\ell^2)$.
+
+Another direction could be to consider weaker topologies. For the span of an orthonormal basis $W_0$, is it still true that $BA(W_0)\subset B(\mathcal{H})$ is dense with respect to the strong/weak operator topologies? Furthermore, it is known that the commutant of a self-adjoint subspace of operators is a von Neumann algebra, so $BA(W)'$ is a von Neumann algebra. One could compute this, and, if it turns out to be nontrivial, apply methods of $W^\ast$-algebras to $BA(W)'$. One could also approach the question of density of $BA(W)$ by computing the double commutant $BA(W)''$; the theory shows that if $BA(W)=BA(W)''$ then $BA(W)$ is closed in the strong/weak operator topologies, hence closed in the operator norm topology. Then if $BA(W)\subsetneq B(\mathcal{H})$, it is certainly not dense.
+
+Finally, one could expand on the spectral theory of $BA(W)$ developed here, or consider the spectral theory of a nontrival $C^\ast(W)$. How much of the spectral theory on $B(\mathcal{H})$ can be recovered, and does the spectrum/resolvent ``see'' certain properties of $BA(W)$?
+
+    %\appendix
+%\include{appendixA}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Backend of thesis (references and the like)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\backmatter
+
+%Add your bibliography filename and uncomment these lines
+%\addbibresource{../thesis.bib}
+\bibliographystyle{amsplain}
+\addcontentsline{toc}{chapter}{References}
+\bibliography{thesis}
+\markboth{{\sffamily\sc Bibliography}}{}
+
+
+
+\end{document}
+
+
+
+
+

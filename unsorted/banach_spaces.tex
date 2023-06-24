@@ -1,0 +1,775 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\addbibresource{banach_spaces.bib}
+
+\title{Banach spaces}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{uncategorized} % {{{1
+\begin{refsection}
+
+\begin{proposition}
+\label{prop_neumann_series}
+	Let $X$ be a Banach space with identity $1$. Let $x\in X$ be such that $\limsup_n \|x^n\| < 1$. Then 
+	\begin{equation*}
+		(1 - x)^{-1} = \sum_{k=0}^\infty x^k.
+	\end{equation*}
+	The above series is sometimes called the \emph{Neumann} series.
+\end{proposition}
+\begin{proof}
+	Examining the partial sums,
+	\begin{equation*}
+	\lim_{n\to\infty} (1 - x)\sum_{k=0}^n x^k = \lim_{n\to\infty} \left(\sum_{k=0}^n x^k - \sum_{k=0}^n x^{k+1}\right) = \lim_{n\to\infty}(1 - x^{n+1}) = 1.
+	\end{equation*}
+\end{proof}
+
+\begin{remark}
+	The condition on $x$ is implied by the radius of convergence theorem (Theorem \ref{thm_radius_of_convergence}). The following conditions on $x$ are at least as strong:
+	\begin{itemize}
+		\item $\|x\|<1$
+		\item $\sum_n \|x^n\|$ converges
+	\end{itemize}
+\end{remark}
+
+\begin{corollary}[Hadamard's formula]
+\label{cor_hadamard_formula}
+	Suppose $\lambda, x$ are such that $\limsup_n \|\lambda^{-n}x^n\|^{1/n} < 1$. Then 
+	\begin{equation*}
+		(\lambda 1 - x)^{-1} = \sum_{k=0}^\infty \frac{x^k}{\lambda^{k+1}}.
+	\end{equation*}
+\end{corollary}
+\begin{proof}
+	Rewrite $(\lambda 1 - x)^{-1} = \lambda^{-1}(1 - \lambda^{-1}x)^{-1}$. By assumption we satisfy the conditions for Proposition \ref{prop_neumann_series}, so 
+	\begin{equation*}
+		(\lambda 1 -x)^{-1} = \lambda^{-1}\sum_{k=0}^\infty \lambda^{-k}x^k = \sum_{k=0}^\infty \frac{x^k}{\lambda^{k+1}}.
+	\end{equation*}
+\end{proof}
+
+\begin{proposition}
+\label{prop_linear_continuous_bounded}
+	Let $T:X\to Y$ be a linear map between normed vector spaces. Then $T$ is continuous if and only if it is bounded.
+\end{proposition}
+\begin{proof}
+	Bounded implies continuous (if this isn't clear, fill it in), even without the linearity assumption. The content of the proposition is the other direction:
+
+	If $T$ is continuous, then it is continuous at $0\in X$. Letting $\epsilon=1$, there exists $\delta>0$ such that $\|x\|=\|x-0\|<\delta$ implies $\|A(x)\|=\|A(x-0)\|=\|A(x)-A(0)\|<1$. 
+
+	Now for arbitrary $x\in X$,
+	\begin{align*}
+		\|Ax\| =& \frac{\|x\|}{\delta} \cdot \| A(\delta \frac{x}{\|x\|})\| \\
+		\leq& \frac{\|x\|}{\delta} \cdot 1 \\
+		=& \frac{1}{\delta} \cdot \|x\|.
+	\end{align*}
+\end{proof}
+
+\begin{proposition}
+	If a bounded linear operator $T:X\to Y$ between Banach spaces is invertible, then it is bounded from below, in the sense that there exists $c>0$ such that $\|Tx\|\geq c\|x\|$ for all $x\in X$.
+\end{proposition}
+\begin{proof}
+	Suppose $T$ is invertible. Then it is bijective, continuous, and linear, so by the bounded inverse theorem (Theorem \ref{thm_bounded_inverse}) its inverse $T^{-1}$ is bounded. So there exists $C>0$ such that $\|T^{-1}y\| \leq C\|y\|$. Substituting $y=Tx$, we get 
+	\begin{equation*}
+		\|Tx\| \geq \frac{1}{C}\|x\|.
+	\end{equation*}
+	Letting $c=1/C$ shows $T$ is bounded below.
+\end{proof}
+
+\nocite{pm_neumann_series}
+\nocite{wikipedia_neumann_series}
+\nocite{se_linear_cts_bounded}
+\nocite{se_inv_bounded_below}
+\printbibliography
+
+\end{refsection}
+% uncategorized }}}1
+
+\section{sequence spaces} % {{{1 
+
+\begin{proposition}
+	If $1\leq p < q < \infty$, then $\ell^p\subset\ell^q$.
+\end{proposition}
+\begin{proof}
+	Suppose $(z_n)^q\in\ell^p$. Then $\sum_n |z_n|^p<\infty$. We want to show that $\sum |z_n|^q<\infty$.
+
+	Since $\sum |z_n|^p<\infty$, there exists $N>1$ such that $|z_n|^p<1$ for all $i>N$. Since $p<q$, it must also be the case that $|z_n|^q<1$ for all $i>N$. Then 
+	\begin{align*}
+		\sum_{n=1}^\infty |z_n|^q 
+		=& \sum_{i=1}^N |z_n|^q + \sum_{j=N+1}^\infty |z_n|^q \\
+		\leq& 1 + \sum_{i=1}^N |z_n|^q < \infty.
+	\end{align*}
+\end{proof}
+
+% sequence spaces }}}1
+
+\section{topologies} % {{{1
+\begin{refsection}
+
+\subsection{weak and weak*} % {{{2 
+
+Consider the pairing
+\begin{align*}
+	\langle -, -\rangle : X\times X^\ast &\to \mathbb{C} \\
+	(x,f) &\mapsto f(x).
+\end{align*}
+This restricts to functions 
+\begin{gather*}
+	\langle -, f\rangle: X \to \mathbb{C} \\
+	\langle x, -\rangle: X^\ast \to \mathbb{C}.
+\end{gather*}
+
+\begin{definition}
+\label{def_weak_weakstar}
+	\hfill
+	\begin{itemize}
+		\item The \emph{weak} topology (on $X$) is the coarsest topology making the functions $\langle -, f\rangle$ continuous.
+		\item The \emph{weak*} topology (on $X^\ast$) is the coarsest topology making the functions $\langle x, -\rangle$ continuous.
+	\end{itemize}
+\end{definition}
+
+\begin{remark}
+\label{rmk_weak_is_pointwise}
+	The topologies in Definition \ref{def_weak_weakstar} are ``topologies of pointwise convergence''. Taking the weak* topology, for example, the assertion that it is the coarsest topology making the $\langle x, -\rangle$ continuous means (using the characterization of continuity by converging nets) $f_n\to f$ if and only if $\langle x, f_n\rangle \to \langle x, f\rangle$ for all $x$, i.e. $f_n(x)\to f$ for all $x$.
+\end{remark}
+
+\begin{remark}
+	Since the weak and weak* topologies are not a topology induced by a norm, we will often have to work with nets rather than just sequences.
+\end{remark}
+
+% weak }}}2
+
+\subsection{quotient} % {{{2 
+
+\begin{proposition}
+\label{prop_quotient_nvs}
+	Let $X$ be a normed vector space, and $V$ a closed linear subspace. Then the quotient $X/V$ is a normed vector space with respect to the quotient norm 
+	\begin{equation*}
+		\|[x]\| = \inf_{v\in V}\|x + v\| = \inf_{x'\sim x}\|x'\|.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	$X/V$ has classes $[x]$ such that $x\sim x'$ if and only if $x-x'\in V$ \todo{move to footnote}. \todo{check linear, w.d.} 
+
+	Now we will show the quotient norm is a norm.
+	\begin{itemize}
+		\item If $[x]=0$, then $x\sim 0$ so $x\in V$. Let $v=-x$. Then 
+			\begin{equation*}
+				\|[x]\| = \inf_{v\in V}\|x + v\| = \|x-x\| = 0.
+			\end{equation*}
+			Conversely, if $\|[x]\|=0$ then there exists $(v_n)\subset V$ such that $\|x+v_n\|\to 0$. Then $-v_n\to x$ in $X$. Since $V$ is closed, it must be that $x\in V$, so $x\sim 0$ and $[x]=0$. 
+		\item For nonzero $\lambda\in\mathbb{C}$ and $x\in X$, 
+			\begin{align*}
+				\|[\lambda x]\|
+				=& \inf_{v\in V}\|\lambda x + v\| = \inf_{v\in V}\|\lambda x + \lambda v\| \\
+				=& |\lambda| \inf_{v\in V} \|x + v\| = |\lambda|\cdot \|[x]\|.
+			\end{align*}
+		\item For all $x,y\in X$, 
+			\begin{align*}
+				\|[x] + [y]\|
+				=& \inf_{v\in V} \|x+y+v\| \\
+				=& \inf_{v,w\in V} \|x+y+v+w\| \\
+				\leq& \inf_{v,w\in V} (\|x+v\| + \|y+w\|) \\
+				=& \|[x]\| + \|[y]\|.
+			\end{align*}
+	\end{itemize}
+	Hence it's a norm.
+\end{proof}
+
+\begin{proposition}
+\label{prop_quotient_banach}
+	If moreover $X$ is a Banach space, then so is $X/V$. 
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop_absolute_convergence_implies_convergence}, it suffices to show that every absolutely convergent series is convergent. Let $([x_n])\subset X/V$ be such that 
+	\begin{equation*}
+		\sum_{n=1}^\infty \|[x_n]\| < \infty.
+	\end{equation*}
+	Then, by definition of the infimum, for each $n$ there exists $v_n$ such that 
+	\begin{equation*}
+		\|x_n + v_n\| < \inf_{v\in V}\|x_n + v\| + \frac{1}{2^n} = \|[x_n]\| + \frac{1}{2^n}.
+	\end{equation*}
+	Hence
+	\begin{equation*}
+		\sum_{n=1}^\infty \|x_n + v_n\| < \sum_{n=1}^\infty \left( \|[x_n]\| + \frac{1}{2^n} \right) = \sum_{n=1}^\infty \|[x_n]\| + 1 < \infty.
+	\end{equation*}
+	Since $X$ is Banach, there exists $y\in X$ such that 
+	\begin{equation*}
+		y = \sum_{n=1}^\infty (x_n + v_n).
+	\end{equation*}
+	We claim 
+	\begin{equation*}
+		\sum_{n=1}^\infty [x_n] = [y].
+	\end{equation*}
+	Calculate:
+	\begin{align*}
+		\|[y] - \sum_{k=1}^n [x_k]\|
+		=& \| [y - \sum_{k=1}^n x_k] \| \\
+		=& \inf_{v\in V} \|y - \sum_{k=1}^n x_k + v \| \\
+		\leq& \|y - \sum_{k=1}^n x_k - \sum_{k=1}^n v_k \| \quad \text{(defined above)}
+		=& \|y - \sum_{k=1}^n (x_k + v_k) \| \to 0.
+	\end{align*}
+	This shows what we want.
+\end{proof}
+
+% quotient }}}2
+
+\nocite{wikipedia_weak}
+\nocite{se_weakstar_distributions}
+\printbibliography
+
+\end{refsection}
+% topologies }}}1
+
+\section{key theorems} % {{{1
+\begin{refsection}
+
+\subsection{Banach-Alaoglu} % {{{2
+
+\begin{theorem}[Banach-Alaoglu]
+\label{thm_banach_alaoglu}
+	If $V$ is a normed vector space, then the closed unit ball in $V^\ast$ is compact in the weak* topology.
+\end{theorem}
+\begin{proof}
+	The idea is to show the closed unit ball in $V^\ast$ is homeomorphic to a closed subset of a compact set, in particular a set which is the product of compact sets (hence we need Tychanoff's theorem). Specifically:
+
+	For $v\in V$, let 
+	\begin{equation*}
+		D_v = \{z\in\mathbb{C} : |z| \leq \|v\|\}.
+	\end{equation*}
+	Then each $D_v$ is compact. Define 
+	\begin{equation*}
+		D = \prod_{v\in V} D_v.
+	\end{equation*}
+	Then $D$ is compact by Tychanoff's theorem. We claim that $B_{V^\ast}$ is homeomorphic to a closed subset of $D$.
+
+	Let us define a map exhibiting this proposed homeomorphism. For eavh $v\in V$, let
+	\begin{align*}
+		\Phi_v: B_{V^\ast} &\to D_v \\
+		f &\mapsto f(v)
+	\end{align*}
+	and 
+	\begin{align*}
+		\Phi: B_{V^\ast} &\to D \\
+		f &\mapsto (f(v))_{v\in V}.
+	\end{align*}
+
+	First we verify $\Phi$ is continuous. It suffices to show that for any net $(f_{\alpha}) \subset B^\ast$ which converges to $f$ in the weak* topology, then $\Phi(f_{\alpha})\to \Phi(f)$. So let $(f_\alpha)$ be such a net. Since convergence in the weak* topology is pointwise convergence, it must be the case that $f_\alpha(v) \to f(v)$ for all $v\in V$ (Remark \ref{rmk_weak_is_pointwise}). But then 
+	\begin{equation*}
+		\Phi(f_\alpha) = (f_\alpha(v))_{v\in V} \to (f(v))_{v\in V} = \Phi(f)
+	\end{equation*}
+	as desired.
+
+	We also claim $\Phi$ is injective. Indeed, if $\Phi(f)=\Phi(g)$ then $(f(v))_{v\in V} = (g(v))_{v\in V}$ so $f(v)=g(v)$ for all $v$, i.e. $f=g$. Thus there exists a continuous inverse from $\text{Im}(\Phi)\to B_{V^\ast}$.
+
+	Thus $\Phi$ is a homeomorphism onto its image. It remains to show that $\text{Im}(\Phi)$ is closed. Consider a net $(\Phi(f_\alpha))\subset\text{Im}(\Phi)$ converging to $d=(d_v)_{v\in V}\in D$. We wish to show $d\in \Phi(B_{V^\ast})$. Consider the function
+	\begin{align*}
+		f: X &\to \mathbb{C} \\
+		x &\mapsto d_x.
+	\end{align*}
+	Then $\Phi(f)=d$, and $(\Phi(f_\alpha)) \to \Phi(f)$. Then $f_\alpha \to f$ in the weak* topology, by the continuity of $\Phi$. In particular, this would mean $f\in B_{V^\ast}$, and so $\Phi(f)=d\in \Phi(B_{V^\ast})$.  
+\end{proof}
+
+% Banach-Alaoglu }}}2
+
+\subsection{open mapping theorem} % {{{2
+
+We present three major theorems (open mapping, bounded inverse, closed graph) which turn out to be equivalent to each other, in the sense that they all imply each other. We choose to prove the open mapping theorem, and derive the others from it. A technical aspect of all of these theorems is that their proofs use the Baire category theorem (\todo{ref bct}).
+
+\begin{theorem}[open mapping theorem]
+\label{thm_omt}
+	If $A:X\to Y$ is a surjective, continuous, linear function between Banach spaces, then $A$ is open.
+\end{theorem}
+\begin{proof}
+	The idea is to first observe it suffices to show the unit ball in $X$ is contains a neighborhood around the origin of $Y$. Then, to show this is the case under the conditions of the theorem, we consider $X$ as a union of open balls around the origin. Since $A$ is surjective, $Y$ is the image of this union, hence can itself be expressed as some union of (closures of) images of open balls in $X$. We then use the Baire category theorem to assert at least one of the terms in the union has nonempty interior. We then show the unit ball in $Y$ (essentially) lies in the image of this open ball, and we rearrange constants to show the image of the unit ball in $X$ contains an open ball around the origin of $Y$.
+
+	\begin{proposition}
+		A linear map $A:X\to Y$ is open if and only if the image of the unit ball in $X$ contains a neighborhood around the origin in $Y$.
+	\end{proposition}
+	\begin{proof}
+		Let $U\subset X$ be open. Translating and scaling are homeomorphisms, so without loss of generality we assume $U$ contains the unit ball in $X$. We want to show that, for any $y\in A(U)$ we can find a neighborhood of $y$ contained in $A(U)$.
+
+		Let $x$ be such tat $Ax=y$. Since $U$ is open, there exists $r<1$ such that $B_r(x)\subset U$. Since $r<1$, we also have $B_r(0)\subset B_1(0)$. By linearlity, $A(x+B_r(0))=y+A(B_r(0))$. Now $A(B_r(0))$ must contain a neighborhood of the origin (of $Y$), since $B_1(0)$ does by assumption, and $A(0)=0$. Call such a neighborhood $P$. Then $y+P$ is an open neighborhood around $y$, contained in the image of $A(x+B_r(0))\subset A(U)$. Since we can do this for all $y\in A(U)$, we are done.
+	\end{proof}
+
+	Now let $A:X\to Y$ be a surjective, continuous, linear map between Banach spaces. Let 
+	\begin{equation*}
+		U=B_1^X(0), \quad V=B_1^Y(0).
+	\end{equation*}
+	Then we can write
+	\begin{equation*}
+		X=\bigcup_{k\in\mathbb{N}}kU = \bigcup_{k\in\mathbb{N}}B_k^X(0).
+	\end{equation*}
+	Since $A$ is surjective,
+	\begin{equation*}
+		Y=A(X)=A(\bigcup_{k\in\mathbb{N}}kU)=\bigcup_{k\in\mathbb{N}}A(kU)=\bigcup_{k\in\mathbb{N}}\overline{A(kU)},
+	\end{equation*}
+	where we were able to pull out the infinite union because $A$ is continuous. We have thus expressed $Y$ as a countable union of closed sets. $Y$ has an interior point, so by the Baire category theorem (\todo{ref BCT}) there exists at least one $k$ such that $\overline{A(kU)}$ has an interior point. 
+
+	Since $\overline{A(kU)}$ has an interior point, there exists $c\in\overline{A(kU)}\subset Y$ and $r>0$ such that $B_r(c)\subset \overline{A(kU)}$. In particular, both $c,(c+rv)\in \overline{A(kU)}$ for any $v\in V$. So 
+	\begin{align*}
+		rv =& (c+rv) - c \\
+		\in& \overline{A(kU)} - \overline{A(kU)} \\
+		=& \overline{A(kU)} + \overline{A(-kU)} \\
+		=& \overline{A(kU)} + \overline{A(kU)} \\
+		\subset& \overline{A(kU) + A(kU)} \\
+		\subset& \overline{A(2kU)}.
+	\end{align*}
+	We were able to move the substraction inside $A$ by both the continuity of addition/substraction (to bring it under the closure) and the continuity of $A$ (to then bring it inside $A$). By continuity again, we get 
+	\begin{equation*}
+		V\subset \overline{A\left(\frac{2k}{r}U\right)}.
+	\end{equation*}
+
+	Write $L=\frac{2k}{r}$, so that $V\subset \overline{A(LU)}$.
+
+	\begin{proposition}
+	\label{prop_open_mapping_of_any_y}
+		For any $y\in Y$ and any $\epsilon>0$, there exists $x\in X$ such that 
+		\begin{equation*}
+			\|x\| \leq L\|y\|, \quad \|y - Ax\| < \epsilon.
+		\end{equation*}
+	\end{proposition}
+	\begin{proof}
+		For any $m>\|y\|$, we know $\frac{y}{m}\in V$, and so there exists a sequence $(x_n)\in U$ such that  
+		\begin{equation*}
+			\lim_{n\to\infty}A\left(Lx_n\right) = \frac{y}{m}.
+		\end{equation*}
+		By continuity, 
+		\begin{equation*}
+			\lim_{n\to\infty}A\left(mLx_n\right) = y.	
+		\end{equation*}
+		We can then pick an $x$ from the above sequence such that $\|Ax-y\|<\epsilon$. We also know that $x\in B_{mL}^X(0)$, and so $\|x\| < mL$. Since the inequality holds for any $m>\|y\|$, we have that $\|x\|\leq L\|y\|$.
+	\end{proof}
+
+	\begin{proposition}
+		$V\subset A(2LU)$.
+	\end{proposition}
+	\begin{proof}
+		Fix $v\in V$. First we will construct a sequence $(x_n)$ such that 
+		\begin{equation*}
+			\|x_n\| < \frac{L}{2^{n}},\quad \|v-A(\sum_{i=1}^n x_i)\|<\frac{1}{2^n}.
+		\end{equation*}
+		We proceed by induction. For the base case the result follows from Proposition \ref{prop_open_mapping_of_any_y}. Suppose we have constructed $x_n$. Then, setting $y=v-A(\sum_{i=1}^n x_n)$, it follows that $y\in V$ by the induction step. Hence we can find $x_{n+1}$ such that 
+		\begin{equation*}
+			x_{n+1} < \frac{L}{2^{n+1}}, \quad \|v-A(\sum_{i=1}^{n+1}x_i)\| = \|y-Ax_{n+1}\| < \frac{1}{2^{n+1}}
+		\end{equation*}
+		as desired. Thus we have constructed the sequence.
+		
+		Write $s_n$ for the $n$th partial sum, and consider the sequence $(s_n)$. Note
+		\begin{equation*}
+			\sum_{n=1}^\infty \|x_n\| \leq \sum_{n=1}^\infty \frac{L}{2^{n}} = L < 2L < \infty.
+		\end{equation*}
+		So the series $\sum_n x_n$ is absolutely convergent, hence convergent by Proposition \ref{prop_absolute_convergence_implies_convergence}, i.e. the sequence $(s_n)$ converges, call its limit $x$. Furthermore, by the triangle ineqality,
+		\begin{equation*}
+			\|x\|=\left\|\sum_{n=1}^\infty x_n\right\|\leq \sum_{n=1}^\infty \|x_n\| < 2L,
+		\end{equation*}
+		i.e. $x\in 2LU$.
+
+		Now by construction, $\|v-As_n\|\to 0$, and so $As_n\to v$. By continuity, it must be that $Ax=v$. Hence $v\in A(2LU)$. Since $v\in V$ was arbitrary, $V\subset A(2LU)$. Then $V/2L\subset A(U)$, and so $A(U)$ contains a neighborhood around the origin in $Y$. 
+	\end{proof}
+\end{proof}
+
+\begin{theorem}[bounded inverse theorem]
+\label{thm_bounded_inverse}
+	If $A:X\to Y$ is a bijective, continuous (bounded), linear function between Banach spaces, then $A^{-1}$ is continuous (bounded).
+\end{theorem}
+\begin{proof}
+	For $U\subset X$ open, $(A^{-1})^{-1}(U)=A(U)$ is open by Theorem \ref{thm_omt}. The substitution of ``bounded'' for ``continuous'' is justified by Proposition \ref{prop_linear_continuous_bounded}.
+\end{proof}
+
+\begin{definition}
+	The \emph{graph} of a function $f:X\to Y$ is the set 
+	\begin{equation*}
+		\Gamma(f) \coloneqq \{ (x, f(x)) \} \subset X\times Y.
+	\end{equation*}
+\end{definition}
+
+\begin{theorem}[closed graph theorem]
+	Let $A:X\to Y$ be a linear map between Banach spaces. Then the following are equivalent:
+	\begin{enumerate}
+		\item $A$ is continuous.
+		\item $\Gamma(A)\subset X\times Y$ is closed.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	($1\Rightarrow 2$) Suppose $A$ is continuous. We wish to show $\Gamma(A)$ is closed, that is, for every convergent sequence $(x_n, Ax_n)\to (x,y)$, we have that $(x,y)\in \Gamma(A)$. By definition of the product topology, the projection maps $\pi_X$ and $\pi_Y$ are continuous. Hence 
+	\begin{gather*}
+		\lim_{n\to\infty} x_n = \lim_{n\to\infty}\pi_X(x_n, Ax_n) = \pi_X(x,y) = x, \\
+		\lim_{n\to\infty} Ax_n = \lim_{n\to\infty}\pi_Y(x_n, Ax_n) = \pi_Y(x,y) = y.
+	\end{gather*}
+	Since $A$ is also continuous, 
+	\begin{equation*}
+		y = \lim_{n\to\infty} Ax_n = Ax.
+	\end{equation*}
+	Thus $(x,y)\in\Gamma(A)$.
+
+	($2\Rightarrow 1$) Suppose $\Gamma(A)$ is closed. We wish to show $A$ is continuous. First note that $\Gamma(A)$ is Banach, being a closed subset of the Banach space $X\times Y$. Consider the function $G: X\to \Gamma(A)$. It is bijective, so consider its inverse $G^{-1}$. Note $G^{-1}$ is continuous since it is the restriction of the continuous function $\pi_X$. One also checks it is linear. Thus $G^{-1}:\Gamma(A)\to X$ is a bijective, continuous, linear function between Banach spaces, so $G$ is continuous by the bounded inverse theorem (Theorem \ref{thm_bounded_inverse}). Then $A=\pi_Y\circ G$ is continuous. 
+\end{proof}
+
+\begin{remark}
+	The great utility of this tool is rather subtle. Generally, to prove $A$ as above is continuous we must show that if $x_n\to x$ then $Ax_n\to Ax$. The closed graph theorem tells you that it suffices to prove something weaker: you must show that if $x_n\to x$ and there exists $y$ such that $Ax_n\to y$, then $Ax=y$. The point is, that with the closed graph theorem, you can assume $Ax_n$ converges to something, and then just try to show that the thing it converges to is $Ax$.
+\end{remark}
+
+% open mapping theorem }}}2
+
+\subsection{uniform boundedness principle} % {{{2 
+
+This principle states that if a collection of continuous, linear operators $F$ from a Banach space $X$ to an \emph{arbitrary} normed vector space $Y$ is pointwise bounded, then it is uniformly bounded.
+
+\begin{theorem}[uniform boundedness principle]
+\label{thm_ubp}
+	Let $X, Y, F$ be as above. If 
+	\begin{equation*}
+		\sup_{T\in F} \|Tx\| < \infty
+	\end{equation*}
+	for all $x\in X$, then 
+	\begin{equation*}
+		\sup_{T\in F} \|T\| < \infty.
+	\end{equation*}
+\end{theorem}
+
+\begin{remark}
+	In particular, $F$ may consist of a single operator $T$, in which case the theorem says pointwise boundedness of $T$ implies uniform boundedness of $T$. But the theorem is stronger in that it generalizes that case, in some sense, to a collection of operators.
+\end{remark}
+
+\begin{proof}
+	The idea is to use the Baire category theorem to find a subset of $X$ which is bounded by all $T\in F$ and which has nonempty interior. Then, for any unit vector $u\in X$, we can bound $\|Tu\|$ by values of $T$ on that subset, which is bounded. 
+
+	As in the theorem, suppose 
+	\begin{equation*}
+		\sup_{T\in F}\|Tx\| < \infty.
+	\end{equation*}
+	Define 
+	\begin{equation*}
+		X_n = \{ x\in X : \sup_{T\in F} \|Tx\| \leq n \}
+	\end{equation*}
+	
+	\begin{proposition}
+		$X_n$ is closed.
+	\end{proposition}
+	\begin{proof}
+		Let $(x_n)\subset X_n$. We need to show that if $(x_n)\to x\in X$, then $x\in X_n$. We calculate 
+		\begin{align*}
+			\sup_{T\in F} \|Tx\| =& \sup_{T\in F}\|T(\lim_{i\to\infty}x_i)\| \\
+			=& \sup_{T\in F} (\lim_{n\to\infty} \|Tx_i\|) \\
+			\leq& \sup_{T\in F} n = n.
+		\end{align*}
+		Thus $x\in X_n$.
+	\end{proof}
+
+	Continuing, we can write 
+	\begin{equation*}
+		X=\bigcup_{n\in\mathbb{N}} X_n,
+	\end{equation*}
+	so by the Baire category theorem (\todo{ref bct}) there exists $m\in\mathbb{N}$ such that $X_m$ has non empty interior. In particular, there exists $\epsilon>0$ and $x_0\in X_m$ such that $\overline{B_\epsilon(x_0)}\subset X_m$. 
+
+	Now let $u\in X$ be such that $\|u\|=1$, and also let $T\in F$. Then 
+	\begin{align*}
+		\|Tu\| =& \frac{1}{\epsilon} \|T(x_0+\epsilon u) - Tx_0 \| \\
+		\leq& \frac{1}{\epsilon} ( \|T(x_0 + \epsilon u)\| + \|Tx_0\| ) \\
+		\leq& \frac{1}{\epsilon} (m + m) = \frac{2m}{\epsilon}.
+	\end{align*}
+	Finally, 
+	\begin{align*}
+		\sup_{T\in F} \|T\| 
+		=& \sup_{T\in F} \left( \sup_{\|u\|=1} \|Tu\| \right) \\
+		\leq& \frac{2m}{\epsilon} < \infty
+	\end{align*}
+	and we are done.
+\end{proof}
+
+% ubp }}}2
+
+\nocite{pm_banach_alaoglu_proof}
+\nocite{se_linear_open_conditions}
+\nocite{wikipedia_open_mapping}
+\nocite{pm_closed_graph_proof}
+\nocite{wikipedia_ubp}
+\printbibliography
+
+\end{refsection}
+% key theorems }}}1
+
+\section{Spectrum} % {{{1
+\begin{refsection}
+
+\subsection{basics} % {{{2
+
+We introduce spectral theory here in the more general context of (not necessarily complete) normed vector spaces $X$ with unit $1$.
+
+Let $U\subset X$ , and let $T:U \to X$ be a linear operator.
+
+\begin{definition} % regular values
+	$\lambda\in\mathbb{C}$ is called \emph{regular} if the following conditions hold:
+	\begin{enumerate}[label=R\arabic*.,ref=R\arabic*]
+		\item\label{def_regular_exists} $(T-\lambda 1)^{-1}$ exists.
+		\item\label{def_regular_bounded} $(T-\lambda 1)^{-1}$ is bounded.
+		\item\label{def_regular_dense} $(T-\lambda 1)^{-1}$ has a dense (in $X$) domain, i.e. $\text{Im}(T-\lambda 1)$ is dense in $X$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition} % resolvent set
+\label{def_resolvent_set}
+	The set of regular values is called the \emph{resolvent set} of $T$, and is denoted $\rho(T)$.
+\end{definition}
+
+\begin{definition} % resolvent function
+	The function $R_T$ mapping $\lambda \mapsto (T-\lambda 1)^{-1}$ is callend the \emph{resolvent function}.
+\end{definition}
+
+\begin{definition} % spectrum
+\label{def_spectrum}
+	The \emph{spectrum} of $T$ is defined as $\sigma(T) \coloneqq \mathbb{C} \setminus \rho(T)$. 
+\end{definition}
+
+\begin{remark}
+\label{rmk_banach_space_spectrum_def_equivalent}
+	For a Banach space $\mathcal{G}$ and $T\in B(\mathcal{G})$, the spectrum is usually defined as 
+	\begin{equation*}
+		\sigma(T) = \{ \lambda\in\mathbb{C} : (T-\lambda 1)^{-1} \not\in B(\mathcal{G}) \}.
+	\end{equation*}
+	(the above notation does not suppose the existence of $(T-\lambda 1)^{-1}$). Let us show that this is equivalent to Definition \ref{def_spectrum}. 
+
+	To begin, suppose $\lambda$ is regular. Then $(T-\lambda 1)^{-1}$ extends uniquely to a bounded linear operator $\mathcal{G}\to\mathcal{G}$ \todo{ref from thesis}. Hence $(T-\lambda 1)^{-1}\in B(\mathcal{G})$ and $\lambda\in\sigma(T)$ according to the definition above. Conversely, suppose $\lambda$ is such that $(T-\lambda 1)^{-1}\in B(\mathcal{G})$. Then immediately $\lambda$ is regular.
+
+	Also for Banach spaces, the resolvent set is sometimes defined as 
+	\begin{equation*}
+		\rho(T) = \{ \lambda\in\mathbb{C} : (T-\lambda 1) \text{ is bijective} \}.
+	\end{equation*}
+	This is equivalent to Definition \ref{def_resolvent_set}. To see this, first suppose $(T-\lambda 1)$ is bijective. Then by the bounded inverse theorem (Theorem \ref{thm_bounded_inverse}), we get that $(T-\lambda 1)^{-1}$ is also bounded. Thus $\lambda$ is regular. Conversely, suppose $\lambda$ is regular. Then as above, $(T-\lambda I)^{-1}$ extends uniquely to a bounded linear operator $\mathcal{G}\to\mathcal{G}$, so in particular $(T-\lambda 1)$ is bijective.
+\end{remark}
+
+The spectrum of a linear operator $T$ can be decomposed as follows:
+
+\begin{center}
+\begin{tabular}{ | C{1cm} | C{1cm} | C{1cm} || C{2.5cm} |  }
+	\hline
+	\multicolumn{3}{|c||}{property of $\lambda$}& \multirow{2}{=}{\centering $\lambda$ belongs to:} \\
+	\cline{1-3}
+	\ref{def_regular_exists} & \ref{def_regular_bounded} & \ref{def_regular_dense} & {} \\
+	\hline
+	\xmark & \xmark & \xmark & $\sigma_p(T)$ \\
+	\hline
+	\cmark & \xmark & \cmark & $\sigma_c(T)$ \\
+	\hline
+	\cmark & \cmark & \xmark & \multirow{2}{=}{\centering $\sigma_r(T)$} \\
+	\cmark & \xmark & \xmark & \\
+	\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+	\ref{def_regular_bounded} and \ref{def_regular_dense} can only be satisfied if \ref{def_regular_exists} is satisfied.
+\end{remark}
+
+\begin{definition}
+	$\sigma(T)$ can be decomposed into the following disjoint sets:
+	\begin{itemize}
+		\item the \emph{point spectrum}, denoted $\sigma_p(T)$.
+		\item the \emph{continuous spectrum}, denoted $\sigma_c(T)$.
+		\item the \emph{residual spectrum}, denoted $\sigma_r(T)$.
+	\end{itemize}
+\end{definition}
+
+\begin{definition} % approximate eigenvalues
+	Let $X$ be a Banach space, and $T\in B(X)$. A scalar $\lambda$ is called an \emph{approximate eigenvalue} of $T$ if $T-\lambda I$ is not bounded below, i.e. there exists a sequence of unit vectors $(x_n)$ such that $Tx_n-\lambda x_n \to 0$. Such a sequence $(x_n)$ is called a \emph{Weyl sequence}. The set of approximate eigenvalues of $T$ is denoted $\sigma_{\text{ap}}(T)$.
+\end{definition}
+
+\begin{proposition}
+	Approximate eigenvalue lie in the spectrum. 
+\end{proposition}
+\begin{proof}
+	Let $\lambda$ be an approximate eigenvalue, and $(x_n)$ a Weyl sequence. If $T-\lambda I$ is not injective, then $\lambda\in\sigma_p(T)\subset\sigma(T)$. So it suffices to consider the case when $T-\lambda I$ is injective. In that case, suppose $(T-\lambda I)^{-1}$ is bounded (hence continuous). But then $\lim_{n\to\infty} \|x_n\| = 1$ contradicts the computation
+	\begin{align*}
+		\lim_{n\to\infty} x_n 
+		=& \lim_{n\to\infty} (T-\lambda I)^{-1}(T-\lambda I)x_n \\
+		=& (T-\lambda I)^{-1}\lim_{n\to\infty} (T-\lambda I)x_n \\
+		=& (T - \lambda I)^{-1} (0) = 0.
+	\end{align*}
+	In other words, if $\lambda$ satisfies \ref{def_regular_exists} then it fails \ref{def_regular_bounded}. Thus $\lambda\in\sigma(T)$.
+\end{proof}
+
+\begin{corollary}
+	$\sigma_p(T) \cup \sigma_c(T) \subset \sigma_{\text{ap}}(T)$.
+\end{corollary}
+
+\begin{definition}
+	The \emph{spectral radius} is defined as 
+	\begin{equation*}
+		\rho(x) \coloneqq \sup_{\lambda \in \sigma(x)} |\lambda|.
+	\end{equation*}
+\end{definition}
+
+% }}}2
+
+
+
+\nocite{pm_resolvent_analytic}
+\nocite{se_spectral_radius_equals}
+\printbibliography
+
+\end{refsection}
+ % spectrum }}}1
+
+\section{extensions of classical analysis} % {{{1
+\begin{refsection}
+
+\subsection{series} %{{{2
+
+\begin{proposition}
+\label{prop_absolute_convergence_implies_convergence}
+	A normed vector space $X$ is Banach if and only if every absolutely convergent series (converges in $\mathbb{C}$) converges (in $X$).
+\end{proposition}
+\begin{proof}
+	First we will show the forward direction. So suppose $X$ is Banach. Suppose the sequence $(x_n)$ is absolutely convergent, i.e. $\sum_n \|x_n\| < \infty$. Then, for any $\epsilon>0$, there exists $N>0$ such that for any $n,m>0$ (assume without loss of generality that $m>n$) we have, in particular, 
+	\begin{equation*}
+		\sum_{i=n+1}^m \|x_i\| < \epsilon.
+	\end{equation*}
+	By the triangle inequality, we also have 
+	\begin{equation*}
+		\left\| \sum_{i=n+1}^m x_i \right\| < \epsilon.
+	\end{equation*}
+	Another way to write this:
+	\begin{equation*}
+		\left\| \sum_{i=1}^m x_n - \sum_{i=1}^n x_n \right\| < \epsilon,
+	\end{equation*}
+	which shows that the partial sums form a Cauchy sequence. Since $X$ is Banch, the partial sums converge (in $X$).
+
+	Now we will show the reverse direction, so suppose every absolutely convergent series converges. Let $(x_n)$ be Cauchy in $X$. We need to show that it converges.
+
+	Since $(x_n)$ is Cauchy, there exists $N_m>0$ such that, for all $k, k'\geq N_m$, we have $\|x_k-x_{k'}\|<m^{-2}$. Now pick the sequence $(N_m)_1^\infty$ such that it is increasing. Then 
+	\begin{equation*}
+		\sum_{m=1}^\infty \|x_{N_m} - x_{N_{m+1}} \| < \sum_{m=1}^\infty \frac{1}{m^2} < \infty.
+	\end{equation*}
+	By assumption, absolute convergence implies convergence so 
+	\begin{equation*}
+		\sum_{m=1}^\infty (x_{N_m} - x_{N_{m+1}})
+	\end{equation*}
+	converges (in $X$), call its limit $x'$. But notice that the above sum is telescoping, i.e.
+	\begin{equation*}
+		\sum_{m=1}^\infty (x_{N_m} - x_{N_{m+1}}) = \lim_{m\to\infty}(x_{N_1} - x_{N_m})=x_{N_1} - \lim_{m\to\infty}x_{N_m} = x.
+	\end{equation*}
+	Thus $\lim_{m\to\infty} x_{N_m}$ converges, and since $(x_{N_m})$ is a subsequence of a Cauchy sequence, the Cauchy sequence must also converge to the same limit.
+\end{proof}
+
+\begin{theorem}[radius of convergence]
+\label{thm_radius_of_convergence}
+	The series
+	\begin{equation*}
+		F(\lambda) = \sum_{n=0}^\infty \lambda^n x_n
+	\end{equation*}
+	converges absolutely (hence in $X$, by Proposition \ref{prop_absolute_convergence_implies_convergence}) if 
+	\begin{equation*}
+		\limsup_n |\lambda| \cdot \|x_n\|^{1/n} < 1
+	\end{equation*}
+	and does not converge if 
+	\begin{equation*}
+		\limsup_n |\lambda| \cdot \|x_n\|^{1/n} > 1.
+	\end{equation*}
+\end{theorem}
+\begin{proof}
+	First we will show the claim about convergence. Suppose $\limsup_n |\lambda|\cdot\|x_n\|^{1/n} < 1$. Since $\limsup$ is nondecreasing, there exists $N>0$ and $0<r<1$ such that $\sup_{n\geq N} |\lambda| \cdot \|x_n\|^{1/n} < r^n < 1$, i.e.
+	\begin{equation*}
+		\sup_{n\geq N} |\lambda|^n \cdot \|x_n\| < r^{n} < 1.
+	\end{equation*}
+	This implies
+	\begin{equation*}
+		\sum_{n=N}^\infty |\lambda|^n \cdot \|x_n\| < \sum_{n=N}^\infty r^n.
+	\end{equation*}
+	Since $0<r<1$, 
+	\begin{equation*}
+		\sum_{n=N}^\infty = \sum_{n=1}^\infty r^n - \sum_{n=1}^{N-1} r^n = \frac{1}{1-r} - \frac{1-r^N}{1-r} < \infty, 
+	\end{equation*}
+	and this implies
+	\begin{equation*}
+		\sum_{n=0}^\infty |\lambda|^n \cdot \|x_n\| 
+	\end{equation*}
+	converges.
+	
+	For the divergence claim, suppose now that $\limsup_n |\lambda| \cdot \|x_n\|^{1/n} > 1$. But then we can find a subsequence $\{x_{n_k}\}$ for which 
+	\begin{equation*}
+		|\lambda| \cdot \|x_{n_k}\|^{1/n_k} > 1,
+	\end{equation*}
+	then
+	\begin{equation*}
+		\lim_{n_k\to\infty} |\lambda|^{n_k} \cdot \|x_n\| = \infty,
+	\end{equation*}
+	and the sum
+	\begin{equation*}
+		\sum_{n=0}^\infty \lambda^n x_n
+	\end{equation*}
+	surely diverges if its terms don't approach 0 in norm.
+\end{proof}
+
+% series }}}2
+
+\subsection{function kinds} % {{{2
+
+Let $\Omega\subset\mathbb{C}$ be open, and let $X$ be a complex Banach space.
+
+\begin{definition}
+\label{def_analytic}
+	A function $f:\Omega\to X$ is \emph{analytic} if, for every $\lambda_0\in\Omega$, there exists a neighborhood $U\ni \lambda_0$ in which $f$ is the uniform limit of a power series with coefficients in $X$ centered at $\lambda_0$; i.e. for every $\lambda\in U$
+	\begin{equation*}
+		f(\lambda) = \sum_{k=0}^\infty a_k (\lambda - \lambda_0)^k
+	\end{equation*}
+	(where $a_k\in X$).
+\end{definition}
+
+\begin{definition}
+	A function $f:\Omega\to X$ is \emph{holomorphic} or \emph{differentiable} at a point $\lambda_0\in\Omega$ if 
+	\begin{equation*}
+		f'(\lambda_0)\coloneqq \lim_{\lambda\to\lambda_0} \frac{f(\lambda) - f(\lambda_0)}{\lambda - \lambda_0}
+	\end{equation*}
+	exists (in $X$). We say that $f$ is holomorphic on $S\subset\Omega$ if it is holomorphic at every point $\lambda_0\in S$.
+\end{definition}
+
+\begin{proposition}[differentiation properties]
+	\hfill
+	\begin{enumerate}
+		\item (chain rule) If $f:\Omega\to X$ is holomorphic at $\lambda_0$, and $\phi:X\to\mathbb{C}$ is a continuous linear functional, then $\phi\circ f$ is holomorphic (in the sense of complex numbers) and 
+			\begin{equation*}
+				(\phi \circ f)'(\lambda_0) = \phi(f'(\lambda)).
+			\end{equation*}
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\hfill
+	\begin{enumerate}
+		\item Since $\phi$ is a linear functional, we can pull out (or push in) scalars, and since it is continuous we can bring limits in, so
+			\begin{align*}
+				(\phi\circ f)'(\lambda_0) =& \lim_{\lambda\to\lambda_0} \frac{\phi(f(\lambda)) - \phi(f(\lambda_0))}{\lambda - \lambda_0} \\
+				=& \phi \left( \lim_{\lambda\to\lambda_0} \frac{f(\lambda) - f(\lambda_0)}{\lambda - \lambda_0} \right) \\
+				=& \phi(f'(\lambda_0)).
+			\end{align*}
+	\end{enumerate}
+\end{proof}
+
+% function kinds }}}2
+
+\subsection{contour integrals} % {{{2
+
+TODO: generalize to not just continuous functions.
+
+Let $\gamma: [a,b] \to \mathbb{C}$ be a piecewise smooth path in $\Omega\subset\mathbb{C}$. Let $f:\Omega\to X$ be continuous, and let $\mathcal{P}=\{t_0, t_1, \dots, t_n\}$ be a partition of $[a,b]$.
+
+% contour integrals }}}2
+
+\subsection{classical theorems} % {{{2
+
+\begin{theorem}[Louisville's theorem]
+	TODO
+\end{theorem}
+
+% classical theorems }}}2
+
+\nocite{banach_valued_functions_planet_math}
+\nocite{pm_banach_convergent_series}
+\nocite{se_spectral_radius_equals}
+\printbibliography[heading=subbibliography]
+
+\end{refsection}
+% Banach space valued functions }}}1 
+
+\end{document}

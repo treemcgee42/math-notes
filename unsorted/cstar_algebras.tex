@@ -1,0 +1,1115 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\addbibresource{cstar_algebras.bib}
+\externaldocument{banach_spaces}
+
+\title{$C^\ast$-algebras}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+Unless otherwise stated, the field of scalars is assumed to be $\mathbb{C}$.
+
+\section{Banach algebras} % {{{1 
+
+\begin{definition}
+	A \emph{Banach algebra} is a Banach space $A$ paired with an associative, distributive multiplication such that 
+	\begin{itemize}
+		\item (linearity) $\lambda(ab) = (\lambda a)b = a(\lambda b)$
+		\item (continuity) $\|ab\| \leq \|a\|\cdot\|b\|$
+	\end{itemize}
+	for all $a,b\in A$ and all $\lambda\in\mathbb{C}$.
+\end{definition}
+
+The following justifies the way we describe the second condition (though strictly speaking the second condition is stronger than continuity):
+
+\begin{proposition}
+	Multiplication in a Banach algebra $A$ is continuous (as a function $A\times A\to A$).
+\end{proposition}
+\begin{proof}
+	If $x_n\to x$ and $y_n\to y$ in $A$, then 
+	\begin{align*}
+		\|x_ny_n - xy\| =& \|(x_n-x)y + (y_n-y)x_n\| \\
+		\leq& \|x_n-x\|\cdot\|y\| + \|y_n-y\|\cdot\|x_n\| \\
+		\to& 0.
+	\end{align*}
+	So $x_ny_n\to xy$.
+\end{proof}
+
+\subsection{units} % {{{2 
+
+As one might expect, a unit $1_A\in A$ is an element such that $a1_A=1_Aa=a$ for any $a\in A$. There is a connection between non-unital Banach algebras and unital Banach algebras, specifically in that we can embed any non-unital Banach algebra into a unital one as an ideal of codimension 1.
+
+\begin{corollary}
+	If $A$ has a unit, then the unit is unique.
+\end{corollary}
+\begin{proof}
+	Let $1_A, 1_A'$ be units. Then $1_A = 1_A1_A' = 1_A'1_A = 1_A'$.
+\end{proof}
+
+We would typically expect a unit to have norm 1. However, this is not always the case. The situation isn't far from this, however. We will show it is always true that $\|1_A\|\geq 1$. Furthermore, we can replace the norm on $A$ with an equivalent one in which the (new) norm of $1_A$ is 1.
+
+\begin{proposition}
+	If $A$ is a unital Banach algebra, then $\|1_A\|\geq 1$.
+\end{proposition}
+\begin{proof}
+	Since $1_A = 1_A^2$, it follows $\|1_A\| \leq \|1_A\| \cdot \|1_A\|$. Such an inequality on real numbers only holds for numbers $\geq 1$, hence the result.
+\end{proof}
+
+\begin{lemma}
+\label{lemma_equivalent_unital_norm}
+	If $A$ is a unital Banach algebra, then there exists an equivalent norm $n$ on $A$ such that $A$ is unital and $n(1_A) = 1$. 	
+\end{lemma}
+\begin{proof}
+	For $x\in A$, consider the left multiplication operator $L_x: y\mapsto xy$. 
+	\begin{claim}
+		$L_x$ is injective, bounded, and linear.
+	\end{claim}
+	\begin{proof}[Proof of claim] 
+		For injectivity, suppose $L_x = L_{x'}$. Then in particular $x = x1_A = x'1_A = x'$. For linearity, note 
+		\begin{equation*}
+			L_{\lambda x + y}z = (\lambda x + y)z  = \lambda xz + yz = (\lambda L_x + L_y)(z).
+		\end{equation*}
+		For boundedness, note 
+		\begin{equation*}
+			\|L_x y\| = \|xy\| \leq \|x\| \cdot \|y\|,
+		\end{equation*}
+		so $L_x$ is bounded and in particular $\|L_x\| \leq \|x\|$.
+	\end{proof}
+
+	We now set 
+	\begin{equation*}
+		n(x) = \|L_x\|.
+	\end{equation*}
+	First let us show this norm is equivalent to $\|\cdot\|$. By the above, we already have $n(x) \leq \|x\|$. Conversely,
+	\begin{align*}
+		n(x)  
+		=& \|L_x\| = \sup\{ \|L_xy\| : \|y\|\leq 1 \} \\
+		=& \sup\{ \|xy\| : \|y\|\leq 1 \} \\
+		\geq&  \|xy'\| \quad (\text{setting } y'=\frac{1_A}{\|1_A\|}) \\
+		=& \frac{\|x\|}{\|1_A\|}.
+	\end{align*}
+	In total, 
+	\begin{equation*}
+		\frac{\|x\|}{\|1_A\|} \leq n(x) \leq \|x\|
+	\end{equation*}
+	which proves equivalence.
+
+	Now let us show $n(-)$ makes $A$ a Banach algebra. Completeness follows by equivalence, and for all $x,y\in A$ we have 
+	\begin{align*}
+		n(xy) 
+		=& \|L_{xy}\| = \|L_xL_y\| \\
+		\leq& \|L_x\| \cdot \|L_y\| = n(x)n(y).
+	\end{align*}
+	\todo{ref bounded operators are banach algebra} Thus $A$ is a Banach algebra under $n(-)$. 
+
+	Finally, we check that $n(1_A)=1$:
+	\begin{align*}
+		n(1_A)
+		=& \|L_{1_A}\| \\
+		=& \sup\{ \|L_{1_A}y\| : \|y\|\leq 1 \} = \sup\{ \|y\| : \|y\|\leq 1 \} \\
+		=& 1.
+	\end{align*}
+	This concludes the proof.
+\end{proof}
+
+\begin{lemma}
+	If $A$ is a non-unital Banach algebra, then it can be embedded into a unital Banach algebra $A_I$ as an ideal of codimension 1.
+\end{lemma}
+
+\begin{remark}
+	As our construction will show, $\|1_{A_I}\| = 1$. We don't mention it in the statement above because, by Lemma \ref{lemma_equivalent_unital_norm} we could always modify $A_I$ so that this is the case.
+\end{remark}
+
+\begin{proof}
+	Let $A_I = A \oplus \mathbb{C}$. Define multiplication on $A_I$ as follows: 
+	\begin{equation*}
+		(x,\lambda)(y,\mu) = (xy + \mu x + \lambda y, \lambda\mu).
+	\end{equation*}
+	One checks this is associative and distributive. Also $(0,1)$ is a unit:
+	\begin{equation*}
+		(x,\lambda)(0,1) = (x0 + x + \lambda 0, \lambda 1) = (x,\lambda).
+	\end{equation*}
+	We now define the norm on $A_I$ as follows: 
+	\begin{equation*}
+		\|(x,\lambda)\| = \|x\| + |\lambda|.
+	\end{equation*}
+	Note $\|(0,1)\| = 1$. Let us now verify that this norm makes $A_I$ into a Banach space: suppose a sequence $\{(x_n,\lambda_n)\}\subset A_I$ is Cauchy. Then for any $\epsilon>0$ there exists $N>0$ such that for all $n,m\geq N$ we have $\|(x_n,\lambda_n) - (x_m,\lambda_m)\| < \epsilon$. But then 
+	\begin{equation*}
+		\|(x_n - x_m, \lambda_n - \lambda_m)\| = \|x_n - x_m\| + |\lambda_n - \lambda_m| < \epsilon,
+	\end{equation*}
+	so both $(x_n)\subset A$ and $(\lambda_n)\subset \mathbb{C}$ are Cauchy, hence convergent. Say $x_n\to x$ and $\lambda_n\to \lambda$. Then we can find $N'>0$ such that 
+	\begin{equation*}
+		\|(x_n,\lambda_n) - (x,\lambda)\| = \|x_n-x\| + \|\lambda_n - \lambda\| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon.
+	\end{equation*}
+	This shows completeness.
+
+	Now let us check this norm makes $A_I$ a Banach algebra:
+	\begin{align*}
+		\|(x,\lambda)(y,\mu)\|
+		=& \|(xy + \mu x  +\lambda y, \lambda\mu)\| = \|xy + \mu x + \lambda y\| + \|\lambda\mu\| \\
+		\leq& \|x\|\cdot\|y\| + |\mu|\cdot \|x\| + |\lambda| \cdot \|y\| + |\lambda|\cdot |\mu| \\
+		=& (\|x\| + |\lambda|)(\|y\| + |\mu|) \\
+		=& \|(x,\lambda)\|\cdot\|(y,\mu)\|.
+	\end{align*}
+	Hence $A_I$ is a Banach algebra with unit.
+
+	All that is left is to identify $A$ is a codimension 1 ideal in $A_I$. The mapping $x\mapsto (x,0)$ is an isometric isomorphism between $A$ is the set $M\coloneqq \{(x,0) : x\in A\}\subset A_I$. This set is codimension one, and an ideal since 
+	\begin{align*}
+		(y,\lambda)(x,0) =& (yx + \lambda x, 0) \in M, \\
+		(x,0)(y,\lambda) =& (xy + \mu x, 0) \in M.
+	\end{align*}
+	This concludes the proof.
+\end{proof}
+
+% units }}}2
+
+\subsection{invertible elements} % {{{2 
+
+In a unital Banach algebra $A$, the inverse of $a$, if it exists, is such that $a^{-1}a=aa^{-1}=1_A$. There are two initial complications: the lack of a commutativity assumption means an element could satisfy one of the above conditions when multiplying on the left but not the right. The second is uniqueness.
+
+We will write $\mathcal{G}(A)$ for the set (in fact, group) of invertible elements. Elements which are not invertible are called singular.
+
+\begin{proposition}
+\label{prop_left_and_right_inverses}
+	Let $x\in A$. If $l$ is a left inverse of $x$, i.e. $lx = 1_A$, and $r$ is a right inverse of $x$, i.e. $xr = 1_A$, then $x\in \mathcal{G}(A)$ and, in particular, $l=r$.
+\end{proposition}
+\begin{proof}
+	By assumption $lx=xr=1_A$. Then in particular $r=(lx)r=l(xr)=l$.
+\end{proof}
+
+\begin{proposition}
+\label{prop_invertible_elts_are_open}
+	$\mathcal{G}(A) \subset A$ is open.
+\end{proposition}
+\begin{proof}
+	Recall that if $y\in A$ is such that $\|y\| < 1$, then 
+	\begin{equation*}
+		w = \sum_{k=0}^\infty y^k
+	\end{equation*}
+	exists by (\textit{Banach spaces}, Proposition \ref{prop_absolute_convergence_implies_convergence}). Furthermore, $w$ is the inverse of $1_A - y$ by the Neumann series (\textit{Banach spaces}, Proposition \ref{prop_neumann_series}). So if $x\in A$ is such that $\|1_A - x\| < 1$, then since $x = 1_A - (1_A - x)$ we get $x^{-1} = \sum_k (1_A - x)^k$.
+
+	We will show that for any $x_0\in\mathcal{G}(A)$ we have $B(\frac{1}{\|x_0^{-1}\|}, x_0) \subset \mathcal{G}(A)$, which will complete the proof.
+
+	Now for any $x_0\in\mathcal{G}(A)$, we know $x_0x_0^{-1}x = x$. Also 
+	\begin{equation*}
+		\|1_A - x_0^{-1}x\| = \|x_0^{-1}(x_0-x)\| \leq \|x_0\|^{-1}\cdot\|x_0-x\|.
+	\end{equation*}
+	If $\|x-x_0\| < \|x_0^{-1}\|^{-1}$ (i.e. $x$ is in the ball described above), then the above inequality becomes $\|1_A - x_0^{-1}x\| < 1$ so we can apply our previous remarks to get $x_0^{-1}x$ is invertible and in particular
+	\begin{equation*}
+		(x_0^{-1}x)^{-1} = \sum_{k=0}^\infty (1_A - x_0^{-1}x)^k.
+	\end{equation*}
+	To show $x\in\mathcal{G}(A)$, we can write 
+	\begin{equation*}
+		(x_0^{-1}x)^{-1}(x_0^{-1}x) = \underbrace{\left( \sum_{k=0}^\infty (1_A - x_0^{-1}x)^k \right) (x_0^{-1} }_{x^{-1}} x) = 1_A.
+	\end{equation*}
+	This is a left inverse. A right inverse can be obtained analagously. By Proposition \ref{prop_left_and_right_inverses} this suffices to show $x\in \mathcal{G}(A)$. 
+\end{proof}
+
+\begin{corollary}
+	The inversion function $\mathcal{G}(A) \to A$ is continuous.
+\end{corollary}
+\begin{proof}
+	Suppose $(x_n)\subset \mathcal{G}(A)$ converges to $x_0\in\mathcal{G}(A)$. For large enough $n$, we get $\|x_n - x_0\| < \frac{1}{\|x_0^{-1}\|}$. Then by the above proof 
+	\begin{align*}
+		\|x_n^{-1} - x_0^{-1}\|
+		=& \left\|\sum_{k=0}^\infty((x_0^{-1}(x_0-x_n))^k)x_0^{-1}\right\| \\
+		\leq& \sum_{k=0}^\infty(\|x_0^{-1}\| \cdot \|x_0 - x_n\|)^k \|x_0^{-1}\|
+	\end{align*}
+	which tends to 0 since $\|x_0-x_n\|\to 0$. In other words, $(x_n^{-1}) \to x_0^{-1}$. 
+\end{proof}
+
+% invertible elements }}}2
+
+\subsection{spectrum} % {{{2 
+
+\begin{proposition}
+\label{prop_resolvent_open}
+	For $x\in X$, the resolvent set $\mathbb{C} - \sigma_A(x)$ is open.
+\end{proposition}
+\begin{proof}
+	We will show that for every $\lambda_0\in\mathbb{C}-\sigma_A(x)$, the open ball
+	\begin{equation*}
+		B \coloneqq B(\lambda_0, \frac{1}{\|R_x(\lambda_0)\|})
+	\end{equation*}
+	is contained in $\mathbb{C}-\sigma_A(x)$. So let $\lambda\in B$. Then $\|(\lambda - \lambda_0)R_x(\lambda_0)\|<1$, so \textit{Banach spaces} Proposition \ref{prop_neumann_series} implies 
+	\begin{equation*}
+		1 - (\lambda - \lambda_0)R_x(\lambda_0)
+	\end{equation*}
+	is invertible. Since $\lambda_0\not\in \sigma(x)$, it is also true that $(x-\lambda_0 1)$ is invertible. Combining these facts, we can show that $x-\lambda 1$ is invertible:
+	\begin{equation*}
+		x-\lambda 1 = x - \lambda_0 1 - (\lambda - \lambda_0)1 = (x-\lambda_0 1)\cdot (1 - (\lambda - \lambda_0)R_x(\lambda_0)).
+	\end{equation*}
+	Thus $\lambda\in \mathbb{C}-\sigma_A(x)$ and the result follows.
+\end{proof}
+
+\begin{proposition}
+\label{prop_spectrum_compact}
+	$\sigma_A(x)\subset\mathbb{C}$ is closed and bounded:
+	\begin{equation*}
+		\sigma_A(x) \subset \{\lambda\in\mathbb{C} : |\lambda| \leq \|x\|\}.
+	\end{equation*}
+	In particular, it is compact.
+\end{proposition}
+\begin{proof}
+	If $|\lambda|>\|x\|$, then $(x-\lambda 1_A) = -\lambda(1-\frac{x}{\lambda})$ has an inverse provided by the Neumann series (\textit{Banach spaces}, Proposition \ref{prop_neumann_series}) since $\|\frac{x}{\lambda}\|<1$. Hence $\sigma_A(x)$ is bounded. It is closed because its complement is open, by Proposition \ref{prop_resolvent_open}.
+\end{proof}
+
+\begin{proposition}
+\label{prop_resolvent_analytic}
+	The resolvent function $R_x$ is analytic (in the sense of \textit{Banach spaces}, Definition \ref{def_analytic}).
+\end{proposition}
+\begin{proof}
+	For this claim to even make sense, the domain of $R_x$ must be open. This is Proposition \ref{prop_resolvent_open}. We need to show that $R_x$ can be defined as a power series which converges absolutely on an open disk centered at each $\lambda_0\in\mathbb{C}-\sigma_A(x)$. By the proof of Proposition \ref{prop_resolvent_open}, we can take the disk of radius $\|R_x(\lambda_0)\|^{-1}$.
+
+	Let $\lambda\in\mathbb{C}-\sigma_A(x)$. In the proof of Proposition \ref{prop_resolvent_open}, we show that $x-\lambda 1)$ is invertible, and, for $\lambda_0$ in the disk described at the end of the previous paragraph, 
+	\begin{equation*}
+		x-\lambda 1 = (x - \lambda_0)\cdot (1 - (\lambda-\lambda_0)R_x(\lambda_0)).
+	\end{equation*}
+	Taking inverses of both sides,
+	\begin{equation*}
+		R_x(\lambda) = R_x(\lambda_0) \cdot (1 - (\lambda - \lambda_0)R_x(\lambda_0))^{-1}.
+	\end{equation*}
+	Now we can expand $(1 - (\lambda - \lambda_0)R_x(\lambda_0))^{-1}$ as a Neumann series (Proposition \ref{prop_neumann_series}) to get
+	\begin{equation*}
+		R_x(\lambda) = R_x(\lambda_0) \sum_{n=0}^\infty R_x(\lambda_0)^n (\lambda-\lambda_0)^n = \sum_{n=0}^\infty R_x(\lambda_0)^{n+1}(\lambda - \lambda_0)^n,
+	\end{equation*}
+	which shows that $R_x$ can be expressed as an appropriate power series.
+\end{proof}
+
+\begin{theorem}
+	$\sigma_A(x)$ is nonempty.
+\end{theorem}
+\begin{proof}
+	Suppose $\sigma_A(x)$ is empty. Then the resolvent is defined on all of $\mathbb{C}$. It is analytic (Proposition \ref{prop_resolvent_analytic}) and nonconstant. We claim it is also bounded. Note $\|x - 1_A\lambda\| \leq \|x\| + |\lambda|$. So $\|(x-1_A\lambda)^{-1}\|$ is bounded by $(\|x\| + |\lambda|)^{-1}$. In particular, it is finite away from infinity. It remains to show that it remains bounded as $|\lambda|\to\infty$. Without loss of generality, suppose $|\lambda|>\|x\|$. Then, by the Neumann series (\textit{Banach spaces} Proposition \ref{prop_neumann_series}) we get 
+	\begin{align*}
+		(x-1_A\lambda)^{-1} 
+		=& \frac{-1}{\lambda} \left( 1_A - \frac{x}{\lambda} \right)^{-1} \\
+		=& \frac{1}{\lambda} \sum_{k=0}^\infty \left(\frac{x}{\lambda}\right)^k.
+	\end{align*}
+	Hence
+	\begin{align*}
+		\|(x-1_A\lambda)^{-1}\|
+		\leq& \frac{1}{|\lambda|} \sum_{k=0}^\infty \left( \frac{\|x\|}{|\lambda|}\right)^k \\
+		=& \frac{1}{|\lambda|} \cdot \frac{1}{1 - \|x\|/|\lambda|} \\
+		=& \frac{1}{|\lambda| - \|x\|}.
+	\end{align*}
+	This tends to 0 as $|\lambda|\to\infty$, hence $R_x$ is bounded.
+
+	We have shown $R_x$ is entire, bounded, and nonconstant. Thus by Louisville's theorem \todo{ref} $R_x=0$. But then $(x-\lambda 1_A)^{-1}=0$, contradicting the fact that $(x-\lambda 1_A)(x-\lambda 1_A)^{-1} = 1_A \neq 0$.
+\end{proof}
+
+\begin{proposition}
+	Let $A$ be a unital Banach algebra, and $a\in A$.
+	\begin{enumerate}
+		\item For any complex polynomial $p$, we have $\sigma_A(p(a)) = p(\sigma_A(a))$.
+		\item If $a\in\mathcal{G}(A)$, then $\sigma_A(a^{-1}) = \sigma_A(a)^{-1}$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+\begin{enumerate}
+	\item Suppose $\text{deg}(p)\geq 1$ (the other case is immediate). For any $\mu\in\mathbb{C}$, let $(\lambda_i)_1^n$ be the complex roots of the polynomial $p(-) - \mu$. In other words, for all $z\in\mathbb{C}$, we have 
+		\begin{equation*}
+			p(z) - \mu = \alpha (z-\lambda_1)\cdots(z-\lambda_n)
+		\end{equation*}
+		for some $\alpha\in\mathbb{C}$. Then 
+		\begin{equation*}
+			p(a) - \mu 1_A = \alpha(a-\lambda_1 1_A) \cdots (a - \lambda_n 1_A).
+		\end{equation*}
+
+		\begin{claim}
+			If $(a_i)_1^n\subset A$ are mutually commuting, then the product $a_1\cdots a_n$ is invertible if and only if each $a_i$ is invertible.
+		\end{claim}
+		\begin{proof}[Proof of claim] 
+			In one direction, if each $a_i$ are invertible then $a_1\cdots a_n$ is invertible, regardless even of the mutually commuting assumption.
+
+			Conversely, if the product $a_1\cdots a_n$ is invertible, then we can write down an inverse for each $a_i$. For example, 
+			\begin{align*}
+				a_2(a_1a_3\cdots a_n)(a_1\cdots a_n)^{-1}
+				=& (a_1\cdots a_n)^{-1}(a_1\cdots a_n) \\
+				=& 1_A \\
+				=& (a_1\cdots a_n)^{-1} (a_1a_3\cdots a_n)a_2.
+			\end{align*}
+			This shows the claim.
+		\end{proof}
+
+		First we will show 
+		\begin{equation*}
+			\sigma_A(p(a)) \subset p(\sigma_A(a)).
+		\end{equation*}
+		Suppose $\mu \in \sigma_A(p(a))$. Then by definition $p(a) - \mu 1_A$ is singular, so by the claim there exists some $i$ such that $a-\lambda_i 1_A$ is singular. This would mean $\lambda_i\in \sigma_A(a)$. But 
+		\begin{equation*}
+			p(\lambda_i) - \mu = \alpha(\lambda_i-\lambda_1)\cdots (\lambda_i-\lambda_n) = 0,
+		\end{equation*}
+		so $p(\lambda_i) = \mu$. Hence $\mu\in p(\sigma_A(a))$ as desired.
+
+		Now we will show 
+		\begin{equation*}
+			p(\sigma_A(a)) \subset \sigma_A(p(a)).
+		\end{equation*}
+		Suppose $\lambda\in\sigma_A(a)$, and write $\mu\coloneqq p(\lambda)$ (so that $\mu\in p(\sigma_A(a))$). Then again 
+		\begin{equation*}
+			p(z) - \mu = \alpha(z-\lambda_1)\cdots(z-\lambda_n),
+		\end{equation*}
+		so if $z=\lambda$ then $p(z) - \mu = 0$, i.e. $p(z) = \mu$. By the above remarks we would get that $z=\lambda=\lambda_i$ for some $i$. Hence $(a-\lambda_i1_A)$ is singular, since $(a-\lambda 1_A)$ is by assumption. By the claim, we get that 
+		\begin{equation*}
+			p(a) - \mu 1_A = \alpha(a-\lambda_1 1_A)\cdots (a-\lambda_n 1_A)
+		\end{equation*}
+		is singular. This shows $\mu\coloneqq p(\lambda) \in \sigma_A(p(a))$, which is what we wanted.
+		
+	\item If $a\in\mathcal{G}(A)$, then by definition $0\neq \sigma_A(a)$. For any $\lambda\in\mathbb{C}$ which is nonzero, we get 
+		\begin{equation*}
+			a-\lambda 1_A = a(1_A - \lambda a^{-1}) = a\lambda (\lambda^{-1}1_A - a^{-1}).
+		\end{equation*}
+		Since $a\lambda$ is invertible, it follows that $a-\lambda 1_A$ is invertible if and only if $\lambda^{-1}1_A - a^{-1}$ is invertible, which is only the case if its negative $a^{-1} - \lambda^{-1} 1_A$ is invertible. This is precisely the statement in the proposition.
+\end{enumerate}
+\end{proof}
+
+\begin{corollary}
+	$\sigma_A(-a) = -\sigma(a)$.
+\end{corollary}
+
+\begin{proposition}
+\label{prop_inverse_oneminusxy}
+	Let $R$ be a unital ring. The element $1-yx$ is invertible if and only if $1-xy$ is invertible. In particular, 
+	\begin{equation*}
+		(1-yx)^{-1} = 1-y(1-xy)^{-1}x.
+	\end{equation*}
+	\todo{move to different document}
+\end{proposition}
+
+\begin{proposition}
+\label{prop_sigmaxy0_sigmayx0}
+	Let $A$ be a unital Banach algebra. Then 
+	\begin{equation*}
+		\sigma_A(xy) \cup \{0\} = \sigma_A(yx) \cup \{0\}.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	Let $\lambda\in\mathbb{C}$ be nonzero. Then 
+	\begin{align*}
+		\lambda\in\sigma_A(xy)
+		\Longleftrightarrow& \lambda 1_A - xy \text{ invertible} \\
+		\Longleftrightarrow& \lambda\left(1_A - \frac{xy}{\lambda}\right) \text{ invertible}. \\
+	\end{align*}
+	But by Propostion \ref{prop_inverse_oneminusxy}, this is only possible if 
+	\begin{equation*}
+		\lambda\left(1_A - \frac{yx}{\lambda} \right) = \lambda 1_A - yx
+	\end{equation*}
+	is invertible, i.e. if and only if $\lambda\in\sigma_A(yx)$.
+\end{proof}
+
+\begin{proposition}
+	Let $A$ be a unital Banach algebra, and $a,b\in A$. Then $ab-ba\neq 1_A$.
+\end{proposition}
+\begin{proof}
+	Suppose $ab-ba = 1_A$. One one hand, Proposition \ref{prop_sigmaxy0_sigmayx0} says
+	\begin{equation*}
+		\sigma_A(ab) \cup \{0\} = \sigma_A(ba) \cup \{0\}.
+	\end{equation*}
+	But on the other hand 
+	\begin{equation*}
+		\sigma_A(ab) = \sigma_A(1_A + ba) = 1 + \sigma_A(ba)
+	\end{equation*}
+	by \todo{ref}. This suggests
+	\begin{equation*}
+		\{1 + \sigma_A(ba) \} \cup \{0\} = \sigma_A(ba) \cup \{0\},
+	\end{equation*}
+	which we will now show is a contradiction.
+
+	First suppose $\alpha\in\sigma_A(ba)$ is such that $\text{Re}(\alpha)\geq 0$. Then $1+\alpha\neq 0$, so $(1+\alpha)\in \{1 + \sigma_A(ba)\} \setminus \{0\}$, implying by the above equality that $1+\alpha\in\sigma_A(ba)$. Inductively we show $n+\alpha\in\sigma_A(ba)$ for all $n$, contradicting the boundedness of $\sigma_A(ba)$ (Proposition \ref{prop_spectrum_compact}). 
+
+	Now suppose $\text{Re}(\alpha) < 0$. Observe $-\alpha\in\sigma_A(-ba)$, and $\text{Re}(-\alpha)>0$, so we reach a contradiction by the above situation. \todo{correct?}
+\end{proof}
+
+\begin{theorem}[Gelfand-Mazur]
+\label{thm_gelfand_mazur}
+	Let $A$ be a unital Banach algebra. If every nonzero element is invertible, then $A=\mathbb{C}$. 
+\end{theorem}
+\begin{proof}
+	Let $x\in A$. Then $\sigma_A(x)\neq \emptyset$ so there exists $\lambda\in\mathbb{C}$ such that $x-\lambda 1_A\not\in\mathcal{G}(A)$. By assumption this means $x-\lambda 1_A=0$, so $x=\lambda 1_A$.
+\end{proof}
+
+\begin{theorem}[Gelfand's formula]
+\label{thm_gelfands_formula}
+	\begin{equation*}
+		\rho(x) = \limsup_n \|x^n\|^{1/n}.
+	\end{equation*}
+\end{theorem}
+\begin{proof}
+	First we will show $\rho(x) \leq \limsup_n \|x^n\|^{1/n}$. Indeed, if $|\lambda| > \limsup_n \|x^n\|^{1/n}$, then $\limsup_n \|\lambda^{-n}x^n\| < 1$ so, by \textit{Banach spaces} Proposition \ref{cor_hadamard_formula}, $(\lambda 1 - x)^{-1}$ exists. Since this is true for all $\lambda$ such that $|\lambda| > \limsup_n \|x^n\|^{1/n}$, it must be that $\limsup_n \|x^n\|^{1/n} \geq \rho(x)$ (else there would be a $\lambda$ for which $(\lambda 1 -x)$ is not invertible, contradicting what we have just shown).
+
+	Conversely, suppose $\lambda$ is such that $|\lambda| > \rho(x)$. 
+
+	\begin{claim}
+	\label{claim_gf_pf_to_zero}
+		\begin{equation*}
+			\lim_{n\to\infty} \phi\left(\frac{x^n}{\lambda^{n+1}}\right) = 0.
+		\end{equation*}
+	\end{claim}
+	\begin{proof}
+		By Proposition \ref{prop_resolvent_analytic}, the resolvent is analytic on the set of $\lambda$ such that $|\lambda| > \rho(x)$. By the uniqueness of the Laurent expansion (\todo{ref}) and \textit{Banach spaces} Corollary \ref{cor_hadamard_formula}, we must have 
+		\begin{equation*}
+			(\lambda 1 - x)^{-1} = \sum_{k=0}^\infty \frac{x^k}{\lambda^{k+1}}.
+		\end{equation*}
+
+		Let $\phi\in X^\ast$. Since $(\lambda 1 - x)^{-1}$ exists, so must $\phi((\lambda 1 - x)^{-1})$, i.e. 
+		\begin{equation*}
+			\phi\left( \sum_{k=0}^\infty \frac{x^k}{\lambda^{k+1}} \right) = \sum_{k=0}^\infty \phi\left(\frac{x^k}{\lambda^{k+1}}\right)
+		\end{equation*}
+		is convergent, where we have used the continuity and linearity of $\phi$. The result follows.
+	\end{proof}
+
+	Define 
+	\begin{align*}
+		T_n: X^\ast &\to \mathbb{C} \\
+		\phi &\mapsto \phi\left(\frac{x^n}{\lambda^{n+1}}\right)
+	\end{align*}
+	for all $n\in\mathbb{N}$. Since each $T_n$ is an evaluation map, it is continuous and linear. We also have that $X^\ast$ (and $\mathbb{C}$) are Banach. Claim \ref{claim_gf_pf_to_zero} implies 
+	\begin{equation*}
+		\sup_{T\in \{T_n\}} \|T(\phi)\| < \infty
+	\end{equation*}
+	for all $\phi\in X^\ast$. Hence by the uniform boundedness principle (\textit{Banach spaces} Theorem \ref{thm_ubp})
+	\begin{equation*}
+		\sup_{T\in\{T_n\}} \|T\| < \infty.
+	\end{equation*}
+	Let's unwrap what this gives us. By definition 
+	\begin{equation*}
+		\|T\| = \sup_{\|\phi\|=1} \left\| \phi\left(\frac{x^n}{\lambda^{n+1}}\right)\right\| = \frac{1}{\lambda^{n+1}} \sup_{\|\phi\|=1} \|\phi(x^n)\|.
+	\end{equation*}
+	Also by definition, 
+	\begin{equation*}
+		\|\phi\| = \sup_{x\neq 0} \frac{|\phi(x)|}{\|x\|},
+	\end{equation*}
+	so $\|\phi\|=1$ means, in particular, $\|\phi(x^n)\| \leq \|x^n\|$. By \todo{ref norming functional}, there actually exists $\phi$ such that $\|\phi(x^n)\| = \|x^n\|$ and $\|\phi\|=1$. Hence  
+	\begin{equation*}
+		\sup_{\|\phi\|=1} \|\phi(x^n)\| = x^n.
+	\end{equation*}
+	Pulling it all together, we have 
+	\begin{equation*}
+		\|T\| = \left\| \frac{x^n}{\lambda^{n+1}} \right\|.
+	\end{equation*}
+	Since this is true for all $n$, the sequence $(x^n/\lambda^{n+1})$ is bounded, i.e. there exists $\alpha>0$ such that  $\|x^n/\lambda^{n+1}\|<\alpha$ for all $n$. Hence $\|x^n\|^{1/n} < \alpha^{1/n} |\lambda|^{n+1/n}$. Then 
+	\begin{equation*}
+		\limsup_n \|x^n\|^{1/n} \leq \limsup_n \alpha^{1/n} |\lambda|^{n+1/n} = |\lambda|.
+	\end{equation*}
+	Since we chose $|\lambda| > \rho(x)$ arbitrarily, we have shown
+	\begin{equation*}
+		\limsup_n \|x^n\|^{1/n} \leq \rho(x),
+	\end{equation*}
+	completing the proof.
+\end{proof}
+
+% spectrum }}}2
+
+\subsection{constructing Banach algebras} % {{{2 
+
+\begin{proposition}
+\label{prop_quotient_banach_alg}
+	Let $A$ be a Banach algebra, and $V$ a closed 2-sided ideal. Then $A/V$ is a Banach algebra. If moreover $A$ is unital and $V$ is proper, then $A/V$ is unital and $1_{A/V} \leq \|1_A\|$.
+\end{proposition}
+\begin{proof}
+	By \textit{Banach spaces}, Proposition \ref{prop_quotient_banach}, we know $A/V$ is a Banach space.  
+
+	We first claim $A/V$ is an algebra with respect to the multiplication $[x]\cdot [y] = [xy]$. Indeed, if $x'\sim x$ and $y'\sim y$, then 
+	\begin{equation*}
+		xy - x'y' = (x - x')y + x'(y-y') \in V
+	\end{equation*}
+	since $V$ is a 2-sided ideal.
+	
+	For the Banach inequality, we calculate
+	\begin{align*}
+		\|[x]\cdot[y]\|
+		=& \|[xy]\| = \inf_{v\in V}\|xy+v\| \\
+		\leq& \inf_{v,w\in V}\|xy + \underbrace{xw + vy + vw}_{\in V}\| \\
+		=& \inf_{v,w\in V} \|(x+v)(y+w)\| \\
+		\leq& \inf_{v,w\in V} \|x+v\| \cdot \|y+w\| \\
+		=& \|[x]\| \cdot \|[y]\|.
+	\end{align*}
+	Thus $A/V$ is a Banach algebra.
+
+	Now suppose $A$ is unital and $V$ is proper. Immediately we have $[1_A]\cdot[b] = [b]$, so $[1_A]$ is a unit. Furthermore, 
+	\begin{equation*}
+		\|[1_A]\| = \inf_{v\in V}\|1_A + v\| \leq \|1_A\|
+	\end{equation*}
+	by taking $v=0$. 
+\end{proof}
+
+% constructing Banach algebras }}}2
+
+\subsection{Gelfand theory} % {{{2 
+
+\begin{proposition} % max ideals are closed
+\label{prop_max_ideals_closed}
+	Every maximal ideal in a unital Banach algebra is closed.
+\end{proposition}
+\begin{proof}
+	Let $J\subset A$ be a maximal ideal. Then $J$ cannot contain any invertible element (otherwise $J=A$). Hence $J \subset A \setminus \mathcal{G}(A)$. By Proposition \ref{prop_invertible_elts_are_open}, $\mathcal{G}(A)\subset A$ is open, so $A \setminus \mathcal{G}(A)$ is closed, hence 
+	\begin{equation*}
+		J \subset \overline{J} \subset A \setminus \mathcal{G}(A).
+	\end{equation*}
+	In particular, $\overline{J}\neq A$. Since $J$ is maximal and $\overline{J}$ is also an ideal, it follows that $J=\overline{J}$. 
+\end{proof}
+
+\begin{definition} % characters 
+	Let $A$ be a Banach algebra. A nonzero homomorphism $A\to\mathbb{C}$ is called a \emph{character} of $A$. The set of all characters on $A$ is called the \emph{spectrum}, and denoted $\text{Sp}(A)$.
+\end{definition}
+
+\begin{corollary}
+\label{cor_character_on_unit}
+	For a unital Banach algebra $A$ and any $\ell\in\text{Sp}(A)$, we have $\ell(1_A)=1$.
+\end{corollary}
+\begin{proof}
+	We calculate
+	\begin{equation*}
+		\phi(a) = \phi(a1_A) = \phi(a)\phi(1_A),
+	\end{equation*}
+	so $\phi(1_A)=1$.
+\end{proof}
+
+\begin{corollary}
+\label{cor_character_at_point_is_in_spectrum}
+	Let $A$ be a unital Banach algebra, and $\ell: A\to\mathbb{C}$ a character. For any $a\in A$, we have $\ell(a)\in\sigma_A(a)$.
+\end{corollary}
+\begin{proof}
+	First calculate 
+	\begin{equation*}
+		\ell(a - \ell(a)1_A) = \ell(a) - \ell(a) = 0.
+	\end{equation*}
+	Now if $a-\ell(a)1_A$ has an inverse $b$, then 
+	\begin{equation*}
+		\ell((a-\ell(a)1_A)b) = \ell(a-\ell(a)1_A)\ell(b) = 0\cdot b = 0,
+	\end{equation*}
+	contradicting Corollary \ref{cor_character_on_unit}. 
+\end{proof}
+
+\begin{proposition} % characters are cts
+\label{prop_characters_cts}
+	Every character $\phi$ on a Banach algebra is continuous. In particular, $\|\phi\|_\infty \leq 1$.
+\end{proposition}
+\begin{proof}
+	Let $A$ be a Banach algebra, and $\phi$ a character. First suppose $A$ is unital. For any $a\in A$ such that $\phi(a)\neq 0$, Corollary \ref{cor_character_at_point_is_in_spectrum} tells us that $\phi(a)\in\sigma_A(a)$. Proposition \ref{prop_spectrum_compact} tells us that $|\phi(a)| \leq \|a\|$. The inequality still holds if $\phi(a)=0$. Hence  $\phi$ is continuous.
+	Now suppose $A$ is non-unital. Consider its unitization \todo{ref} $A_I=A\oplus \mathbb{C}$, and the map 
+	\begin{align*}
+		\phi': A_I &\longrightarrow \mathbb{C} \\
+		(a,\lambda) &\mapsto \phi(a) + \lambda.
+	\end{align*}
+	One checks this is a homomorphism. It is continuous by the previous paragraph, hence its restriction to $A$ (which is $\phi$) is continuous as well.
+\end{proof}
+
+\begin{theorem}[character correspondence] % character correspondence
+\label{thm_character_correspondence}
+	Let $A$ be a commutative unital Banach algebra. There is a canonical bijection
+	\begin{gather*}
+		\left\{\parbox{5em}{\centering{characters of $A$}}\right\} \longleftrightarrow \left\{\parbox{7em}{\centering{maximal ideals of $A$}}\right\} \\
+		\ell \quad \mapsto \quad \ker(\ell)
+	\end{gather*}
+\end{theorem}
+\begin{proof}
+	The idea is that kernels are maximal ideals, and conversely every element outside a maximal ideal $J$ is invertible, hence by the Gelfand-Mazur theorem $A/J\cong\mathbb{C}$. Then composition with the projection $A\to A/J$ uniquely determines a character. In detail:
+
+	Let $\ell:A\to\mathbb{C}$ be a character, and write $J=\text{ker}(\ell)$. Since $\ell$ is nonzero by definition, $J\neq A$, so there exists $a\not\in J$. Then any $b\in A$ can be written as 
+	\begin{equation*}
+		b = a\frac{\ell(b)}{\ell(a)} + \left(b - a\frac{\ell(b)}{\ell(a)}\right).
+	\end{equation*}
+	Note $b-a\frac{\ell(b)}{\ell(a)}\in\text{ker}(\ell)=J$, since 
+	\begin{equation*}
+		\ell\left(b - a\frac{\ell(b)}{\ell(a)}\right) = \ell(b) - \ell(a)\frac{\ell(b)}{\ell(a)} = 0.
+	\end{equation*}
+	Since $b\in A$ is arbitrary, this shows $A=\mathbb{C}a+J$. Since $J$ is codimension 1 it is maximal \todo{better proof}.
+
+	Conversely, suppose $J$ is maximal. By Proposition \ref{prop_max_ideals_closed}, $J$ is closed, hence by Proposition \ref{prop_quotient_banach_alg} we have that $A/J$ is a Banach algebra.
+
+	\begin{claim}
+		Every nonzero $[a]\in A/J$ is invertible. \todo{separate}
+	\end{claim}
+	\begin{proof}[Proof of claim]
+		Suppose $[a]$ is not invertible. Then $J+aA$ is a proper ideal of $A$ containing $J$, contradicting the maximality of $J$.
+	\end{proof}
+
+	By the claim, every (nonzero) element in $A/J$ is invertible. Hence by the Gelfand-Mazur theorem (Theorem \ref{thm_gelfand_mazur}), there is an isomorphism $\phi:A/J\to\mathbb{C}$. Now let $\pi:A\to A/J$ be the canonical projection. Then $\phi\circ\pi:A\to A/J\to\mathbb{C}$ is a homomorphism with kernel $J$:
+	\begin{align*}
+		\phi\circ\pi(ab) 
+		=& \phi(\pi(ab)) = \phi([ab]) \\
+		=& \phi([a][b]) = \phi([a])\phi([b]) \\
+		=& (\phi\circ\pi(a))(\phi\circ\pi(b)),
+	\end{align*}
+	where $\phi\circ\pi(a)=0$ if and only if $\pi(a)=0$, if and only if $a\in J$.
+
+	This correspondence is one-to-one since $\ell$ is uniquely determined by its kernel: if $\text{ker}(\ell) = \text{ker}(\ell')$, then for all $a\in A$ we have $a-\ell(a)1_A\in\text{ker}(\ell)=\text{ker}(\ell')$, so $\ell'(a)=\ell(a)$ since $\ell'(1_A)=1$.
+\end{proof}
+
+\begin{proposition} % nonempty Sp(A)
+	Any commutative unital Banach algebra posseses at least one character.
+\end{proposition}
+\begin{proof}
+	If every element is invertible, then $A\cong\mathbb{C}$ by the Gelfand-Mazur theorem (Theorem \ref{thm_gelfand_mazur}), and this isomorphism is itself a character.
+
+	Otherwise, there exists a noninvertible $x\in A$. Then $xA\subset A$ is a proper ideal, hence contained in some maximal ideal $J$ \todo{ref}. By the character correspondence (Theorem \ref{thm_character_correspondence}), $J$ is the kernel of a character on $A$.
+\end{proof}
+
+\begin{definition}
+	The set of characters of a commutative unital Banach algebra $A$ is called the \emph{spectrum} of $A$, and is denoted $\text{Sp}(A)$.
+\end{definition}
+
+The natural topology in which to consider $\text{Sp}(A)$ is the weak*-topology (\textit{Banach spaces}, Definition \ref{def_weak_weakstar}):
+
+\begin{proposition} % Sp(A) is compact
+\label{prop_spa_compact}
+	$\text{Sp}(A)\subset A$ is compact in the weak*-topology. In particular, it is a (weak*-)closed subset of the unit ball in $A^\ast$.
+\end{proposition}
+\begin{proof}
+	By Proposition \ref{prop_characters_cts}, we know that any character is bounded with norm $\leq 1$, hence $\text{Sp}(A)$ is contained in the unit ball in $A^\ast$. 
+
+	Now suppose $(\ell_\alpha)\subset\text{Sp}(A)$ is a net converging to $\phi\in A^\ast$. Then by definition of the weak*-topology, $\ell_\alpha(x)\to\phi(x)$ for all $x\in A$. But then, for all $x,y\in A$,
+	\begin{equation*}
+		\phi(xy) = \lim\ell_\alpha(xy) = \lim\ell_\alpha(x)\ell_\alpha(y) = \phi(x)\phi(y).
+	\end{equation*}
+	Hence $\phi\in\text{Sp}(A)$, so $\text{Sp}(A)$ is a closed subset of the unit ball in $A^\ast$. Since the unit ball is compact in the weak*-topology by the Banach-Alaoglu theorem (\textit{Banach spaces}, Theorem \ref{thm_banach_alaoglu}), it follows that $\text{Sp}(A)$ is compact.
+\end{proof}
+
+\begin{definition}
+	Let $A$ be a commutative unital Banach algebra. For each $x\in A$, we can consider the ``evaluation'' map $\hat{x}:\text{Sp}(A) \to \mathbb{C}$, i.e. the map whose value on $\ell\in\text{Sp}(A)$ is 
+	\begin{equation*}
+		\hat{x}(\ell) = \ell(x).
+	\end{equation*}
+	Varying over all $x$, we obtain a map
+	\begin{align*}
+		X &\overset{\widehat{(-)}}{\longrightarrow} C(\text{Sp}(A)) \\
+		x &\ \mapsto (\ell \overset{\hat{x}}{\mapsto} \ell(x)).
+	\end{align*}
+	called the \emph{Gelfand transform}.
+\end{definition}
+
+\begin{theorem}
+\label{thm_spa_spectrum}
+	Let $A$ be a commutative unital Banach algebra.
+	\begin{enumerate}
+		\item For any $x\in A$, 
+			\begin{equation*}
+				\text{Im}(\hat{x}) = \sigma_A(x). 
+			\end{equation*}
+			If moreover $x$ generates $A$, i.e. the polynomials in $x$ are dense in $A$, then the map $\hat{x}$ is a homeomorphism.
+		\item The Gelfand transform $\widehat{(-)}: A \to C(\text{Sp}(A))$ is a homomorphism (in particular, each $\hat{x}$ is continuous) and 
+			\begin{equation*}
+				\|\hat{x}\|_\infty \leq \|x\|
+			\end{equation*}
+			for all $x\in A$.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\hfill
+\begin{enumerate}
+	\item Corollary \ref{cor_character_at_point_is_in_spectrum} tells us that $\text{Im}(\hat{x}) \subset \sigma_A(x)$. Conversely, let $x\in\sigma_A(x)$. So $x-\lambda 1_A$ is not invertible, so it belongs to some maximal ideal $J$. By the character correspondence (Theorem \ref{thm_character_correspondence}), there exists a (unique) $\ell\in\text{Sp}(A)$ such that $\text{ker}(\ell)=J$. Then $x-\lambda 1_A\in J$ miplies $\ell(x-\lambda 1_A)=0$, which implies $\ell(x)=\lambda$. Hence $\lambda\in\text{Im}(\hat{x})$, which shows $\sigma_A(x)\subset\text{Im}(\hat{x})$. 
+	\item To see that the Gelfand transform is a homomorphism, compute
+		\begin{equation*}
+			\widehat{xy}(\ell) = \ell(xy) = \ell(x)\ell(y) = \hat{x}(\ell)\hat{y}(\ell).
+		\end{equation*}
+		
+		To see that $\hat{x}$ is continuous, let $(\ell_\alpha)\subset\text{Sp}(A)$ is a net converging to $\ell$. Then by definition of the weak*-topology, 
+		\begin{equation*}
+			\hat{x}(\ell_\alpha) = \ell_\alpha(x) \to \ell(x) = \hat{x}(\ell).
+		\end{equation*}
+		This shows $\hat{x}$ is continuous.
+
+		The inequality is implied by the first part.
+\end{enumerate}
+\end{proof}
+
+\begin{corollary}
+	Let $A$ be a commutative unital Banach algebra generated by $a\in A$. Then $\hat{a}:\text{Sp}(A)\to\sigma_A(a)\subset\mathbb{C}$ is a homeomorphism.
+\end{corollary}
+\begin{proof}
+	By Propositions \ref{prop_spa_compact} and \ref{prop_spectrum_compact}, both $\text{Sp}(A)$ and $\sigma_A(a)$ are compact Hausdorff. By Theorem \ref{thm_spa_spectrum}, $\hat{a}$ is continuous and surjective in this case. By \todo{ref that cts bij between compact hausdorff is homeo}, it suffices to show $\hat{a}$ is injective. So suppose $\hat{a}(\ell_1) = \hat{a}(\ell_2)$, i.e. $\ell_1(a) = \ell_2(a)$. Then for any $c_0, c_1,\dots, c_N\subset\mathbb{C}$, so 
+	\begin{equation*}
+		\ell_1\left(\sum_{n=0}^N c_n a^n \right) = \ell_2\left(\sum_{n=0}^N c_n a^n \right).
+	\end{equation*}
+	Since $\ell_1,\ell_2$ are continuous and $a$ generates $A$, we have $\ell_1=\ell_2$ and are done.
+\end{proof}
+
+% Gelfand theory }}}2
+
+% Banach algebras }}}1
+
+\section{$C^\ast$-algebras} % {{{1 
+
+\begin{definition}
+	Consider a Banach algebra $A$ with an \emph{involution} $a\mapsto a^\ast$ such that 
+	\begin{enumerate}
+		\item (conjugate linear) $(\lambda a)^\ast = \overline{\lambda}a^\ast$.
+		\item $a^{\ast\ast}=a$
+		\item $(ab)^\ast = b^\ast a^\ast$
+		\item (continuity) $\|a^\ast\| = \|a\|$
+		\item ($C^\ast$-property) $\|a^\ast a\| = \|a\|^2$.
+	\end{enumerate}
+	If $A$ satisfies properties 1-4, it is called a \emph{Banach $\ast$-algebra}. If $A$ satisfies all properties 1-5, it is called a \emph{$C^\ast$-algebra}.
+\end{definition}
+
+\begin{definition}
+	An element $a$ in a $C^\ast$-algebra is called:
+	\begin{itemize}
+		\item \emph{self-adjoint} if $x^\ast = x$.
+		\item a \emph{projection} if it is self-adjoint and $x^2=x$.
+		\item \emph{normal} if $a^\ast a=aa^\ast$.
+		\item \emph{unitary} if it is normal and $aa^\ast=a^\ast a=1_A$.
+	\end{itemize}
+\end{definition}
+
+\begin{corollary}[real-imaginary decomposition]
+\label{cor_real_imaginary_decomposition}
+	Given a $C^\ast$-algebra $A$, we can decompose any $x\in A$ as follows:
+	\begin{equation*}
+		x = \frac{1}{2}(x+x^\ast) + i\frac{1}{2i}(x-x^\ast).
+	\end{equation*}
+	This is the unique decomposition of $x$ as $x=h+ik$ where $h,k$ are self-adjoint.
+\end{corollary}
+\begin{proof}
+	If we can write $x=h+ik$, then $x^\ast=h-ik$. Solving for $h,k$ yields the desired result.
+\end{proof}
+
+\begin{definition}
+	Given a unital $C^\ast$-algebra $A$ and an element $x\in A$, write $A(x)$ for the unital $C^\ast$-algebra generated by $x$, i.e. the closure in $A$ of the $\ast$-algebra of complex polynomials in $x$, $x^\ast$, and $1_A$.
+\end{definition}
+
+\begin{corollary}
+\label{cor_ax_comm_if_x_normal}
+	$A(x)$ is commutative if and only if $x$ is normal.
+\end{corollary}
+
+
+
+\begin{proposition}
+\label{prop_spectrum_selfadjoint_is_real}
+	Let $A$ be a unital $C^\ast$-algebra, and $h\in A$ self-adjoint. Then $\sigma_A(h)\subset\mathbb{R}$.
+\end{proposition}
+\begin{proof}
+	The idea is the following. $A(h)$ is commutative unital. Consider the exponential $u_t = e^{ith}\in A(h)$. One shows $\|u_t\|=1$ for all $t\in\mathbb{R}$. Since for any $\ell\in\text{Sp}(A(h))$ we have $\|\ell\|\leq 1$, we get $|\ell(u_t)|\leq \|u_t\|=1$. We then use the continuity of $\ell$ to show $\ell(u_t)=u_{\ell(t)}$. So we end up with an inequality $|\text{exp}(it\ell(h))|\leq 1$ for all $t\in\mathbb{R}$. This will imply that $\ell(h)\in\mathbb{R}$, and hence we conclude that $\hat{h}$ is real-valued. We now use the fact that $A(h)$ is commutative unital to know that $\sigma_{A(h)}(h)=\text{im}(\hat{h})$. But $\sigma_A(h)\subset\sigma_{A(h)}(h)$ and we're done. In detail:
+
+	Suppose $h\in A$ is self-adjoint. By Corollary \ref{cor_ax_comm_if_x_normal}, $A(h)$ is a commutative, unital $C^\ast$-algebra. For $t\in \mathbb{R}$, write 
+	\begin{equation*}
+		u_t \coloneqq e^{ith} \coloneqq \sum_{n=0}^\infty \frac{(it)^n}{n!}h^n,
+	\end{equation*}
+	which is well-defined by \todo{add and ref}. By the continuity of the involution,
+	\begin{align*}
+		u_t^\ast 
+		=& \lim_{n\to\infty}\left(\sum_{k=0}^n\frac{(it)^k}{k!}h^k\right)^\ast = \lim_{n\to\infty}\sum_{k=0}^\infty \frac{(-it)^k)}{k!}h^k \\
+		=& u_{-t}
+	\end{align*}
+	So 
+	\begin{equation*}
+		u_t^\ast u_t = u_{-t}u_t = u_0 = 1_A,
+	\end{equation*}
+	and $1 = \|u_t^\ast u_t\| = \|u_t\|^2$, implying $\|u_t\|=1$ for all $t\in\mathbb{R}$. 
+
+	Proposition \ref{prop_characters_cts} tells us that $\|\ell\|\leq 1$, so $|\ell(u_t) \leq \|u_t\| = 1$. Now let $\ell\in\text{Sp}(A(h))$. Also by Proposition \ref{prop_characters_cts}, $\ell$ is continuous, and so 
+	\begin{equation*}
+		\ell(u_t) 
+		= \ell\left( \sum_{n=0}^\infty \frac{(it)^n}{n!}h^n \right) 
+		= \sum_{n=0}^\infty \frac{(it)^n}{n!}\ell(h)^n 
+		= e^{it\ell(h)}.
+	\end{equation*}
+	Combining these results tells us that $|e^{it\ell(h)}|\leq 1$ for all $t\in\mathbb{R}$. But this implies $\ell(h)\in\mathbb{R}$ (since, for example, $|e^z|\leq 1$ implies $\text{Re}(z)\leq 0$, and our statement is true for all $t\in\mathbb{R}$ hence $\text{Re}(\ell(h))=0$). 
+
+	So $\hat{h}$ is real-valued. By Theorem \ref{thm_spa_spectrum}, $\sigma_{A(h)}(h)=\text{Im}(\hat{h})$, so $\sigma_{A(h)}(h)\subset\mathbb{R}$. But $A(h)\subset A$, so we also have $\sigma_A(h)\subset\sigma_{A(h)}(h)$, so $\sigma_A(h)\subset\mathbb{R}$ as desired.
+\end{proof}
+
+\begin{theorem}[Gelfand-Naimark]
+\label{thm_gelfand_naimark_cstar}
+	Let $A$ be a commutative unital Banach $\ast$-algebra. The Gelfand transformation 
+	\begin{equation*}
+		\widehat{(-)}:A\longrightarrow C(\text{Sp}(A))
+	\end{equation*}
+	is an isometric $\ast$-isomorphism if and only if $A$ is a $C^\ast$-algebra.
+\end{theorem}
+\begin{proof}
+	The idea is the following. For the forward direction, recall that $C(\text{Sp}(A))$ is a $C^\ast$-algebra by \todo{ref ex}. So if $A$ is isometrically $\ast$-isomorphic to it, then so is $A$. Conversely, you can use the real-imaginary decomposition of $x\in A$ to show $\widehat{(-)}$ is a $\ast$-homomorphism. To see it is isometric (hence injective), we start with self-adjoint $h\in A$ and see 
+	\begin{equation*}
+		\|\hat{h}\|_\infty = \rho(h) = \limsup_n\|h^{2^n}\|^{1/2^n} = \|h\|.
+	\end{equation*}
+	The extension to general $x\in A$ is obtained by considering the self-adjoint element $xx^\ast$. To see it is surjective, we see first note that $\text{im}(\widehat{(-)})$ is closed, then that it seperates points, hence is dense in, and in fact equal to, $C(\text{Sp}(A))$. In detail:
+
+	We will just consider the converse direction. Suppose $A$ is a $C^\ast$-algebra. By Proposition \ref{prop_spectrum_selfadjoint_is_real}, for any self-adjoint $h\in A$ we have $\sigma_A(h)\subset\mathbb{R}$, i.e. $\hat{h}$ is real valued (e.g. by Theorem \ref{thm_spa_spectrum}). By Corollary \ref{cor_real_imaginary_decomposition} we can write 
+	\begin{equation*}
+		x = \frac{1}{2}(x+x^\ast) + i\frac{1}{2i}(x-x^\ast)
+	\end{equation*}
+	for any $x\in A$. Then
+	\begin{align*}
+		\widehat{x^\ast}(\ell) 
+		=& \ell(x^\ast) = \ell\left(\frac{x+x^\ast}{2} - i\frac{(x-x^\ast)}{2i}\right) \\
+		=& \ell\left(\frac{x+x^\ast}{2}\right) - i\ell\left(\frac{x-x^\ast}{2i}\right) \\
+		=& \left( \ell\left(\frac{x+x^\ast}{2}\right) + i\ell\left(\frac{x+x^\ast}{2i}\right)\right)^- \\
+		=& \overline{\ell(x)} = \overline{\hat{x}(\ell)}.
+	\end{align*}
+	This shows $\widehat{(-)}$ is a $\ast$-homomorphism.
+
+	Now we will show $\widehat{(-)}$ is isometric (which will also show it is injective). First we will show it is isometric on self-adjoint elements. Let $h\in A$ be self-adjoint. By the $C^\ast$-property, $\|h\|^{2^n}=\|h^{2^n}\|$. Thus 
+	\begin{equation*}
+		\|\hat{h}\|_\infty = \rho(h) = \limsup_n\|h^{2^n}\|^{1/2^n} = \|h\|,
+	\end{equation*}
+	where we have used \todo{ref} and Theorem \ref{thm_gelfands_formula}. This shows $\widehat{(-)}$ is an isometric on self-adjoint elements. In the general case, let $x\in A$. Then 
+	\begin{align*}
+		\|\hat{x}\|^2_\infty 
+		=& \|\overline{\hat{x}}\hat{x}\|_\infty = \|\widehat{x^\ast x}\|_\infty \\
+		=& \|x^\ast x\| = \|x\|^2,
+	\end{align*}
+	where we have used the fact that $x^\ast x$ is self-adjoint and the $C^\ast$-algebra property. So $\widehat{(-)}$ is isometric on all of $A$.
+
+	It remains to show $\widehat{(-)}$ is surjective. Since $A$ is complete and $\widehat{(-)}$ is an isomorphism, $\text{Im}(\widehat{(-)})$ is closed in $C(\text{Sp}(A))$ \todo{ref}. In fact, it is a closed $\ast$-subalgebra with unit, since $\widehat{(-)}$ is a $\ast$-homomorphism. We claim $\text{im}(\widehat{(-)})$ seperates points of $\text{Sp}(A)$. Indeed, for any $\ell_1\neq\ell_2$ in $\text{Sp}(A)$, by definition there exists $x\in A$ such that $\ell_1(x)=\ell_2(x)$, i.e. $\hat{x}(\ell_1)\neq\hat{x}(\ell_2)$. Then, by the Stone-Weierstrass theorem (\todo{ref}), $\text{im}(\widehat{(-)})\subset C(\text{Sp}(A))$ is dense. Since it is also closed, we have equality and we are done.
+\end{proof}
+
+\begin{theorem}
+\label{thm_inverse_in_generated_cstar_algebra}
+	Let $A$ be a unital $C^\ast$-algebra, and $x\in A$ an invertible element. Then $x^{-1}$ belongs to the $C^\ast$-subalgebra of $A$ generated by $1_A, x, x^\ast$ (i.e. the closure of $A$ in the set of complex polynomials in $1_A, x, x^\ast$).
+\end{theorem}
+\begin{proof}
+	The idea is the following. We will first consider a self-adjoint element $x$. In this case, we can actually show that $x^{-1}$ is in the algebra generated by $x$. To see this, we let $\mathcal{A}$ be the algebra generated by $x$, and $\mathcal{B}$ be the algebra generated by $x^{-1}$. Since $x$ and $x^{-1}$ commute, $\mathcal{B}$ is commutative, so it is isometrically $\ast$-isomorphic to $C(\text{Sp}(\mathcal{B}))$ by the Gelfand-Naimark theorem. Now one shows the image of $\mathcal{A}$ under the Gelfand transform, $\hat{\mathcal{A}}$, separates the points of $\text{Sp}(\mathcal{B})$. So by Stone-Weierstrass we conclude $\hat{\mathcal{A}}=\hat{\mathcal{B}}$. The Gelfand-Naimark theorem in the other direction then gives us that $\mathcal{A}=\mathcal{B}$, and in particular $x^{-1}\in\mathcal{A}$. For the general case, we do a similar thing, observing that for the self-adjoint element $x^\ast x$ a certain element appears in the $C^\ast$-algebra generated by $1_A, x^\ast x$ which will also appear in the algebra generated by $1_A,x,x^\ast$ and will multiply with $x^\ast$ to yield $x^{-1}$. 
+
+	Suppose first that $x=x^\ast$. Let $\mathcal{A}$ be the unital $C^\ast$-algebra generated by $x$, and $\mathcal{B}$ the unital $C^\ast$-algebra generated by $x,x^{-1}$. So $\mathcal{A}\subset\mathcal{B}\subset A$. Since $x$ and $x^{-1}$ commute, $\mathcal{B}$ is commutative. Thus by Theorem \ref{thm_gelfand_naimark_cstar}, the Gelfand transform $\widehat{(-)}:\mathcal{B}\to\hat{\mathcal{B}}\coloneqq C(\text{Sp}(B))$ is an isometric $\ast$-isomorphism. Since $\mathcal{A}$ is a $C^\ast$-subalgebra of $\mathcal{B}$, it follows (\todo{ref}) that $\hat{A}$ (the image of $A$ under the Gelfand transform) is a $C^\ast$-subalgebra of $\hat{B}$. 
+
+	We claim $\hat{A}$ separates points of $\text{Sp}(B)$. Let $\ell_1,\ell_2\in\text{Sp}(B)$, and suppose $\ell_1(x)=\ell_2(x)$. Then for any $\ell\in\text{Sp}(B)$,
+	\begin{equation*}
+		\ell(xx^{-1}) = \ell(x)\ell(x^{-1})=\ell(1_A)=1_A
+	\end{equation*}
+	and
+	\begin{equation*}
+		\ell_1(x^{-1}) = \ell(x)^{-1} = \ell_2(x)^{-1} = \ell_2(x^{-1}).
+	\end{equation*}
+	Since $B$ is generated by $x, x^{-1}$ it follows that $\ell_1=\ell_2$. We have shown that if $\ell_1\neq \ell_2$, then $\ell_1(x)\neq\ell_2(x)$, i.e. $\hat{x}(\ell_1) \neq \hat{x}(\ell_2)$. So $\hat{\mathcal{A}}$ separates points of $\text{Sp}(B)$. So $\hat{\mathcal{A}}\subset\hat{\mathcal{B}}$ is dense, and since it is also closed, they are equal. Theorem \ref{thm_gelfand_naimark_cstar} again now imiplies $A=B$. In particular, $x^{-1}\in\mathcal{A}$. 
+
+	For the general case, consider an invertible element $x\in A$. Then $x^\ast x$ is invertible with inverse $x^{-1}(x^{-1})^\ast$. But $x^\ast x$ is self-adjoint, hence by the above $x^{-1}(x^{-1})^\ast$ is in the $C^\ast$-algebra generated by $1_A$ and $x^\ast x$, which itself is in the $C^\ast$-algebra generated by $1_A, x, x^\ast$. But then 
+	\begin{equation*}
+		x^{-1}(x^{-1})^\ast x^\ast = (x^\ast x)^{-1}x^\ast = x^{-1}
+	\end{equation*}
+	is also in that algebra, and we are done.
+\end{proof}
+
+\begin{corollary}[spectral permanence]
+\label{cor_cstar_spectral_permanence}
+	Let $A\subset B$ be unital $C^\ast$-algebras with the same unit, and let $x\in A$. Then $\sigma_A(x)=\sigma_B(x)$.
+\end{corollary}
+\begin{proof}
+	$A\subset B$ already implies $\sigma_B(x)\subset\sigma_A(x)$. For the other inclusion, suppose $(x-\lambda 1_A)$ is invertible in $B$. Then by Theorem \ref{thm_inverse_in_generated_cstar_algebra}, $(x-\lambda 1_A)^{-1}$ is in the $C^\ast$-algebra generated by $x-\lambda 1_A$, i.e. $x-\lambda 1_A$ is invertible in $A$. Thus $\mathbb{C}\setminus\sigma_B(x)\subset\mathbb{C}\setminus\sigma_A(x)$. So $\sigma_B(x)\supset\sigma_A(x)$. 
+\end{proof}
+
+\begin{corollary}
+	Let $A$ be a unital $C^\ast$-algebra, and $x\in A$ normal \todo{need self-adjoint?}. Then $\|\hat{x}\|_\infty = \rho(x)$.
+\end{corollary}
+\begin{proof}
+	Since $x$ is normal, $A(x)$ is commutative (Corollary \ref{cor_ax_comm_if_x_normal}). Thus $\text{im}(\hat{x})=\sigma_{A(x)}(x)$ by Theorem \ref{thm_spa_spectrum}. By Corollary \ref{cor_cstar_spectral_permanence}, $\sigma_{A(x)}(x)=\sigma_A(x)$. Now by definition, 
+	\begin{equation*}
+		\|\hat{x}\|_\infty = \sup\{|\hat{x}(\ell)|=|\ell(x)| : \ell\in\text{Sp}(A), \ \|\ell\|\leq 1 \}.
+	\end{equation*}
+	But by Proposition \ref{prop_characters_cts}, it is always true that $\|\ell\|\leq 1$. Hence 
+	\begin{equation*}
+		\|\hat{x}\|_\infty = \sup\{|\hat{x}(\ell)|=|\ell(x)| : \ell\in\text{Sp}(A)\} = \sup\{|\lambda| : \lambda\in\text{im}(\hat{x})=\sigma_A(x)\}=\rho(x).
+	\end{equation*}
+\end{proof}
+
+\begin{theorem}
+	Let $A$ be a unital $C^\ast$-algebra generated by a single normal element $h\in A$. Then there is an isometric $\ast$-isomorphism between $A$ and the algebra $C(\sigma_A(h))$, mapping polynomials in $h$ to the same polynomials in $C(\sigma_A(h))$.
+\end{theorem}
+\begin{proof}
+	By Corollary \ref{cor_ax_comm_if_x_normal}, $A=A(x)$ is commutative. Hence by Theorem \ref{thm_gelfand_naimark_cstar} it is isometrically $\ast$-isomorphic to the $C^\ast$-algebra $C(\text{Sp}(A))$. By Theorem \ref{thm_spa_spectrum}, $\hat{h}:\text{Sp}(A)\to\sigma_A(h)$ is a homeomorphism. Now define
+	\begin{align*}
+		\alpha: C(\text{Sp}(A)) &\longrightarrow C(\sigma_A(h)) \\
+		f &\mapsto f \circ \hat{h}^{-1}
+	\end{align*}
+	\[
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHYAMpoAvgAoAggEoQw0uky58hFGQCMVWoxZtOAWzo4AFgCNjwAMLCZGmFADm8IqABmAJwi6kZEDghJV1PTMrIggztbCQA
+		\begin{tikzcd}
+			\text{Sp}(A) \arrow[d, "f"] \\
+			\mathbb{C}                 
+		\end{tikzcd}
+		\quad \overset{\alpha}{\mapsto}
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB13sBzAWzoD6AQQAUACwCUIAL6l0mXPkIoAjKRVVajFm044YADxzAAymmkihU2fOx4CRAEzlN9Zq0Qd2-HGIBGfsAAwtIymjBQ3PBEoABmAE4QvEhkIDgQSGpa7rrsYnTGYtIAesAAtCqh1Ax0fjAMAAoK9sog8VjcYjgyciAJSZnU6UjO2TqesSDVtfVNdkps7Z3dNn2JyYipw4ijbuNejGj5IrHWFNJAA
+		\begin{tikzcd}
+				\sigma_A(h) \arrow[rd, "\hat{h}^{-1}"'] \arrow[rr, "\alpha(f)"] &                               & \mathbb{C} \\
+																				& \text{Sp}(A) \arrow[ru, "f"'] &           
+		\end{tikzcd}
+	\]
+	In particular, $\alpha(\hat{h})(\lambda)\coloneqq f\circ\hat{h}^{-1}(\lambda)$, which shows \todo{work} $\alpha$ is an isometric $\ast$-isomorphism. Hence \todo{ref}
+	\begin{equation*}
+		\alpha\circ\widehat{(-)}:A\longrightarrow C(\sigma_A(h))
+	\end{equation*}
+	is an isometric $\ast$-isomorphism.
+
+	Let's show that this map is how we describe in the statment of the theorem. Let $p$ be a complex polynomial. Then 
+	\begin{align*}
+		(\alpha\circ\widehat{p(h)})(\lambda) 
+		=& (\alpha\circ p(\hat{h}))(\lambda) \\
+		=& (p\circ\alpha(\hat{h}))(\lambda) \\
+		=& p(\lambda),
+	\end{align*}
+	where we have used the linearity of $\alpha$.
+\end{proof}
+
+\begin{theorem}
+	Let $\Omega$ be a compact Hausdorff space. Then we have the following homeomorphism: $\text{Sp}(C(\Omega)) \cong \Omega$.
+\end{theorem}
+\begin{proof}
+	The idea is the following. The map exhibiting the homeomorphism will be the function sending $\omega\in\Omega$ the the evaluation map $\phi_\omega$ which sends $a\in C(\Omega)$ to $a(\omega)$. This map is injective because $C(\Omega)$ separates points of $\Omega$. To show it is surjective, we suppose for the sake of contradiction that for $\ell\in\text{Sp}(A)$ there does not exist $\omega\in\Omega$ such that $\ell=\phi_\omega$. Then for each $\omega$ we can construct $b_\omega\in C(\Omega)$ which does not vanish at $\omega$, hence does not vanish in a neighborhood of $\omega$, but $\ell(b_w)=0$. By compactness we can cover $\Omega$ with finitely many such neighborhoods, and define a continuous function $x$ to be the sum of the finitely many corresponding $b_\omega$. We can make this function positive everywhere on $\Omega$. We then derive a $0=1$ contradiction using the fact that $\ell(x)=0$ but $\ell(xx^{-1})=\ell(1_A)=1$. 
+
+	For each $\omega\in\Omega$, define the evaluation maps 
+	\begin{align*}
+		\phi_\omega: C(\Omega) &\longrightarrow \mathbb{C} \\
+		a &\mapsto a(\omega)
+	\end{align*}
+	One checks \todo{work} $\phi_\omega$ is a character, so $\phi_\omega\in\text{Sp}(C(\Omega))$. Note if $\phi_{\omega_1}=\phi_{\omega_2}$ then $a(\omega_1)=a(\omega_2)$ for all $a\in C(\Omega)$. By \todo{ref}, $C(\Omega)$ separates points of $\Omega$, so $a(\omega_1)=a(\omega_2)$ for all $a\in C(\Omega)$ implies $\omega_1=\omega_2$. Thus $\omega\mapsto\phi_\omega$ is injective.
+
+	To show it is surjective, let $\ell\in \text{Sp}(C(\text{sp}(A)))$ and suppose for the sake of contradiction that does not exist $\omega\in\Omega$ such that $\ell=\phi_\omega$. Then $\ell-\phi_\omega\neq 0$ for all $\omega\in\Omega$. So far each $\omega\in\Omega$, there exists $a_w\in C(\Omega)$ such that $\ell(a_\omega) - \phi(a_\omega)\neq 0$, i.e. $\ell(a_\omega)\neq a_\omega(\omega)$. Write $b_\omega\coloneq a_\omega-\ell(a_\omega)1_A$. Then $b_\omega\neq 0$ (since $b_\omega(\omega)\neq 0$) but $\ell(b_\omega)=0$.
+
+	Since $b_\omega\in C(\Omega)$, there exists a neighborhood $N_\omega$ of $\omega$ such that $b_\omega$ does not vanish on $N_\omega$. Varying $\omega$ over $\Omega$ we get an open cover $\{N_\omega : \omega\in\Omega\}$ of $\Omega$. Since $\Omega$ is compact, we get a finite subcover $\{N_{\omega_1}\}$. Write 
+	\begin{equation*}
+		x = |b_{\omega_1}|^2 + \cdots + |b_{\omega_k}|^2.
+	\end{equation*}
+	Then $x\in C(\Omega)$ and $x(\omega)>0$ for all $\omega\in\Omega$. Also 
+	\begin{align*}
+		\ell(x) 
+		=& \ell(b^\ast_{\omega_1}) + \cdots + \ell(b^\ast_{\omega_k}b_{\omega_k}) \\
+		=& \ell(b^\ast_{\omega_1})\ell(b_{\omega_1}) + \cdots + \ell(b^\ast_{\omega_k})\ell(b_{\omega_k}) \\
+		=& 0,
+	\end{align*}
+	since $\ell(b_{\omega_j})=0$ for all $j=1,\dots,k$. So $x\in\text{ker}(\ell)$. But $x>0$ implies $x^{-1}$ exists in $C(\Omega)$ \todo{ref}, and we reach a contradiction:
+	\begin{equation*}
+		0 = \ell(x)\ell(x^{-1})=\ell(xx^{-1})=\ell(1_A)=1.
+	\end{equation*}
+	This shows surjectivity.
+
+	To show this is a homeomorphism, since $\Omega$ is compact by assumption and $\text{Sp}(A)$ is compact by Proposition \ref{prop_spa_compact}, it sufficies to show $\phi_{(-)}$ is continuous \todo{ref}. Suppose a net $(w_\alpha)\subset\Omega$ converges to $\omega$. Then for each $x\in C(\Omega)$, 
+	\begin{equation*}
+		\phi_{\omega_\alpha}(x) = x(\omega_\alpha) \to x(\omega) = \phi_\omega(x)
+	\end{equation*}
+	by the continuity of $x$. This $\phi_{\omega_\alpha}\to\phi_\omega$ and we're done.
+\end{proof}
+
+\begin{theorem}[unitization]
+\label{thm_cstar_unitization}
+	Let $A$ be a $C^\ast$-algebra without unit. Then $A$ is isometrically $\ast$-isomorphic to a $C^\ast$-algebra of codimension 1 in a unital $C^\ast$-algebra.
+\end{theorem}
+\begin{proof}
+	We define the unital $C^\ast$-algebra as follows: 
+	\begin{align*}
+		&\text{as a set}  &&\tilde{A} = A \oplus\mathbb{C} \\
+		&\text{involution}  &&a\oplus\lambda\mapsto a^\ast\oplus\overline{\lambda} \\
+		&\text{multiplication}  &&(a\oplus\lambda)(b\oplus\mu) = (ab+\lambda b + \mu a) \oplus \lambda \mu \\
+		&\text{norm}  &&\|a\oplus\lambda\| = \sup\{\|ax+\lambda x\| : x\in A, \ \|x\|\leq 1\} \\
+		&\text{unit}  &&0\oplus 1
+	\end{align*}
+	We check this works. \todo{check}
+\end{proof}
+
+\begin{theorem}
+	The norm on a $C^\ast$-algebra is unique. 
+\end{theorem}
+\begin{proof}
+	Suppose $n_1$ and $n_2$ are norms on $A$ making $A$ a $C^\ast$-algebra. Without loss of generality we may assume $A$ is unital, by Theorem \ref{thm_cstar_unitization}. Let $h\in A$ be self-adjoint. Then \todo{ref}
+	\begin{equation*}
+		n_1(h) = \|\hat{h}\|_\infty = \sup\{|\lambda| : \lambda\in\sigma(h)\} = n_2(h),
+	\end{equation*}
+	since inverses are defined algebraically (i.e. independent of norm).
+
+	In general, for any $x\in A$, 
+	\begin{equation*}
+		n_1(x)^2 = n_1(x^\ast x) = n_2(x^\ast x) = n_2(x)^2
+	\end{equation*}
+	since $x^\ast x$ is self-adjoint.
+\end{proof}
+
+\begin{corollary}
+	Let $A$ be a non-unital $C^\ast$-algebra. Then unitization commutes with taking the subalgebra generated by $a$:
+	\[
+		% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAEEQBfU9TXfIRQBGclVqMWbdgAoAHgEpuvEBmx4CRMsPH1mrRCAA6RvA1jB2XZX3WCiondT1TDJsxavyFAXhMB3LFgPGEtvay5xGCgAc3giUAAzACcIAFskMhAcCCQAJh4k1IzELJykYUKQFPT86nLEAGYqmpLRbNymyK4gA
+		\begin{tikzcd}
+			A \arrow[d] \arrow[r] & A(x) \arrow[d]                \\
+			\tilde{A} \arrow[r]   & \tilde{A}(x)=\widetilde{A(x)}
+		\end{tikzcd}
+	\]
+\end{corollary}
+
+\begin{theorem}
+	Let $A$ be a commutative $C^\ast$-algebra without unit. Then there exists a locally compact, non-compact, Hausdorff space $X$ such that $A$ is isometrically $\ast$-isomorphic to $C_0(X)$, the $C^\ast$-algebra of continuous $\mathbb{C}$-valued functions on $X$ vanishing at infinity.
+\end{theorem}
+\begin{proof}
+	Let $K=\text{Sp}(\tilde{A})$. By Proposition \ref{prop_spa_compact}, $K$ is a compact Hausdorff space. By Theorem \ref{thm_gelfand_naimark_cstar}, $\tilde{A}\simeq C(K)$, and so $A$ is isometrically $\ast$-isomorphic to a $C^\ast$-subalgebra of $C(K)$ via the Gelfand transform on $\tilde{A}$. 
+
+	Let $\kappa_0\in K$ be defined as follows: 
+	\begin{equation*}
+		\kappa_0(a) = 
+		\begin{cases}
+			0 & a\in A\subset\tilde{A} \\
+			1 & a = 1_A
+		\end{cases}.
+	\end{equation*}
+	\todo{check is char} So for any $a\in A$, we have $\hat{a}(\kappa_0)=0$, so the image of $A$ under $\widehat{(-)}$ consists of functions in $C(K)$ which vanish at $\kappa_0\in K$. 
+
+	Conversely, suppose $f\in C(K)$ is such that $f(\kappa_0)=0$. Let $x\in\tilde{A}$ be such that $\hat{x}=f$. By the construction of unitization, we can write $x=a+\mu 1_A$ for some $a\in A$ and $\mu\in\mathbb{C}$. Then 
+	\begin{align*}
+		f(\kappa_0) = 0 &\Rightarrow \hat{x}(\kappa_0) = 0 \\
+						&\Rightarrow \kappa_0(x) = 0 \\
+						&\Rightarrow \kappa_0(a) + \mu\kappa_0(1_A)=0 \\
+						&\Rightarrow \mu=0,
+	\end{align*}
+	since $\kappa_0(a)=0$ for all $a\in A$. Thus $x\in A$, so the Gelfand transform maps $A$ onto the subalgebra of $C(K)$ consisting of those functions which vanish at $\kappa_0$. 
+
+	Let $X=K\setminus\{k\kappa_0\}$. Then $X$ is locally compact \todo{ref} and the map $g\mapsto g|_X$ is an isometric $\ast$-isomorphism 
+	\begin{equation*}
+		A=\{g\in C(K) : g(\kappa_0)=0\} \longrightarrow C_0(X)
+	\end{equation*}
+
+	It remains to show $X$ is not compact. If it were, $\kappa_0$ would be an isolated point of $K$ \todo{ref} and the element $e\in A\subset\tilde{A}$ corresponding to the continuous function 
+	\begin{equation*}
+		\hat{e}(\kappa) = 
+		\begin{cases}
+			0 & \kappa=\kappa_0 \\
+			1 & \text{otherwise}
+		\end{cases}
+	\end{equation*}
+	would be a unit for $A$, a contradiction.
+\end{proof}
+
+% $C^\ast$-algebras }}}1
+
+\section{Gelfand-Naimark theorems} % {{{1
+\begin{refsection}
+
+The following is stated as Theorem A.2. in \cite{khalkhali_book}:
+\begin{theorem}
+	\hfill
+	\begin{enumerate}
+		\item Let $A$ be a unital Banach algebra over $\mathbb{C}$. If $a\in A$, then $\sigma(a)$ is nonempty.
+		\item Let $A$ be a unital algebra over $\mathbb{C}$ of countable dimension. If $a\in A$, then $\sigma(a)$ is nonempty. Furthermore, $a$ is nilpotent if and only if $\sigma(a)=\{0\}$.
+	\end{enumerate}
+\end{theorem}
+\begin{proof}[Proof of 1]
+	Suppose $\sigma(a)=\emptyset$. Then the function 
+	\begin{align*}
+		R:\mathbb{C} &\to A \\
+		\lambda &\mapsto (a-\lambda 1)^{-1}
+	\end{align*}
+	is holomorphic, non-constant, and bounded. But this contradicts Liouville's theorem for Banach space valued functions.
+\end{proof}
+\begin{proof}[Proof of 2]
+	Suppose $\sigma(a)=\emptyset$. Then $(T-\lambda 1)^{-1}$ exists for all $\lambda\in \mathbb{C}$.
+
+	\begin{claim}
+		There is an injective, linear homomorphism $\phi:\mathbb{C}(X) \to A$ sending $X\mapsto T$.
+	\end{claim}
+	\begin{proof}
+		Any element in $\mathbb{C}(X)$ may be expressed as $\frac{p(X)}{q(X)}$, where $p(X),q(X)\in\mathbb{C}[X]$. It is clear that $p(X)\mapsto p(T)$ is injective and linear, and it remains to show we can compatibly map $\frac{1}{q(X)}$. By the fundamental theorem of algebra we can write $q(X)=(X-\lambda_1)\cdots (X-\lambda_n)$. By assumption, $(T-\lambda 1)^{-1}$ exists, so map $\frac{1}{q(X)}$ to $(T-\lambda_1 1)^{-1}\cdots (T-\lambda_n 1)^{-1}$. 
+	\end{proof}
+
+	By the uniqueness of partial fraction decomposition, the set 
+	\begin{equation*}
+		\left\{\frac{1}{X-\lambda}\right\}_{\lambda\in\mathbb{C}}
+	\end{equation*}
+	are linearly independent. Since $\phi$ is injective and linear, so are their images under $\phi$, i.e. the $\{(T-\lambda 1)^{-1}\}$ are linearly independent. But then this would provide an uncountable basis for $A$, contradicting our assumption.
+\end{proof}
+
+
+\printbibliography
+\end{refsection}
+% }}}1
+
+\end{document}

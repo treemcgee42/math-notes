@@ -1,0 +1,1093 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+
+\title{Measure Theory Crash Course}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{motivation} % {{{
+
+Lebesgue integration can be thought of as the ``completion'' of Riemann integration. This is because
+Riemann integrals do not behave well at the limit, whereas Lebesgue integrals do. 
+
+\begin{example}[uniform limit of Riemann integrable functions is Riemann integrable]
+	TODO
+\end{example}
+
+\begin{example}[pointwise limit of Riemann integrable functions may fail to be Riemann integrable]
+	TODO
+\end{example}
+
+% }}}
+
+\section{Lebesgue measure} 
+
+\subsection{Tao's approach}
+
+This approach essentially takes Littlewood's first principle to be its definition: it definines 
+``Lebesgue outer measure'' $m^\ast$ and then calls a set $E$ Lebesgue measurable if, for any 
+$\epsilon>0$, we can find an open set $U$ such that $m^ast(U\setminus E) < \epsilon$, and defines 
+the Lebesgue measure of $E$ in that case to be equal to $m^\ast(E)$. 
+
+\begin{definition}[Lebesgue outer measure]
+	TODO
+\end{definition}
+
+So in some sense, $m^\ast(E)$ is the smallest area we can get by covering $E$ with countably many boxes
+(actually the infimum, of course).
+
+\begin{definition}[Lebesgue measure]
+	TODO
+\end{definition}
+
+\section{properties of measurability} % {{{
+
+\subsection{outer measure properties}
+
+\begin{proposition}[axioms of outer measures] Let $m^\ast$ be an outer measure. \hfill
+	\begin{enumerate}
+		\item $m^\ast(\emptyset)=0$
+		\item (monotonicity)
+		\item (countable subadditivity) If $(E_n)$ is a countable sequence of sets, then $m^\ast(\bigcup_n E_n) \leq \sum_n m^\ast(E_n)$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{proposition}[outer measure of almost disjoint boxes]
+	Let $E=\bigcup_n B_n$ be the countable union of almost disjoint boxes (their interiors are all disjoint). Then
+	\begin{equation*}
+		m^\ast(E)=\sum_n |B_n|.
+	\end{equation*}
+\end{proposition}
+
+\begin{proposition}[Lebesgue (outer) measure of open sets] Let $U\subset \mathbb{R}^d$ be an open set. Then 
+	\begin{equation*}
+		m^\ast(U)=\sup_{E\subset U}m(E)
+	\end{equation*}
+	where $E$ is an elementary set (finite union of boxes).
+\end{proposition}
+
+In other terminology, this is saying that the Lebesgue outer measure of open sets is equal to the Jordan inner measure of open sets.
+
+\begin{proposition}[Lebesgue outer measure of an arbitrary set]
+	Let $A\subset \mathbb{R}^d$. Then 
+	\begin{equation*}
+		m^\ast(A)=\inf_{U\supset A} m^\ast(U),
+	\end{equation*}
+	where the $U$ are open.
+\end{proposition}
+
+\subsection{Lebesgue measurability}
+
+\begin{proposition}[quick tests for Lebesgue measurability] The following are Lebesgue measurable: \hfill
+	\begin{enumerate}
+		\item open and closed sets 
+		\item sets with Lebesgue outer measure 0
+		\item the empty set
+		\item the complement of a Lebesgue measurable set
+		\item countable unions and intersections of Lebesgue measurable sets
+	\end{enumerate}
+\end{proposition}
+
+The above immediately implies Lebesgue measurable sets form a $\sigma$-algebra.
+
+\begin{proposition} Let $E\subset\mathbb{R}^d$, and $\epsilon>0$ arbitrary. The following are equivalent: \hfill
+	\begin{enumerate}
+		\item $E$ is Lebesgue measurable.
+		\item (outer approximation by open) One can contain $E$ in an open set $U$ with $m^\ast(U\setminus E)\leq \epsilon$.
+		\item (almost open) One can find an open set $U$ such that $m^\ast(U\ominus E)\leq \epsilon$.
+		\item (inner approximation by closed) One can find a closed $F\subset E$ with $m^\ast(E\setminus F)\leq \epsilon$.
+		\item (almost closed) One can find a closed set $F$ such that $m^\ast(F\ominus E)\leq \epsilon$.
+		\item (almost measurable) One can find a Lebesgue measureable set $E_\epsilon$ such that $m^\ast(E_\epsilon\ominus E)\leq \epsilon$.
+	\end{enumerate}
+\end{proposition}
+
+In the above, $\ominus$ denotes the symmetric difference of sets. It is like an XOR.
+
+\begin{proposition}[axioms of measures] \hfill
+	\begin{enumerate}
+		\item $m(\emptyset)=0$
+		\item (countable additivity) If $(E_n)$ is a countable sequence of disjoint, Lebesgue measurable set, then $m(\bigcup_n E_n)=\sum_n m(E_n)$. 
+	\end{enumerate}
+\end{proposition}
+
+\begin{example}[a set which is not Lebesgue measurable]
+	TODO
+\end{example}
+
+% }}}
+
+\section{Lebesgue integral} % {{{1
+
+\subsection{simple functions} % {{{2
+
+\begin{definition}[simple function]
+	A simple function $f:\mathbb{R}^d\to\mathbb{C}$ is a finite linear combination
+	\begin{equation*}
+		f=\sum_{i=1}^k c_i 1_{E_i}
+	\end{equation*}
+	where $c_i\in\mathbb{C}$, $E_i\subset\mathbb{R}^d$ are Lebesgue measurable, and $1$ is the indicator function. If the $c_i\in[0,+\infty]$ then $f$ is called unsigned.
+\end{definition}
+
+\begin{remark}[]
+	The space of simple functions, $\text{Simp}(\mathbb{R}^d)$, is a commutative $\ast$-algebra under pointwise multiplication and complex conjugation.
+\end{remark}
+
+\begin{definition}[integral of unsigned simple functions]
+	If $f=\sum_{i=1}^k c_i1_{E_i}$ is an unsigned simple function, then its integral is defined as
+	\begin{equation*}
+		\int f(x)\ dx\coloneqq \sum_{i=1}^k c_im(E_i).
+	\end{equation*}
+	Clearly this integral takes values in $[0,\infty]$.
+\end{definition}
+
+\begin{remark}[]
+	One would need to check this is well defined under different representations of the function.
+\end{remark}
+
+\begin{proposition}[properties of simple unsigned integral]
+	Let $f,g$ be simple unsigned functions. \hfill
+	\begin{enumerate}
+		\item (unsigned linearity)
+		\item (finiteness) $\int f(x)\ dx<\infty$ if and only if $f$ is finite a.e., and its support has finite measure.
+		\item (vanishing) $\int f(x)\ dx=0$ if and only if $f=0$ a.e.
+		\item (equivalence) If $f=g$ a.e., then $\int f(x)\ dx=\int g(x)\ dx$. 
+		\item (monotonicity) If $f\leq g$ a.e., then $\int f(x)\ dx\leq \int g(x)\ dx$. 
+		\item (compatibility with Lebesgue measure) For any Lebesgue measurable $E$, $\int 1_E(x)\ dx=m(E)$. 
+	\end{enumerate}
+\end{proposition}
+
+% simple functions }}}2
+
+\subsection{measurable functions} % {{{2
+
+\subsubsection{unsigned} % {{{3
+
+\begin{definition}[unsigned measurability]
+	Let $f$ be an unsigned function. The following are equivalent: \hfill
+	\begin{enumerate}
+		\item $f$ is unsigned Lebesgue measurable.
+		\item $f$ is the pointwise limit of unsigned simple functions. 
+		\item $f$ is the pointwise a.e. limit of unsigned simple functions.
+		\item $f$ is the supremum of an increasing sequence $0\leq f_1\leq f_2,\dots$ of unsigned simple functions, each of which are bounded with finite measure support.
+		\item For every $\lambda\in[0,\infty]$, the set $\{x\ : \ f(x)>\lambda\}$ is Lebesgue measurable.
+		\item For every $\lambda\in[0,\infty]$, the set $\{x\ : \ f(x)\geq\lambda\}$ is Lebesgue measurable.
+		\item For every $\lambda\in[0,\infty]$, the set $\{x\ : \ f(x)<\lambda\}$ is Lebesgue measurable.
+		\item For every $\lambda\in[0,\infty]$, the set $\{x\ : \ f(x)\leq\lambda\}$ is Lebesgue measurable.
+		\item For every interval $I\subset[0,\infty)$, the set $f^{-1}(I)$ is Lebesgue measurable.
+		\item For every (relatively) open set $U\subset[0,\infty)$, the set $f^{-1}(U)$ is Lebesgue measurable.
+		\item For every (relatively) closed set $K\subset[0,\infty)$, the set $f^{-1}(K)$ is Lebesgue measurable.
+	\end{enumerate}
+\end{definition}
+
+Recall that, for $A\subset X$, a set $U_A\subset A$ is relatively open (in $A$) if there exists an open set $U\subset X$ such that $U\cap A=U_A$. 
+
+\begin{proposition}[common classes of unsigned measurable functions] \hfill
+	\begin{enumerate}
+		\item every unsigned continuous function
+		\item every unsigned simple function 
+		\item the supremum, infimum, limit superior, or limit inferior of unsigned measurable functions
+		\item an unsigned function equal a.e. to an unsigned measurable function 
+		\item pointwise a.e. limit of unsigned measurable functions, provided the limit is unsigned 
+		\item postcomposition of an unsigned measurable function with an unsigned continuous function
+		\item sum and product of unsigned measurable functions
+	\end{enumerate}
+\end{proposition}
+
+% unsigned }}}3
+
+\subsubsection{complex} % {{{3
+
+\begin{definition}[complex measurability]
+	Let $f:\mathbb{R}^d\to\mathbb{C}$ be a.e. defined. The following are equivalent: \hfill
+	\begin{enumerate}
+		\item $f$ is measurable.
+		\item $f$ is the pointwise, a.e. limit of simple functions
+		\item The (magnitudes of the) positive and negative parts of the real and complex parts are unsigned measurable functions.
+		\item $f^{-1}(U)$ is Lebesgue measurable for every open set $U\subset\mathbb{C}$.
+		\item $f^{-1}(K)$ is Lebesgue measurable for every closed set $K\subset\mathbb{C}$.
+	\end{enumerate}
+\end{definition}
+
+\begin{proposition}[common classes of complex measurable functions] \hfill
+	\begin{enumerate}
+		\item continuous functions 
+		\item simple functions 
+		\item a function equal a.e. to a measurable function
+		\item the pointwise, a.e. limit of measurable functions 
+		\item the postcomposition of a measurable function by a continuous function 
+		\item the sum and product of measurable functions
+	\end{enumerate}
+\end{proposition}
+
+% complex }}}3
+
+% measurable functions }}}2
+
+\subsection{unsigned integrals} % {{{2 
+
+\begin{definition}[lower, upper unsigned Lebesgue integrals]
+	Let $f$ be unsigned (not necessarily measurable). The lower integral is 
+	\begin{equation*}
+		\underline{\int_{\mathbb{R}^d}}f(x)\ dx\coloneqq\sup_{0\leq g\leq f}\int_{\mathbb{R}^d}g(x)\ dx
+	\end{equation*}
+	and the upper integral is 
+	\begin{equation*}
+		\overline{\int_{\mathbb{R}^d}}f(x) \ dx\coloneqq\inf_{h\geq f}\int_{\mathbb{R}^d}h(x)\ dx
+	\end{equation*}
+	where the $g$ and $h$ are simple.
+\end{definition}
+
+\begin{proposition}[properties of lower/upper integral]
+	Let $f,g$ be unsigned. \hfill
+	\begin{enumerate}
+		\item (compatibility with simple integral) The lower, upper, and simple integrals of a simple function all agree.
+		\item (monotonicity)
+		\item (homogeneuity)
+		\item (equivalence) If $f,g$ agree a.e., then their upper/lower integrals are the same.
+		\item (super/sub-additivity) $\underline{\int}f(x)+g(x)\ dx\geq\underline{\int}f(x)\ dx+\underline{\int}g(x)\ dx$ and the direction of the inequality flips for upper integrals.
+		\item (divisibility) For any measurable set $E$, one has $\underline{\int}f(x)\ dx=\underline{\int}f(x)1_{E}(x)\ dx+\underline{\int}f(x)1_{\mathbb{R}^d\setminus E}(x)\ dx$.
+		\item (horizontal truncation) $\underline{\int}\min(f(x),n)\ dx\to\underline{\int}f(x)\ dx$ as $n\to\infty$.
+		\item (vertical truncation) $\underline{\int}f(x)1_{|x|\leq n}\ dx\to\underline{\int}f(x)\ dx$ as $n\to\infty$.
+		\item (reflection) If $f+g$ is a simple function that is bounded with finite measure support (= absolutely integrable), then $\int f(x)+g(x)\ dx=\underline{\int}f(x)\ dx + \overline{\int}g(x)\ dx$.
+	\end{enumerate}
+\end{proposition}
+
+\begin{definition}[unsigned Lebesgue integral]
+	If $f$ is unsigned and measurable, define the unsigned Lebesgue integral $\int f(x)\ dx$ to be equal to the lower unsigned Lebesgue integral.
+\end{definition}
+
+% unsigned integrals }}}2
+
+\subsection{Lebesgue integral} % {{{2 
+
+\begin{definition}[Lebesgue integral]
+	Let $f$ be a.e. defined, measurable, and absolutely integrable. If $f$ is real-valued, define the Lebesgue integral to be 
+	\begin{equation*}
+		\int f(x)\ dx\coloneqq \int \max(f(x),0)\ dx - \int \max(-f(x),0)\ dx.
+	\end{equation*}
+	If $f$ is complex valued, then define the Lebesgue integral to be 
+	\begin{equation*}
+		\int f(x)\ dx\coloneqq \int\text{Re}\ f(x)\ dx+i\int\text{Im}\ f(x)\ dx.
+	\end{equation*}
+\end{definition}
+
+\begin{proposition}[integration is $\ast$-linear]
+	TODO
+\end{proposition}
+
+\begin{proposition}[triangle inequality]
+	TODO
+\end{proposition}
+
+% absolute integrability }}}
+
+% Lebesgue integral }}}1
+
+\section{Littlewood's three principles} % {{{1 
+
+\begin{enumerate}
+	\item Every measurable set is nearly a finite sum of intervals.
+	\item Every absolutely integrable function is nearly continuous.
+	\item Every pointwise convergent sequenece of functions is nearly uniformly convergent.
+\end{enumerate}
+
+\subsection{first principle}
+
+\subsection{second principle} % {{{2 
+
+The following, particularly (3), is a stronger version of Littlewood's second principle.
+
+\begin{theorem}[approximation of $L^1$ functions] 
+	The following classes of functions are dense in $L^1(\mathbb{R}^d)$: \hfill
+	\begin{enumerate}
+		\item absolutely integrable 
+		\item step
+		\item continuous, compactly supported
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}[Lusin's theorem]
+	Let $f$ be absolutely integrable. For any $\epsilon>0$, there exists a Lebesgue measurable set $E$ subh that $m(E)<\epsilon$ and the restriction of $f$ outside of $E$ is continuous.
+\end{theorem}
+
+% second principle }}}2
+
+\subsection{third principle} % {{{2 
+
+Fix domain $\mathbb{R}^d$ and codomain $\mathbb{C}$. 
+
+\begin{definition}[locally uniform convergence]
+	We say $f_n\to f$ locally uniformly if, on every bounded $E\subset\mathbb{R}^D$, $f_n\to f$ uniformly.
+\end{definition}
+
+\begin{theorem}[Egorov's theorem]
+	Let $f_n\to f$ pointwise a.e, and suppose all these functions are measurable. For any $\epsilon>0$, there exists a Lebesgue measurable set $A$ such that $m(A)<\epsilon$ and $f_n\to f$ locally uninformly outside of $A$. 
+\end{theorem}
+
+% third principle }}}2
+
+\subsection{related principles} % {{{2 
+
+\begin{enumerate}
+	\item (absolutely integrable functions almost have bounded support) Let $f$ be absolutely integrable. For any $\epsilon>0$, there exists a ball $B(0,R)$ outside of which $\|f\|_{L^1}<\epsilon$.
+	\item (measurable functions are almost locally bounded) Let $f$ be measurable. For any $\epsilon>0$, there exists a measurable set $E$ such that $m(E)<\epsilon$ and $f$ is locally bounded outside of it, i.e. for every $R>0$ there exists $M<\infty$ such that $|f(x)|\leq M$ for all $x\in B(0,R)\setminus E$.
+\end{enumerate}
+
+% related principles }}}2
+
+% Littlewood's three principles }}}1
+
+\section{abstract measures} % {{{1 
+
+\subsection{$\sigma$-algebras} % {{{2 
+
+\begin{definition}[$\sigma$-algebras] 
+	Let $X$ be a set. A $\sigma$-algebra on $X$ is a collection $\mathcal{B}$ of $X$ which obeys the following properties:
+	\begin{enumerate}
+		\item $\emptyset\in\mathcal{B}$
+		\item (closed under complements)
+		\item (closed under countable union)
+	\end{enumerate}
+\end{definition}
+
+It follows that $\sigma$-algebras are closed under countable intersection as well.
+
+\begin{definition}[measurable space]
+	A pair $(X,\mathcal{B}$) is called a measurable space.
+\end{definition}
+
+\begin{definition}[generation of $\sigma$-algebras] 
+	Let $\mathcal{F}$ be any family of sets in $X$. Define the $\sigma$-algebra generated by $\mathcal{F}$, $\langle \mathcal{F}\rangle$, to be the coarsest $\sigma$-algebra containing $\mathcal{F}$.
+\end{definition}
+
+\begin{definition}[Borel $\sigma$-algebra]
+	For a topological space $X$, the Borel $\sigma$-algebra $\mathcal{B}[X]$ of $X$ is the $\sigma$-algebra generated by the open subsets of $X$.
+\end{definition}
+
+\begin{remark}[Lebesgue and Borel $\sigma$-algebras are different]
+	TODO
+\end{remark}
+
+% $\sigma$-algebras }}}2
+
+\subsection{measure} % {{{2 
+
+\begin{definition}[measure]
+	Let $(X,\mathcal{B})$ be a measurable space. An (unsigned) measure is a map $\mu:\mathcal{B}\to[0,+\infty]$ such that 
+	\begin{enumerate}
+		\item $\mu(\emptyset)=0$
+		\item (countable additivity) If $(E_i)$ are a disjoint and measurable, then $\mu(\bigcup_i E_i) = \sum_i \mu(E_i)$.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[measure space]
+	A triplet $(X,\mathcal{B},\mu)$ is called a measure space.
+\end{definition}
+
+\begin{proposition}[]
+	Let $(X,\mathcal{B},\mu)$ be a measure space. Then \hfill
+	\begin{enumerate}
+		\item (countable subadditivity)
+		\item (upwards monotone convergence) If $E_1\subset E_2\subset\cdots$ are measurable, then 
+			\begin{equation*}
+				\mu(\bigcup_n E_n)=\lim_{n\to\infty}\mu(E_n)=\sup_n\mu(E_n).
+			\end{equation*}
+		\item (downwards monotone convergence) If $E_1\supset E_2\supset\cdots$ are measurable, and $\mu(E_n)<\infty$ for at least one $n$, then 
+			\begin{equation*}
+				\mu(\bigcap_n E_n)=\lim_{n\to\infty}\mu(E_n)=\inf_n\mu(E_n).
+			\end{equation*}
+	\end{enumerate}
+\end{proposition}
+
+\begin{definition}[completeness]
+	A measure space is complete if every sub-null set (complement of a null set) is a null set (a set of measure zero).
+\end{definition}
+
+\begin{remark}[]
+	On $\mathbb{R}^d$, the Lebesgue measure space is complete but the Borel measure space is not.
+\end{remark}
+
+
+% measure }}}2
+
+\subsection{integration} % {{{2 
+
+\begin{definition}[measurable function]
+	Let $(X,\mathcal{B})$ be a measurable space. A function $f:X\to[0,+\infty]$ or $f:X\to\mathbb{C}$ is measurable if $f^{-1}(U)$ for every open subset $U$ of $[0,+\infty]$ or $\mathbb{C}$.
+\end{definition}
+
+\begin{definition}[integral of simple functions]
+	An (unsigned) simple function $f:X\to[0,+\infty]$ on a measurable space is a measurable function taking on finitely many values $a_1,\dots,a_k$. Its integral is defined as 
+	\begin{equation*}
+		\int_X f\ d\mu\coloneqq\sum_{j=1}^k a_j\mu(f^{-1}(\{a_j\})).
+	\end{equation*}
+\end{definition}
+
+\begin{definition}[unsigned integral]
+	Let $f$ be unsigned and measurable. Define its integral to be 
+	\begin{equation*}
+		\int_X f\ d\mu\coloneqq \sup_{0\leq g\leq f} \int_X g\ d\mu,
+	\end{equation*}
+	where the $g$ are simple.
+\end{definition}
+
+\begin{proposition}[properties of unsigned integral]
+	Let $f,g$ be unsigned and measurable. \hfill
+	\begin{enumerate}
+		\item (a.e. equivalence)
+		\item (monotonicity)
+		\item (homogeneity)
+		\item (supperadditivity)
+		\item (compatibility with simple integral)
+		\item (Markov's inequality)
+		\item (finiteness)
+		\item (vanishing)
+		\item (vertical truncation) We have 
+			\begin{equation*}
+				\lim_{n\to\infty}\int_X\min(f,n)\ d\mu=\int_X f\ d\mu.
+			\end{equation*}
+		\item (horizontal truncation) If $(E_i)$ is an non-decreasing sequence of measurable sets, 
+			\begin{equation*}
+				\lim_{n\to\infty}\int_X f\ 1_{E_n}\ d\mu=\int_X f 1_{\bigcup_n E_n}\ d\mu.
+			\end{equation*}
+		\item (restriction)
+	\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+	\hfill
+	\newline
+	\textbf{Vertical truncation}
+
+	This is a consequence of upwards monotone convergence for measurable sets (TODO ref). 
+	\begin{align*}
+		\lim_{n\to\infty}\int_X \min(f,n)\ d\mu =& \lim_{n\to\infty}\int_X f 1_{\{x\mid f(x)\leq n\}}\ d\mu \\
+		=& \lim_{n\to\infty}\sup_{0\leq g\leq f}\int g 1_{\{x\mid f(x)\leq n\}}\ d\mu \\
+		\intertext{(where the $g$ are simple)}
+		=& \lim_{n\to\infty}\sum_{0\leq g\leq f}\sum_{i=1}^k c_i\mu(g^{-1}(c_i)\cap \{x\mid f(x)\leq n\}) \\
+		\intertext{(where the $c_i$ are the finitely many values of $g$)}
+		=& \sup_{0\leq g\leq f}\sum_{i=1}^k c_i \mu(g^{-1}(c_i)) \\
+		\intertext{(since the sets $g^{-1}(c_i)\cap \{x\mid f(x)\leq n\}$ are monotonically increasing as $n\to\infty$)}
+		=& \int_X f\ d\mu.
+	\end{align*}
+
+	\textbf{Horizontal truncation}
+
+	This is another consequence of the upwards monotone convergence for measurable sets, and the proof is analagous to the one above.
+\end{proof}
+
+\begin{theorem}[linearity of unsigned integral]
+	TODO
+\end{theorem}
+
+\begin{proposition}[linearity in $\mu$]
+	TODO
+\end{proposition}
+
+\begin{proposition}[change of variables formula]
+	TODO
+\end{proposition}
+
+\begin{definition}[general integral]
+	TODO
+\end{definition}
+
+% integration }}}
+
+\subsection{signed measures} % {{{2 
+
+\begin{definition}[signed measure]
+	A signed measure is a map $\mu:\mathcal{X}\to[-\infty,+\infty]$ such that 
+	\begin{enumerate}
+		\item $\mu(\emptyset)=0$.
+		\item $\mu$ can take either $+\infty$ or $-\infty$ but not both.
+		\item If $(E_i)$ are disjoint, then $\sum_n\mu(E_n)\to\mu(\bigcup_n E_n)$. If the latter is finite, the sum is absolutely convergent. 
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}[Hahn decomposition]
+	Let $\mu$ be a signed measure. Then we can find (explicitly) a partition $X=X_+\cup X_-$ such that $\mu_+\coloneqq\mu|_{X_+}\geq 0$ and $\mu_- \coloneqq -\mu|_{X_-} \geq 0$. Moreover, these sets are unique modulo null\footnote{A set $E$ is called null for a signed measure $\mu$ if $\mu|_E=0$. Note this implies $\mu(E)=0$, but not conversely since $E$ may contain subsets of non-zero measure even if it has signed measure zero.} sets.
+\end{theorem}
+
+\begin{proof}
+	Without loss of generality, we may assume $\mu$ avoids $+\infty$, by replacing $\mu$ with $-\mu$ if necessary.
+
+	We will construct $X_+$ to be the totally positive\footnote{A set $E$ is \emph{totally positive} if $\mu|_E\geq 0$, i.e. $\mu(E')\geq 0$ for any $E'\subset E$ measurable. We can analagously define \emph{totally negative} sets.} set of maximal measure. Define $m_+$ to be the supremum of $\mu(E)$ where $E$ ranges over all totally positive sets. Then we can find a sequence of totally positive sets $(E_n)$ such that $\mu(E_n)\to m_+$. Let $X_+=\bigcup_n E_n$. Then $\mu(X_+)=\mu(\bigcup_n E_n)=\lim_{n\to\infty}\mu(E_n)=m_+$. Since $\mu$ avoids $+\infty$ (by our without loss of generality assumption), $m_+$ is finite.
+
+	Let $X_-\coloneqq X\setminus X_+$. It suffices to show that $X_-$ is totally negative. Suppose otherwise. Our idea will be to construct a subset $E\subset X_-$ that belongs to $X_+$. Since we have supposed that $X_-$ is not totally negative, there exists a subset $E_1\subset X_-$ of strictly positive measure. If $E_1$ were totally positive, then $X_+\cup E_1$ would be a positive set having measure strictly greater than $m_+$ (since $E_1\not\subset X_+$), which is a contradiction. Thus $E_1$ must contain a subset of strictly negative measure, whose complement must have strictly larger measure than $E_1$. 
+
+	So pick $E_2$ such that $\mu(E_2)\geq \mu(E_1)+1/n_1$, where $n_1$ is the smallest integer for which such an $E_2$ exists. Note that this is well-defined; at the end of the previous paragraph we have asserted that at least one possible $n_1$ exists, and from there there are only finitely many more choices to pick from. If $E_2$ is totally positive, we again have a contradiction and so we can find a subset $E_2$ with $\mu(E_3)\geq\mu(E_2)+1/n_2$ where $n_2$ is the smallest integer for which such an $E_3$ exists. In this way, we obtain a sequence $E_1\supset E_2\supset\cdots$ in $X_-$ of increasing positive measure, specifically $\mu(E_{j+1})\geq\mu(E_j)+1/n_j$.
+
+	Define $E\coloneqq\bigcap_j E_j$. It is measurable, being the countable union of measurable sets, and $\mu(E)=\lim_{j\to\infty}\mu(E_j)>0$ by the TODO REF (does this apply to signed measures?). By assumption $\mu(E)<\infty$, hence it must be the case that $n_j\to\infty$. We claim $E$ does not contain any subsets of strictly larger measure, hence a contradiction by previous remarks. Suppose it contained such a set $D$. But then $D\subset E_j$ for some $j$, hence $\mu(D)\geq\mu(E_j)+1/n_j$ for some $n_j$, hence $E\subset D$ and so $E=D$, which is a contradiction.
+
+	Now we will show uniqueness up to null sets. Let $X=Y_+ \cup Y_-$ be another decomposition. By construction, $X_+$ is the maximal totally positive subset of $X$, hence $Y_+\subset X_+$. Let $C=X_+ \setminus Y_+$. Then $C\subset Y_-$. If $\mu(C)\neq 0$, then $\mu(C)>0$ which contradicts this fact. 
+\end{proof}
+
+\begin{corollary}[Jordan decomposition]
+	Every signed measure $\mu$ can be uniquely decomposed as $\mu=\mu_+-\mu_-$, where $\mu_+$ and $\mu_-$ are mutually singular\footnote{Two signed measures $\mu$ and $\nu$ are \emph{mutually singular}, $\mu\perp\nu$, if they can be supported on disjoint sets. A signed measure $\mu$ is \emph{supported} on $E$ if the complement of $E$ is null.} unsigned measures, called the positive and negative parts/variations of $\mu$.
+\end{corollary}
+
+\begin{definition}[finite signed measure]
+	A signed measure $\mu$ is finite if any of the following are equivalent hold:
+	\begin{enumerate}
+		\item $\mu(E)$ is finite for every $E$.
+		\item $|\mu|$ is a finite unsigned measure.
+		\item $\mu_+$ and $\mu_-$ are finite unsigned measures.
+	\end{enumerate}
+\end{definition}
+
+\begin{definition}[$\sigma$-finite signed measure]
+	A signed measure $\mu$ is $\sigma$-finite if $|\mu|$ is a $\sigma$-finite unsigned measure.
+\end{definition}
+
+\begin{theorem}[Lebesgue-Radon-Nikodym]
+	Let $m$ be an unsigned $\sigma$-finite measure, and $\mu$ a signed $\sigma$-finite measure. There exists a unique decomposition 
+	\begin{equation*}
+		\mu=m_f+\mu_s
+	\end{equation*}
+	where $f\in L^1(X,dm)$ and $\mu_s\perp m$. Moreover, if $\mu$ is unsigned then $f$ and $\mu_s$ are also.
+\end{theorem}
+
+% signed measures }}}2
+
+% abstract measures }}}1
+
+\section{convergence theorems} % {{{1 
+
+\subsection{summary} % {{{2 
+
+One of our primary motivations in developing measure theory has been to obtain an integral that obtains well ``at the limit'', in various senses. Perhaps most directly, we ask if 
+\begin{equation*}
+	\lim_{n\to\infty}\int_X f_n\ d\mu \overset{?}{=} \int_X\lim_{n\to\infty}f_n\ d\mu.
+\end{equation*}
+
+There are two major ways to ensure compatibility of the integral with limits: monotonicity and domination.
+
+% summary }}}2
+
+\subsection{counterexamples} % {{{2 
+
+% counterexamples }}}2
+
+\subsection{monotone convergence theorem} % {{{2 
+
+\begin{theorem}[monotone covergence theorem for measurable sets]
+	\hfill
+	\begin{enumerate}
+		\item (upward) Let $(E_i)$ be a countable, non-decreasing sequence of measurable sets. Then $m(\bigcup_n E_n)=\lim_{n\to\infty} m(E_n)$.
+		\item (downward) Let $(E_i)$ b e acountable, non-increasing sequence of measurable sets. If at least one of the $m(E_n)$ is finite, then $m(\bigcap_n E_n)=\lim_{n\to\infty}m(E_n)$. 
+	\end{enumerate}
+\end{theorem}
+
+\begin{remark}[]
+	The basic reason (1) is true is that montonicity allows us to ``disjointify'' the $E_n$, so that countable additivity becomes available to us.
+\end{remark}
+
+\begin{proof}
+	First we will address (1). Under the assumptions, we can rewrite 
+	\begin{equation*}
+		\bigcup_{n=1}^N E_n = \bigcup_{n=1}^N \left(E_n\setminus\bigcup_{m=1}^{n-1}E_n\right).
+	\end{equation*}
+	Therefore
+	\begin{equation*}
+		\bigcup_n E_n = \bigcup_n\left(E_n\setminus\bigcup_{m=1}^{n-1}E_n\right),
+	\end{equation*}
+	where we observe the countable union on the right is now of disjoint sets. We use the convention that whenever the upper index in a finite union is less than the lower index, the result is the empty set. Note that it may be possible for many sets in the right-hand-side union to be empty, but this does not affect disjointedness. By applying countable additivity to the right, we see that $m(\bigcup_n E_n)=\sum_n m(E_n)$. 
+
+	Now we will address (2). TODO.
+\end{proof}
+
+% monotone convergence theorem {{{3
+\begin{theorem}[monotone convergence theorem]
+	Let $0\leq f_1\leq f_2\leq\cdots$ be a monotone, non-decreasing sequence of unsigned measurable functions on $X$. Then 
+	\begin{equation*}
+		\lim_{n\to\infty}\int_X f_n\ d\mu = \int_{X}\lim_{n\to\infty}f_n\ d\mu.
+	\end{equation*}
+\end{theorem}
+
+\begin{proof}
+	Half of the equality is apparant:
+	\begin{equation*}
+		\lim_{n\to\infty}\int_X f_n\ d\mu\leq\int_X f\ d\mu.
+	\end{equation*}
+
+	In the other direction, we know that 
+	\begin{equation*}
+		\int_X f\ d\mu=\sup_{0\leq g\leq f}\int_X g\ d\mu
+	\end{equation*}
+	where the $g$ are simple, and so it suffices to show that 
+	\begin{equation*}
+		\int_X g\ d\mu\leq\lim_{n\to\infty}\int_X f_n\ d\mu.
+	\end{equation*}
+
+	The simple function $g$ is bounded everywhere by $f$, but not bounded everywhere (it may even be bounded nowhere) by $f_n$ for some $n$. The idea is that the measure of the places where $g$ is bounded by $f_n$ approaches the measure of the entire space as we take limits, since the $f_n\to f$ and $g\leq f$ everywhere. Monotonicity makes this possible by the previous theorem (TODO ref).
+
+	There is a subtle technical detail we need to be weary of, however. If $g$ is exactly equal to $f$ somewhere, then it may never become bounded by the $f_n$, since the values of $f$ may never be attained by any $f_n$. This is a stiuation where we would like to give ourselves an ``epsilon of room'', to consider not the actual values $c_i$ of $g$, but a scaled down version $(1-\epsilon)c_i$ for $0<\epsilon<1$. This puts separation between $g$ and $f$, but only if $c \neq +\infty$.  
+
+	By vertical truncation (TODO ref), this is not an issue. We have that 
+	\begin{equation*}
+		\lim_{m\to\infty}\int_X \min(g,n)\ d\mu = \int_X g\ d\mu,
+	\end{equation*}
+	so to show that
+	\begin{equation*}
+		\int_X g\ d\mu\leq\lim_{n\to\infty}\int_X f_n\ d\mu
+	\end{equation*}
+	it suffices that show 
+	\begin{equation*}
+		\int_X \min(g,n)\ d\mu\leq\lim_{n\to\infty}\int_X f_n\ d\mu
+	\end{equation*}
+	for all $n$. Of course, $\min(g,n)$ only takes on finite values.
+
+	We proceed as follows. Let $\min(g,n)$ take the finite (unsigned) values $(c_i)_1^k$ on the (disjoint, measurable) sets $(A_i)_1^k$. Pick $\epsilon\in(0,1)$. Then, 
+	\begin{equation*}
+		\sup_n f_n(x)=f(x)>(1-\epsilon)c_i
+	\end{equation*}
+	for all $x\in A_i$. Now define the sets 
+	\begin{equation*}
+		A_{i,n}\coloneqq\{x\in A_i: f_n(x)>(1-\epsilon)c_i\}.
+	\end{equation*}
+	The $A_{i,n}$ are measurable by (TODO ref). We claim $\bigcup_n A_{i,n}=A_i$. Indeed, for any $x\in A_i$, $\alpha\coloneqq f(x)-(1-\epsilon)c_i>0$, so there exists (in particular) $n>0$ such that $0<f(x)-f_n(x)<\alpha$. Then $f_n(x)>(1-\epsilon)c_i$, so $x\in A_{i,n}$. 
+
+	So we can apply upwards monotonicity of measure (TODO ref) to get that 
+	\begin{equation*}
+		\lim_{n\to\infty}\mu(A_{i,n})=\mu(A_i).
+	\end{equation*}
+	By construction of the $A_{i,n}$,
+	\begin{equation*}
+		f_n\geq\sum_{i=1}^k(1-\epsilon)c_i1_{A_{i,n}}
+	\end{equation*}
+	for any $n$, we we can integrate to get
+	\begin{equation*}
+		\int_X f_n\ d\mu\geq (1-\epsilon)\sum_{i=1}^k c_i\mu(A_{i,n}).
+	\end{equation*}
+	Taking limits,
+	\begin{equation*}
+		\lim_{n\to\infty}\int_X f_n\ d\mu\geq (1-\epsilon)\sum_{i=1}^kc_i\mu(A_i)=(1-\epsilon)\int_X\min(g,n)\ d\mu,
+	\end{equation*}
+	and by sending $\epsilon\to 0$ we get what we were looking for.
+\end{proof}
+% monotone convergence theorem }}}3
+
+\begin{corollary}[Tonelli's theorem for sums and integrals]
+	Let $(f_n)$ be a sequence of unsigned measurable functions. Then 
+	\begin{equation*}
+		\int_X\sum_{n=1}^\infty f_n\ d\mu=\sum_{n=1}^\infty\int_X f_n\ d\mu.
+	\end{equation*}
+\end{corollary}
+
+\begin{proof}
+	The idea is that the partial sums are a monotone sequence, and we can apply the monotone convergence theorem.
+\end{proof}
+
+% Fatou's lemma {{{3
+\begin{corollary}[Fatou's lemma]
+	Let $(f_n)$ be a sequence of unsigned measurable functions. Then 
+	\begin{equation*}
+		\int_X\liminf_{n\to\infty}f_n\ d\mu\leq\liminf_{n\to\infty}\int_X f_n\ d\mu.
+	\end{equation*}
+\end{corollary}
+
+\begin{proof}
+	The idea is that $F_N\coloneqq\inf_{n\geq N}f_n$ is a montone (non-decreasing) sequence of unsigned measurable functions (TODO ref). So by the montone convergence theorem (TODO ref)
+	\begin{equation*}
+		\int_X\lim_{N\to\infty}F_n\ d\mu = \lim_{N\to\infty}\int_X F_N\ d\mu.
+	\end{equation*}
+	Now by construction (and monotonicity, TODO ref) $\int_X F_N\ d\mu\leq\int_X f_n\ d\mu$ for all $n\geq N$. So 
+	\begin{equation*}
+		\int_X F_N\ d\mu\leq\inf_{n\geq N}\int_X f_n\ d\mu.
+	\end{equation*}
+	Taking limits, 
+	\begin{equation*}
+		\int_X \liminf_{n\to\infty}f_n\ d\mu=\int_X \lim_{N\to\infty}F_n\ d\mu=\lim_{N\to\infty}\int_X F_N\ d\mu\leq\lim_{n\to\infty}\inf_{n\geq N}\int_X f_n\ d\mu
+	\end{equation*}
+\end{proof}
+% Fatou's lemma }}}3
+
+% monotone convergence theorem }}}2
+
+\subsection{dominated convergence theorem} % {{{2 
+
+\begin{theorem}[dominated convergence theorem]
+\label{thm_dct}
+	Let $(f_n)$ be a sequence of measurable functions $X\to\mathbb{C}$ that converge pointwise a.e. to a measurable limit $f$. Suppose there exists an unsigned, absolutely integrable function $G$ that bounds each $|f_n|$ pointwise a.e. Then 
+	\begin{equation*}
+		\lim_{n\to\infty}\int_X f_n\ d\mu = \int_X f\ d\mu.
+	\end{equation*}
+\end{theorem}
+
+\begin{proof}
+	We may assume without loss of generality that the convergence and boundedness in the hypothesis is everywhere rather than a.e., and that the $f_n$ and $f$ are real. Then $-G\leq f_n\leq G$ and likewise for the limit $f$. Thus the functions $f_n+G$ are unsigned, and we can apply Fatou's lemma (TODO ref) to obtain 
+	\begin{equation*}
+		\int_X f+G\ d\mu=\int_X\lim_{n\to\infty}f_n+G\ d\mu=\int_X\liminf_{n\to\infty}f_n+G\ d\mu\leq\liminf_{n\to\infty}\int_X f_n+G\ d\mu.
+	\end{equation*}
+	The key thing to note is that $\int_X G\ d\mu$ is finite by assumption, so we can subtract it to get
+	\begin{equation*}
+		\int_X f\ d\mu \leq \liminf_{n\to\infty}\int_X f_n\ d\mu. 
+	\end{equation*}
+	Conversely, the functions $G-f_n$ are also unsigned, and we proceed analagously. First, 
+	\begin{equation*}
+		\int_X G-f\ d\mu\leq\liminf_{n\to\infty}\int_X G-f_n\ d\mu,
+	\end{equation*}
+	and subtracting $\int_X G\ d\mu$ gives us 
+	\begin{equation*}
+		\int_X -f\ d\mu\leq\liminf_{n\to\infty} \int_X -f_n\ d\mu.
+	\end{equation*}
+	Negating both sides,
+	\begin{equation*}
+		\limsup_{n\to\infty}\int_X f_n \ d\mu\leq\int_X f\ d\mu.
+	\end{equation*}
+	In conclusion,
+	\begin{equation*}
+		\limsup_{n\to\infty}\int_X f_n\ d\mu\leq\int_X f\ d\mu\leq\liminf_{n\to\infty}\int_X f_n\ d\mu,
+	\end{equation*}
+	and since $\liminf \leq \limsup$, we must have equalities in the equation above, and since $\liminf = \limsup$ the limit must also exist and equal that same number.
+\end{proof}
+
+% dominated convergence theorem }}}2
+
+% convergence theorems }}}1
+
+\section{constructing measures} % {{{1 
+
+\subsection{basic operations}
+
+\begin{proposition}
+\label{prop_basic_operations_on_measures}
+	Let $(X, \mathcal{A})$ be a measure space, and let $\mu$ be an unsigned measure on it. Let $A,B\in\mathcal{A}$.
+	\begin{enumerate}
+		\item The function $\nu(A) = c\mu(A)$ is an unsigned measure for $c\geq 0$.
+		\item The function $\nu(A) = \mu(A \cap B)$ is an unsigned measure, and 
+			\begin{equation*}
+				\int_X f d\nu = \int_B f d\mu.
+			\end{equation*}
+			for every nonnegative function $f$.
+	\end{enumerate}
+\end{proposition}
+\begin{proof}
+	\hfill
+	\begin{enumerate} 
+		\item Needed?
+		\item Consider 
+			\begin{align*}
+				\int_X f d\nu 
+				=& \sup_{0\leq g \leq f \text{ simple}} \sum_{i=1}^k a_k \mu (A_k \cap B) \\
+				=& \sup_{0\leq g \leq f} \int g\cdot 1_B\ d\mu \\
+				=& \int_B f\ d\mu.
+			\end{align*}
+	\end{enumerate}
+\end{proof}
+
+\begin{proposition}[]
+	Given two unsigned measures $\mu,\nu$, then 
+	\begin{enumerate}
+		\item $(\mu+\nu)(E)\coloneqq\mu(E)+\nu(E)$
+		\item $(c\mu)(E)\coloneqq c(\mu(E))$
+	\end{enumerate}
+	are unsigned measured, and 
+	\begin{enumerate}
+		\item $(\mu-\nu)(E)\coloneqq\mu(E)-\nu(E)$
+	\end{enumerate}
+	is a signed measure provided either $\mu$ and $\nu$ is finite.
+\end{proposition}
+
+\begin{remark}[]
+	By the Hahn decomposition theorem (Thm TODO ref), every signed measure is a difference as above.
+\end{remark}
+
+\begin{proposition}[absolute value]
+	The absolute value, or \emph{total variation}, of a signed measure $\mu$ is the unsigned measure $|\mu|\coloneqq \mu_+ + \mu_-$.
+\end{proposition}
+
+\begin{proposition}[]
+	$|\mu|$ is the minimal unsigned measure such that $- |\mu| \leq \mu \leq |\mu|$.
+\end{proposition}
+
+\begin{proposition}[]
+	$|\mu|(E)$ is equal to the maximum value of $\sum_n |\mu(E_n)|$, where $(E_n)$ ranges over the partitions of $E$.
+\end{proposition}
+
+\subsection{Radon-Nikodym}
+
+\begin{definition}
+	Let $m$ be an unsigned measure, and $f$ an unsigned function. Then we can construct a new unsigned measure 
+	$m_f$ as follows:
+	\begin{equation*}
+		m_f(E)\coloneqq\int_X 1_E f\ dm.
+	\end{equation*}
+	If $f$ is signed, and either $\max(f,0)$ or $\max(-f,0)$ is absolutely integrable, then $m_f$ is a signed measure.
+\end{definition}
+
+\begin{remark}[]
+	When $f=1_A$, this this is called the \emph{restriction} of $m$ to $A$.
+\end{remark}
+
+\begin{proposition}[]
+	$m_f$ is an unsigned measure.
+\end{proposition}
+
+\begin{proposition}[]
+	For any $g:X\to[0,+\infty]$, we have $\int_X g\ dm_f = \int_X gf\ dm$. (We write this relationship as $dm_f=f\ dm$).
+\end{proposition}
+
+\begin{proposition}[]
+	If $m$ is $\sigma$-finite, $m_f=m_g$ if and only if $f(x)=g(x)$ for $m$-almost every $x$.
+\end{proposition}
+
+\begin{definition}[Radon-Nikodym derivative]
+	A measure $\mu$ is differentiable with respect to $m$ if $\mu=m_f$ (i.e. $\mu=m_f$) for some $f$. We call this $f$ the \emph{Radon-Nikodym derivative} of $\mu$ with respect to $m$, writing 
+	\begin{equation*}
+		f=\frac{d\mu}{dm}.
+	\end{equation*}
+\end{definition}
+
+\begin{remark}[]
+	If $m$ is $\sigma$-finite, the Radon-Nikodym derivative is defined up to $m$-a.e. equivalence.
+\end{remark}
+
+% constructing measures }}}
+
+\section{product measures} % {{{1
+
+\todo{comment on $\sigma$-finite assumption}
+
+\subsection{product $\sigma$-algebras} % {{{2
+
+Given two measure spaces $(E,\mathcal{A})$ and $(F,\mathcal{B})$, we define the product $\sigma$-algebra to be 
+\begin{equation*}
+	\mathcal{A}\otimes\mathcal{B}\coloneqq\sigma(A\times B\mid A\in\mathcal{A}, B\in\mathcal{B}),
+\end{equation*}
+i.e. the $\sigma$-algebra generated by so called ``measurable rectangles''. It is universal in the following sense:
+
+\begin{proposition}[]
+	$\mathcal{A}\otimes\mathcal{B}$ is the smallest $\sigma$-algebra such that the projection maps 
+	\begin{gather*}
+		\pi_1:E\times F\to E, \\
+		\pi_2: E\times F\to F
+	\end{gather*}
+	are measurable.
+\end{proposition}
+\begin{proof}[Proof idea]
+	For $\pi_1$ to be measurable, the sets $(e,F)$ must be measurable, likewise the sets $(E,f)$ if $\pi_2$ is to be measurable. 
+\end{proof}
+
+Now, for $C\in\mathcal{A}\otimes\mathcal{B}$, Let
+\begin{gather*}
+	C_{x\in E}\coloneqq \{y\in F\mid (x,y)\in C\}, \\
+	C^{y\in F}\coloneqq \{x\in E\mid (x,y)\in C\}.
+\end{gather*}
+
+\begin{proposition}[]
+	$C_x\in \mathcal{B}$ and $C^y\in \mathcal{A}$.
+\end{proposition}
+\begin{proof}[Proof idea]
+	This is a consequence of the universal property of $\mathcal{A}\otimes\mathcal{B}$. By construction the proposition holds for when $C$ is a measurable rectangle. One then sees this property is preserved under complements, countable unions, and countable intersections. Thus the set $\mathcal{C}$ of all $C$ such that the proposition holds is a $\sigma$-algebra. But $\mathcal{C}\subset\mathcal{A}\otimes\mathcal{B}$, and $\mathcal{A}\otimes\mathcal{B}$ is minimal, hence $\mathcal{C}=\mathcal{A}\otimes\mathcal{B}$.
+\end{proof}
+
+We can build on this definition with the following: given a function
+\begin{equation*}
+	f:(E\times F,\mathcal{A}\otimes\mathcal{B})\to (G,\mathcal{G}),
+\end{equation*}
+define the functions
+\begin{gather*}
+	f_x(y)\coloneqq f(x,y), \\
+	f^y(x)\coloneqq f(x,y).
+\end{gather*}
+
+\begin{proposition}[]
+	$f_x$ is $\mathcal{B}$-measurable, and $f^y$ is $\mathcal{A}$-measurable.
+\end{proposition}
+\begin{proof}[Proof idea]
+	This builds on the previous proposition in the following way: for any measurable subset $D\in\mathcal{G}$, notice that $f_x^{-1}(D)=(f^{-1}(D))_x$.
+\end{proof}
+
+% product $\sigma$-algebras }}}2
+
+\subsection{product measures} %{{{2
+
+We now state an assumption we will hold for the rest of this section: the measures we will consider are $\sigma$-finite. So let $(E,\mathcal{A},\mu)$ and $(F,\mathcal{B},\nu)$ be $\sigma$-finite.
+
+\begin{theorem}[]
+	There exists a unique measure $(E\times F,\mathcal{A}\otimes\mathcal{B}, \mu\otimes\nu)$ such that 
+	\begin{equation*}
+		\mu\otimes\nu(A\times B)=\mu(A)\nu(B).
+	\end{equation*}
+	This measure is $\sigma$-finite, and can be defined in the following equivalent ways:
+	\begin{equation*}
+		\mu\otimes\nu(C)= \int_E \nu(C_x)\mu(dx) = \int_F \mu(C^y)\nu(dy).
+	\end{equation*}
+	Implicit in the above statement is that the functions $x\mapsto \nu(C_x)$ and $y\mapsto\mu(C^y)$ are $\mathcal{A}$- and $\mathcal{B}$-measurable, respectively.
+\end{theorem}
+\begin{proof}[Proof idea]
+	\textit{Uniqueness:} Since $\mathcal{A}\otimes\mathcal{B}$ is generated by sets of the form $A\times B$, any two measures which satisfy the property in the theorem will agree on any set in $\mathcal{A}\otimes\mathcal{B}$.
+
+	\textit{Existence:} Let us discuss the first equality, as the second is analagous. We first need to show that $x\mapsto \nu(C_x)$ is $\mathcal{A}$-measurable. To do this, we begin with the case where $\nu$ is finite, and then generalize to the $\sigma$-finite case. So suppose $\nu$ is finite. Again, we utilize the universal property of $\mathcal{A}\otimes\mathcal{B}$: let $\mathcal{C}$ be the class of all sets $C\in\mathcal{A}\otimes\mathcal{B}$ is measurable. One then shows $\mathcal{C}$ contains all measurable rectangles and is a monotone class (TODO REF). Then, by the monotone class theorem, it is a $\sigma$-algebra and by minimality it must be equal to $\mathcal{A}\otimes\mathcal{B}$.
+
+	To generalize to the $\sigma$-finite case, determine (the existence of) an increasing sequence of finite measure sets $B_n$ whose union is $F$. Restricting $\nu$ to any $B_n$ gives a finite measure, to which the previous paragraph applies. Then take $\nu=\lim_n \nu_n$ in an appropriate sense.
+
+	Now one carries out an explicit calculation to show that the first equality in the theorem is a measure and satisfies the characteristic property.
+\end{proof}
+
+\begin{remark}[]
+	One generalizes this to the product of an arbitrary finite number of $\sigma$-finite measures:
+	\begin{equation*}
+		\mu_1\otimes\cdots\otimes \mu_n = \mu_1 \otimes (\mu_2 \otimes \cdots (\mu_{n-1}\otimes \mu_n)).
+	\end{equation*}
+	The order of the parenthesis is unimportant since the measure is characterized by its value on measurable rectangles,
+	and ordinary multiplication is associative.
+\end{remark}
+
+% product measures }}}2
+
+\subsection{Fubini theorems} % {{{2 
+
+We can get similar results under varying assumptions. If $f$ is nonnegative, then all we require is that $f$ be measurable. But if $f$ is signed, then we require $f$ be $L^1$.
+
+In what follows, let $(E,\mathcal{A},\mu)$ and $(F,\mathcal{B},\nu)$ be $\sigma$-finite.
+
+\begin{theorem}[Fubini-Tonelli]
+\label{thm_fubini-tonelli}
+	Suppose $f:E\times F\to [0,\infty]$ be measurable (with respect to the product measure). Then, 
+	\begin{enumerate}
+		\item Letting $x\in E$ and $y\in F$, the functions 
+			\begin{align*}
+				x &\mapsto \int_F f(x,y)\ \nu(dy), \\
+				y &\mapsto \int_E f(x,y)\ \mu(dx)
+			\end{align*}
+			are $\mathcal{A}$- and $\mathcal{B}$-measurable, respectively.
+		\item 
+			\begin{equation*}
+				\int_{E\times F} f\ d\mu\otimes\nu 
+				= \int_E \left( \int_F f(x,y)\ \nu(dy) \right) \mu(dx)
+				= \int_F \left( \int_E f(x,y) \mu(dx) \right) \nu(dy).
+			\end{equation*}
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\todo{prove}
+\end{proof}
+
+\begin{theorem}[Fubini-Lebesgue]
+	Suppose $f\in L^1(E\times F, \mathcal{A}\otimes\mathcal{B}, \mu\otimes\nu)$. Then 
+	\begin{enumerate}
+		\item 
+			\begin{itemize}
+				\item $f_x(y)\in L^1(F,\mathcal{B},\nu)$ for almost all $x$ ($\mu(dx)$ a.e.)
+				\item $f_y(x)\in L^1(E,\mathcal{A},\mu)$ for almost all $y$ ($\nu(dy)$ a.e.)
+			\end{itemize}
+		\item 
+			\begin{itemize}
+				\item $\left( x \mapsto \int_F f(x,y)\ \nu(dy) \right)\in L^1(E,\mathcal{A},\mu)$
+				\item $\left( y \mapsto \int_F f(x,y)\ \mu(dx) \right)\in L^1(F,\mathcal{B},\nu)$
+			\end{itemize}
+		\item (just as in the Fubini-Tonelli theorem)
+			\begin{equation*}
+				\int_{E\times F} f\ d\mu\otimes\nu 
+				= \int_E \left( \int_F f(x,y)\ \nu(dy) \right) \mu(dx)
+				= \int_F \left( \int_E f(x,y) \mu(dx) \right) \nu(dy).
+			\end{equation*}
+	\end{enumerate}
+\end{theorem}
+\begin{proof}
+	\todo{prove}
+\end{proof}
+
+% Fubini theorems }}}2
+
+% }}}1
+
+\section{unsorted} % {{{1 
+
+Let $(E, \mathcal{A}, \mu)$ be a measure space, and $U$ be a metric space.
+
+\begin{theorem}
+\label{thm_integral_depending_on_parameter}
+	Let $u_0\in U$. If 
+	\begin{equation*}
+		f:U\times E \to \mathbb{R}
+	\end{equation*}
+	is such that
+	\begin{enumerate}
+		\item $f_u:E\to \mathbb{R}$ is measurable
+		\item $f_x:U\to \mathbb{R}$ is continuous at $u_0\in E$ for almost all $x$
+		\item for every $u\in U$ there exists $g\in L^1_+(E)$ such that $|f_u(x)|\leq g(x)$ for almost all $x$,
+	\end{enumerate}
+	then  
+	\begin{equation*}
+		F(u) \coloneqq \int_E f(u,x) \mu(dx)
+	\end{equation*}
+	is well defined for all $u\in U$ and continuous at $u_0$.
+\end{theorem}
+\begin{proof}
+	Well definedness follows by assumption (3). For continuity at $u_0$, let $(u_n)\subset U$ be a sequence converging to $u_0$. By assumption (2), $f_x(u_n) \to f_x(u)$ for almost all $x$. Assumption (3) again allows us to invoke the dominated convergence theorem (Theorem \ref{thm_dct}) to get 
+	\begin{equation*}
+		\lim_{n\to\infty} \int_X f_{u_n} d\mu = \int_x f_{u_0} d\mu,
+	\end{equation*}
+	proving continuity of $F$ at $u_0$.
+\end{proof}
+
+\begin{remark}
+	We may replace $\mathbb{R}$ with $\mathbb{C}$ in the above theorem.
+\end{remark}
+
+Under stronger conditions, we can make it so that the function $F$ is not only continuous at $u_0$, but also differentiable.
+
+\begin{theorem}
+	Let $I$ be an open interval of $\mathbb{R}$, and $u_0\in I$. Suppose 
+	\begin{equation*}
+		f:I\times E \to \mathbb{R}
+	\end{equation*}
+	is such that 
+	\begin{enumerate}
+		\item $f_u: E\to \mathbb{R}$ is in $L^1(E)$ for all $u\in I$
+		\item $f_x: I\to \mathbb{R}$ is differentiable at $u_0$, i.e. $D_{f_x}(u_0)$ exists, for almost all $x$.
+		\item there exists $g\in L^1(E)$ such that, for all $u\in I$, 
+			\begin{equation*}
+				|f_u(x)-f_{u_0}(x)| \leq g(x) |u-u_0|	
+			\end{equation*}
+			for almost all $x$.
+	\end{enumerate}
+	Then 
+	\begin{equation*}
+		F(u) = \int f(u,x)\mu(dx)
+	\end{equation*}
+	is well-defined and differentiable at $u_0$:
+	\begin{equation*}
+		F'(u_0) = \int D_{f_x}(u_0) \mu(dx).
+	\end{equation*}
+\end{theorem}
+\begin{proof}
+	\todo{prove, legall 2.13}
+\end{proof}
+
+\begin{example}[convolution]
+	Let $\phi \in L^1(\mathbb{R})$ \todo{does $\phi$ need to be Borel?} and $h:\mathbb{R}\to\mathbb{R}$ be bounded continuous. Let us verify that the function 
+	\begin{align*}
+		f(u,x): \mathbb{R}\times\mathbb{R} &\to \mathbb{R} \\
+		(u,x) &\to h(u-x)\phi(x)
+	\end{align*}
+	satisfies the conditions of Theorem \ref{thm_integral_depending_on_parameter}:
+	\begin{enumerate}
+		\item $f_u$ is measurable since it is the pointwise product of a continuous and measurable function.
+		\item $f_x$ is continuous (everywhere) since the $\phi$ term becomes constant, so it is essentially a constant times $h$.
+		\item $|f_u(x)|$ bounds itself and is in $L^1_+(E)$ since $\phi$ is integrable and $h$ is bounded, hence their product is integrable.
+	\end{enumerate}
+	Thus we can apply the theorem to define the \emph{convolution}
+	\begin{equation*}
+		h \ast \phi(u) \coloneqq \int h(u-x)\phi(x) \lambda(dx).
+	\end{equation*}
+	This is a bounded function, and theorem also implies it is continuous on all $\mathbb{R}$. 
+
+	Now suppose $h$ is continuously differentiable, and both $h$ and $h'$ are bounded. Then $h\ast\phi$ is differentiable on $\mathbb{R}$, and 
+	\begin{equation*}
+		(h\ast\phi)' = h'\ast\phi.
+	\end{equation*}
+	\todo{finish proof}
+\end{example}
+
+% unsorted }}}1
+
+\end{document}
+
