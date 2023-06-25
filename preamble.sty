@@ -1,0 +1,113 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{paper_preamble}[2021/03/18 Example LaTeX package]
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{parskip}
+\RequirePackage{amsfonts}
+\RequirePackage{mathrsfs}
+\RequirePackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+\RequirePackage{enumitem}
+\usepackage{amssymb}
+\usepackage{stackrel}
+
+
+\RequirePackage{todonotes}
+
+\renewcommand{\arraystretch}{1.5}
+\RequirePackage{multirow}
+\RequirePackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\RequirePackage{tikz}
+\RequirePackage{tikz-cd}
+\usetikzlibrary{calc}
+\tikzset{hbend left/.style={
+    to path={let \p1=($(\tikztotarget)-(\tikztostart)$),
+        \p2=($(\tikztostart.north)-(\tikztostart.south)$),
+        \p3=($(\tikztotarget.north)-(\tikztotarget.south)$),
+        \n1={max(\y2,\y3)/2} in
+    \ifdim\x1>0pt
+     ([yshift=\n1]\tikztostart.east) to[bend left] ([yshift=\n1]\tikztotarget.west)
+    \else
+     ([yshift=-0.7*\n1]\tikztostart.west) to[bend left] ([yshift=-0.7*\n1]\tikztotarget.east)
+    \fi
+    }}}
+\RequirePackage{standalone}
+
+\RequirePackage{subfiles}
+\RequirePackage{xr}
+
+\RequirePackage[a4paper, margin=1in]{geometry}
+\allowdisplaybreaks
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{} % clear all fields
+\fancyhead[L]{\slshape\nouppercase\leftmark}
+\fancyhead[R]{\slshape\nouppercase\rightmark}
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\subsectionmark}[1]{%
+  \markright{\MakeUppercase{\thesubsection\quad #1}}%
+}
+
+\RequirePackage{biblatex}
+
+\RequirePackage{xurl}
+% Should be the last imported
+\RequirePackage{hyperref}
+\usepackage[ocgcolorlinks]{ocgx2}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{claim}[theorem]{Claim}
+
+\expandafter\def\expandafter\definition\expandafter{\definition\vspace{.5\baselineskip plus 2pt }\parskip=0pt}
+
+
+\renewcommand{\mod}{\text{Mod}}
+\newcommand{\topcg}{\text{Top}_\text{cg}^{\ast /}}
+\newcommand{\topcgq}{(\text{Top}_\text{cg}^{\ast /})_\text{Quillen}}
+\newcommand{\symspec}{\text{SymSpec}}
+\newcommand{\seqspec}{\text{SeqSpec}}
+\newcommand{\hotop}{\text{Ho}(\text{Top}^{\ast /})}
+\newcommand{\hospec}{\text{Ho}(\text{Spectra})}
+\newcommand{\mor}{\text{Mor}}
+\newcommand{\Id}{\text{Id}}
+\newcommand{\sh}{\text{sh}}
+\newcommand{\ab}{\text{Ab}}
+\newcommand{\cat}[1]{\text{#1}}
+\newcommand{\op}{\text{op}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\Obj}{\text{Obj}}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\colim}{\text{colim}}
+\newcommand{\im}{\text{im}}
+\newcommand{\Spec}{\text{Spec}}
+\DeclareFontFamily{U}{dmjhira}{}
+\DeclareFontShape{U}{dmjhira}{m}{n}{ <-> dmjhira }{}
+\DeclareRobustCommand{\yo}{\text{\usefont{U}{dmjhira}{m}{n}\symbol{"48}}}
+\renewcommand{\cat}{\mathcal}
+\newcommand{\tcat}{\text}
+\renewcommand{\op}{\text{op}}
+\newcommand{\adjunction}[4]{
+\begin{tikzcd}[ampersand replacement=\&]
+	{#2} \arrow[r, hbend left=35, "#1"{name=F}]
+	\& {#3} \arrow[l, hbend left=35, "#4"{name=G}]
+	\arrow[phantom, from=F, to=G, "\dashv"]
+\end{tikzcd}
+}
+
+\setlength{\parindent}{0ex}
