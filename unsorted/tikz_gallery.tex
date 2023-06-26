@@ -1,0 +1,128 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    commentstyle=\color{green},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{purple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+	language=[LaTeX]{TeX}
+}
+
+\lstset{style=mystyle}
+
+\title{Tikz gallery}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+	title={Contour plot, view from top},
+	view={0}{90},
+	axis lines=middle,
+	axis line style={-},
+	xticklabels={},
+	yticklabels={},
+	xtick={-3,-2,...,3},
+	ytick={-2,-1,...,2},
+	xmin=-3.5, xmax=3.5,
+	ymin=-2.5, ymax=2.5,
+]
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=red
+		},
+		domain y=-2.5:-1
+	]
+	{y^3-3*y-x};
+
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=green
+		},
+		domain y=-1:1
+	]
+	{y^3-3*y-x};
+
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=blue
+		},
+		domain y=1:2.5
+	]
+	{y^3-3*y-x};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{lstlisting}[]
+\begin{tikzpicture}
+\begin{axis}[
+	title={Contour plot, view from top},
+	view={0}{90},
+	axis lines=middle,
+	axis line style={-},
+	xticklabels={},
+	yticklabels={},
+	xtick={-3,-2,...,3},
+	ytick={-2,-1,...,2},
+	xmin=-3.5, xmax=3.5,
+	ymin=-2.5, ymax=2.5,
+]
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=red
+		},
+		domain y=-2.5:-1
+	]
+	{y^3-3*y-x};
+
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=green
+		},
+		domain y=-1:1
+	]
+	{y^3-3*y-x};
+
+	\addplot3[
+		contour gnuplot={
+			levels={0}, 
+			labels=false, 
+			draw color=blue
+		},
+		domain y=1:2.5
+	]
+	{y^3-3*y-x};
+\end{axis}
+\end{tikzpicture}
+\end{lstlisting}
+
+\end{document}
+
