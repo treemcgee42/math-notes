@@ -1,0 +1,87 @@
+\documentclass[12pt]{article}
+
+\usepackage{../preamble}
+\usepackage{../tikz_tm42}
+
+\title{ML}
+\author{Runi Malladi}
+
+\begin{document}
+\maketitle
+
+\section{appendix} % {{{1 
+
+\subsection{logistic regression} % {{{2 
+
+The purpose of logistic regression is to take data associating various values of the independent variables to binary outcomes and produce a model which takes values of the independent variables and returns a probability of a binary outcome occuring.
+
+\textbf{Background}
+
+Consider $p$ to be the probability of an event occurring. We can further assume only two outcomes: either the event occurs, or it doesn't. We define the \emph{odds ratio} to be 
+\begin{gather*}
+	\text{odds ratio}: [0, 1) \to [0,\infty) \\
+	p \mapsto \frac{p}{1-p}.
+\end{gather*}
+We define the \emph{log-odds ratio}, or \emph{logit}, to be 
+\begin{gather*}
+	\text{logit}: (0, 1) \to (-\infty, \infty) \\
+	p \mapsto \log\left(\frac{p}{1-p}\right).
+\end{gather*}
+The graphs of these functions are depicted below (Figure \ref{fig_odds_logodds_graphs}):
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}
+	\begin{axis}[
+		legend style={at={(0.98,0.02)},anchor=south east},
+		axis lines=middle,
+		axis line style={-},
+		xtick={0, 0.5, 1},
+		ymajorticks=false,
+		xmin=-0.1, xmax=1.1,
+		ymin=-2.5, ymax=2.5
+	]
+		\addplot[domain=0:0.99, color=funkyfuture8_lightblue] {x / (1-x)};
+		\addlegendentry{odds}
+		
+		\addplot[domain=0.01:0.99, color=funkyfuture8_brightorange]{ln(x/(1-x))};
+		\addlegendentry{log-odds}
+
+		\addplot[mark=none, black, dotted] coordinates {(1,-2.5) (1,2.5)};
+	\end{axis}
+\end{tikzpicture}
+\caption{Graphs of odds and log-odds functions.}
+\label{fig_odds_logodds_graphs}
+\end{figure}
+
+\textbf{Assumptions}
+
+The fundamental assumption of logistic regression is a linear relationship between the independent variables and the log-odds. 
+
+For instance, consider a situation with two independent variables $X_1,X_2$ which determine a binary outcome (either $0$ or $1$). We assume 
+\begin{itemize}
+	\item it is reasonable to model the probability of an input $(x_1,x_2)$ resulting in the binary outcome $1$. That is, each outcome $y_i$ is Bernoulli distributed. 
+	\item this relationship is linear: letting $p$ denote the probability of $(x_1,x_2)$ producing $1$, we have 
+		\begin{equation*}
+			\log\left(\frac{p}{1-p}\right) = \beta_0 + \beta_1x_1 + \beta_2x_2.
+		\end{equation*}
+		for some $\beta_0,\beta_1,\beta_2\in\mathbb{R}$. Note that the $\beta_i$ do not depend on the $x_i$.
+\end{itemize}
+
+\textbf{Objective}
+
+Assuming a linear relationship between log-odds and the independent variables 
+\begin{equation*}
+	\text{logit}(p(x)) = \beta \cdot \begin{pmatrix} 1 \\ x \end{pmatrix} = \beta_0 + \beta_1x_1 + \cdots \beta_nx_n,
+\end{equation*}
+the objective of logistic regression is to determine (or approximate) the coefficients $\beta$ in the above linear combination. As a matter of convention, by $\beta\cdot x$ or $\beta^Tx$ we will mean the above dot product, where we have added an $x_0=1$ term to the original $x$.
+
+As we will demonstrate, once the coefficients $\beta$ have been determined, we can determine the probability $p(x)$ of input $x$ succeeding using the following formula:
+\begin{equation*}
+	p(x) = \frac{1}{1+e^{-\beta^Tx}}.
+\end{equation*}
+
+% logistic regression }}}2
+
+% appendix }}}1
+
+\end{document}

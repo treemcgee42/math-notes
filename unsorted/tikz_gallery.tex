@@ -17,8 +17,7 @@
     numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2,
+    showtabs=false,                  tabsize=2,
 	language=[LaTeX]{TeX}
 }
 
@@ -121,6 +120,50 @@
 	]
 	{y^3-3*y-x};
 \end{axis}
+\end{tikzpicture}
+\end{lstlisting}
+
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[
+		legend style={at={(0.98,0.02)},anchor=south east},
+		axis lines=middle,
+		axis line style={-},
+		xtick={0, 0.5, 1},
+		ymajorticks=false,
+		xmin=-0.1, xmax=1.1,
+		ymin=-2.5, ymax=2.5
+	]
+		\addplot[domain=0:0.99, color=red] {x / (1-x)};
+		\addlegendentry{odds}
+		
+		\addplot[domain=0.01:0.99, color=blue]{ln(x/(1-x))};
+		\addlegendentry{log-odds}
+
+		\addplot[mark=none, black, dotted] coordinates {(1,-2.5) (1,2.5)};
+	\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{lstlisting}[]
+\begin{tikzpicture}
+	\begin{axis}[
+		legend style={at={(0.98,0.02)},anchor=south east},
+		axis lines=middle,
+		axis line style={-},
+		xtick={0, 0.5, 1},
+		ymajorticks=false,
+		xmin=-0.1, xmax=1.1,
+		ymin=-2.5, ymax=2.5
+	]
+		\addplot[domain=0:0.99, color=red] {x / (1-x)};
+		\addlegendentry{odds}
+		
+		\addplot[domain=0.01:0.99, color=blue]{ln(x/(1-x))};
+		\addlegendentry{log-odds}
+
+		\addplot[mark=none, black, dotted] coordinates {(1,-2.5) (1,2.5)};
+	\end{axis}
 \end{tikzpicture}
 \end{lstlisting}
 
