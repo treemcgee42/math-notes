@@ -1,0 +1,47 @@
+\RequirePackage{tikz}
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.17}
+\RequirePackage{tikz-cd}
+\usetikzlibrary{calc}
+\tikzset{hbend left/.style={
+    to path={let \p1=($(\tikztotarget)-(\tikztostart)$),
+        \p2=($(\tikztostart.north)-(\tikztostart.south)$),
+        \p3=($(\tikztotarget.north)-(\tikztotarget.south)$),
+        \n1={max(\y2,\y3)/2} in
+    \ifdim\x1>0pt
+     ([yshift=\n1]\tikztostart.east) to[bend left] ([yshift=\n1]\tikztotarget.west)
+    \else
+     ([yshift=-0.7*\n1]\tikztostart.west) to[bend left] ([yshift=-0.7*\n1]\tikztotarget.east)
+    \fi
+    }}}
+
+% Trixbit pallete
+% https://lospec.com/palette-list/trixbit 
+\definecolor{trixbit_black}{HTML}{0f0d0f}
+\definecolor{trixbit_magenta}{HTML}{d01f6c}
+\definecolor{trixbit_maroon}{HTML}{732050}
+\definecolor{trixbit_orange}{HTML}{b54e35}
+\definecolor{trixbit_gold}{HTML}{f79831}
+\definecolor{trixbit_lime}{HTML}{86bd28}
+\definecolor{trixbit_green}{HTML}{184a4a}
+\definecolor{trixbit_darkblue}{HTML}{1e1a4f}
+\definecolor{trixbit_lightblue}{HTML}{2da1c4}
+\definecolor{trixbit_purple}{HTML}{7d4582}
+\definecolor{trixbit_lightpink}{HTML}{dca8c9}
+\definecolor{trixbit_lightyellow}{HTML}{f7e0b2}
+\definecolor{trixbit_darkpink}{HTML}{e37f8f}
+\definecolor{trixbit_white}{HTML}{f7f1e4}
+\definecolor{trixbit_lightgray}{HTML}{b5a9a3}
+\definecolor{trixbit_darkgray}{HTML}{5f5666}
+
+% Funkyfuture 8 pallete
+% https://lospec.com/palette-list/funkyfuture-8
+\definecolor{funkyfuture8_darkpurple}{HTML}{2b0f54}
+\definecolor{funkyfuture8_magenta}{HTML}{ab1f65}
+\definecolor{funkyfuture8_brightorange}{HTML}{ff4f69}
+\definecolor{funkyfuture8_white}{HTML}{fff7f8}
+\definecolor{funkyfuture8_orange}{HTML}{ff8142}
+\definecolor{funkyfuture8_yellow}{HTML}{ffda45}
+\definecolor{funkyfuture8_blue}{HTML}{3368dc}
+\definecolor{funkyfuture8_lightblue}{HTML}{49e7ec}
+

@@ -1,0 +1,33 @@
+
+\RequirePackage{amsmath}
+
+% Redefination of `amsmath` matrix environments, allowing optional
+% arguments. 
+%
+% Credit: Stefan Kottwitz, https://tex.stackexchange.com/questions/2233/whats-the-best-way-make-an-augmented-coefficient-matrix
+%
+% ## Examples:
+%
+% Simple augmented matrix:
+% ```
+% \begin{pmatrix}[cc|c]
+%   1 & 2 & 3\\
+%   4 & 5 & 9
+% \end{pmatrix}
+% ```
+%
+% More complex use, with different alignment, spacing and color:
+% ```
+% \begin{bmatrix}[*2cr@{\quad}|@{\quad}>{\color{red}}r]
+%   a & b & 1  &  4 \\
+%   c & d & -2 & -3
+% \end{bmatrix}
+% ```
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{#1}}
+\makeatother
+
+
