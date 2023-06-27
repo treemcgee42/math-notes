@@ -1,6 +1,9 @@
 \documentclass[12pt]{article}
 
 \usepackage{../preamble}
+\usepackage{../linalg}
+\usepackage{../tikz_tm42}
+
 \setcounter{secnumdepth}{5}
 \newtheorem{para}[theorem]{}
 
@@ -1032,6 +1035,365 @@ Recall that if $\text{rank}(A)=m$ then $Ax=b$ is consistent for all $b\in\mathbb
 \end{proposition}
 
 % linear independence, dimension }}}2
+
+\subsection{four fundamental subspaces} % {{{2 
+
+An $m\times n$ matrix $A$ represents a linear map $\mathbb{R}^n\to\mathbb{R}^m$. There are two fundamental spaces in the domain:
+\begin{enumerate}
+	\item ($\mathbf{R}(A)$) the row space
+	\item ($\mathbf{N}(A)$) the null space (kernel) 
+\end{enumerate}
+and two fundamental spaces in the codomain:
+\begin{enumerate}
+	\item ($\mathbf{C}(A)$) the column space (image)
+	\item ($\mathbf{N}(A^T)$) the null space of the transpose.
+\end{enumerate}
+
+\begin{definition}
+	Given an $m\times n$ matrix $A$, the \emph{column space} is 
+	\begin{equation*}
+		\mathbf{C}(A) = \text{span}\{A_{\bullet, 1}, \dots, A_{\bullet, n}\} \subset\mathbb{R}^m.
+	\end{equation*}
+	The \emph{row space} is 
+	\begin{equation*}
+		\mathbf{R}(A) = \text{span}\{A_{1,\bullet},\dots, A_{m,\bullet}\} \subset\mathbb{R}^n.
+	\end{equation*}
+\end{definition}
+
+\begin{proposition}
+	Let $A$ be an $m\times n$ matrix. Let $b\in\mathbb{R}^m$. Then $b\in\mathbf{C}(A)$ if and only if $Ax=b$ is consistent. Thus the column space is the image.
+\end{proposition}
+
+\begin{definition}
+	The \emph{null space} of $A$ is the set of solutions to the homogeneous equation $Ax=0$. Thus, $\mathbf{N}(A)$ is the kernel.
+\end{definition}
+
+\begin{example}
+	(Algorithm for finding a basis for $\mathbf{N}(A)$). Reduce to reduced echelon form and read off the solution, e.g. 
+	\begin{equation*}
+		A = \begin{pmatrix} 1 & 2 & 1 & -1 \\ 1 & 0 & 1 & 1 \end{pmatrix} \quad \to \quad \begin{pmatrix} 1 & 0 & 1 & 1 \\ 0 & 1 & 0 & -1 \end{pmatrix}.
+	\end{equation*}
+	Reading off the solution:
+	\begin{gather*}
+		x_1 = -x_3 - x_4 \\
+		x_2 = x_4 \\
+		x_3 = x_3 \\
+		x_4 = x_4,
+	\end{gather*}
+	which can be written as 
+	\begin{equation*}
+		\begin{pmatrix} -1 \\ 0 \\ 1 \\ 0 \end{pmatrix}x_3 + \begin{pmatrix} -1 \\ 1 \\ 0 \\ 1 \end{pmatrix}x_4.
+	\end{equation*}
+	These two vectors are the basis for the null space.
+\end{example}
+
+\begin{proposition}
+	$\mathbf{N}(A) = \mathbf{R}(A)^\perp$.
+\end{proposition}
+\begin{proof} 
+	If $x\in\mathbf{N}(A)$ then $A_{i,\bullet}x = 0$ for all $i=1,\dots,m$. So $x$ is orthogonal to any linear combination of the $A_{i,\bullet}$, hence orthogonal to any vector in $\mathbf{R}(A)$, i.e. $x\in\mathbf{R}(A)^\perp$. So $\mathbf{N}(A)\subset\mathbf{R}(A)^\perp$. 
+
+	Conversely, let $x\in\mathbf{R}(A)^\perp$. Then $x$ is orthogonal to any linear combination of $A_{i,\bullet}$. In particular, it is orthogonal to each $A_{i,\bullet}$, hence $Ax=0$ so $x\in\mathbf{N}(A)$. So $\mathbf{R}(A)^\perp\subset\mathbf{N}(A)$.
+\end{proof}	
+
+\begin{corollary}
+	$\mathbf{N}(A^T)=\mathbf{C}(A)^\perp$.
+\end{corollary}
+
+\begin{para} 
+	So any linear combination of rows of $A$ (i.e. columns of $A^T$) which give 0 (these are the elements of $\mathbf{N}(A^T)$) correspond to a constraint on $\mathbf{C}(A)$ (in particular they must be orthogonal). 
+
+	Let $A$ be $m\times n$. Recall when finding $b\in\mathbb{R}^m$ for which $Ax=b$ was consistent, we obtained constraints on the components of $b$. These determined vectors in $\mathbb{R}^m$ with the property that taking a linear combination of rows of $A$ according to them we should get 0. For example, consider the reduction 
+	\begin{equation*}
+		\begin{pmatrix}[cc|l] 1 & 2 & b_1 \\ 1 & 1 & b_2 \\ 0 & 1 & b_3 \\ 1 & 2 & b_4 \end{pmatrix} 
+		\quad \to \quad 
+		\begin{pmatrix}[cc|l] 1 & 2 & b_1 \\ 0 & 1 & b_1-b_2 \\ 0 & 0 & -b_1+b_2+b_3 \\ 0 & 0 & -b_1+b_4 \end{pmatrix}.
+	\end{equation*}
+	Look at the last two rows. Expressed as vectors, these are 
+	\begin{equation*}
+		\begin{pmatrix} -1 & 1 & 1 & 0 \end{pmatrix} \quad \begin{pmatrix} -1 & 0 & 0 & 1 \end{pmatrix}.
+	\end{equation*}
+	Let $y$ be in the span of these two vectors. Then $A^Ty$ is a linear combination of the columns of $A^T$, i.e. the rows of $A$, hence $A^Ty=0$. So $y\in \mathbf{N}(A^T)$. The converse also holds. The corollary says also that $y\in \mathbf{C}(A)^\perp$, and conversely. So the constraints span $\mathbf{N}(A^T)=\mathbf{C}(A)^\perp$. But are these vectors necessarily linearly independent?
+\end{para}	
+
+\begin{theorem}
+	Let $A$ be $m\times n$. Let $U$ and $R$ be the echelon and reduced echelon forms, respectively. Let $E$ be the product of elementary matrices such that $EA=U$. Then 
+	\begin{enumerate}
+		\item To get a basis for $\mathbf{R}(A)$, take the nonzero rows of $U$.
+		\item To get a basis for $\mathbf{N}(A)$, get the general solution to $Ax=0$ (e.g. by reading off $Rx=0$), set each free variable to 1 and the remaining free variables to 0. 
+		\item To get a basis for $\mathbf{C}(A)$, take the pivot columns of $A$.
+		\item To get a basis for $\mathbf{N}(A^T)$, take the (transposes of) the rows of $E$ corresponding to the zero rows of $U$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{theorem}
+	Let $A$ be $m\times n$. 
+	\begin{enumerate}
+		\item $\dim(\mathbf{R}(A))=\dim(\mathbf{C}(A))=\text{rank}(A)$.
+		\item $\dim(\mathbf{N}(A))=n-\text{rank}(A)$.
+		\item $\dim(\mathbf{N}(A^T))=m-\text{rank}(A)$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{corollary}[Rank-Nullity theorem]
+	$\text{rank}(A) + \dim{\mathbf{N}(A)} = n$.
+\end{corollary}
+
+\begin{proposition}
+	Let $V\subset\mathbb{R}^n$ be $k$-dimensional. Then $\dim(V^\perp)=n-k$.
+\end{proposition}
+
+\begin{proposition}
+	For a subspace $V\subset\mathbb{R}^n$, we have $(V^\perp)^\perp=V$.
+\end{proposition}
+
+\begin{theorem}
+	Let $A$ be $m\times n$. Then 
+	\begin{enumerate}
+		\item $\mathbf{R}(A) = \mathbf{N}(A)^\perp$.
+		\item $\mathbf{R}(A)^\perp = \mathbf{N}(A)$.
+		\item $\mathbf{C}(A) = \mathbf{N}(A^T)^\perp$.
+		\item $\mathbf{C}(A)^\perp = \mathbf{N}(A^T)$.
+	\end{enumerate}
+\end{theorem}
+
+\begin{para} 
+	So given a subspace $V=\text{span}\{v_1,\dots,v_k\}$, we can equivalently see $V$ as the solution to a homogeneous equation $Ax=0$. For example, Let the rows of $B$ be $v_1,\dots,v_k$. Then $V=\mathbf{R}(A)=\mathbf{N}(A)^\perp$. Let $w_1,\dots,w_l$ be a basis for $\mathbf{N}(B)$. Then $x\in V$ if and only if 
+	\begin{equation*}
+		w_1\cdot x = \cdots = w_l\cdot x = 0.
+	\end{equation*}
+	Let $A$ be the matrix whose rows are $w_1,\dots, w_l$. Then $V$ is the solution space to $Bx=0$.
+\end{para}	
+
+\begin{proposition}
+	For each $b\in\mathbf{C}(A)$, there exists a unique $x\in\mathbf{R}(A)$ such that $Ax=b$. Moreover, of all the solutions to $Ax=b$, it is the one of least length.
+\end{proposition}
+
+% four fundamental subspaces }}}2
+
+\subsection{nonlinear case: manifolds} % {{{2 
+
+\begin{para} 
+	Recall that given a linear subspace $V$, we can represent it either
+	\begin{itemize}
+		\item (explicitly) as the span of its basis vectors.
+		\item (implicitly) as the solution space of a homogeneous system.
+	\end{itemize}
+	What about the nonlinear case? Sometimes we can do the same.
+\end{para}	
+
+\begin{example}
+	For the hyperbola $xy=1$, which is given to us as an implicit representation, we can explicitly solve for $x$ and $y$ and get all solutions, e.g. $x=\frac{1}{y}$ is a ``global'' solution.
+\end{example}
+
+\begin{example}
+	For the circle $x^2+y^2=1$, another implicit representation, solving for $x$ or $y$ explicitly does not yield all solutions; $y=\sqrt{1-x^2}$ only gives half the possible solutions for $y$, and $y=-\sqrt{1-x^2}$ gives the other half. But for any point on the graph other than $(0,0)$, one of these will give a ``local'' solution, i.e. will be a solution for all points on the graph in a neighborhood of the point.
+\end{example}
+
+\begin{para} 
+	Our goal is to determine when a coordinate $x_n$ can be expressed implicitly as a function of the others. For example, consider the hyperplane $a\cdot x=0$ in $\mathbb{R}^n$. If $x_n$ (or any $x_k$) is nonzero, then we can write 
+	\begin{equation*}
+		x_n = \frac{-1}{a_n}(a_1x_1 + \cdots + a_{n-1}x_{n-1}).
+	\end{equation*}
+	That is, we've expressed the hyperplane as a graph over the $x_1\cdots x_{n-1}$ plane.
+\end{para}	
+
+\begin{para} 
+	Now if a function is differentiable at a point, then the tangent plane at that point gives the best affine linear approximation of the function near that point. So we might expect that if the tangent plane can be expressed as a graph over the $x_1\cdots x_{n-1}$ plane, then so too can $f$ itself near that point.
+\end{para}	
+
+\begin{theorem}[implicit function theorem, simple case]
+	Let $f:U\subset\mathbb{R}^n\to\mathbb{R}$ is $C^1$, where $U$ is open. Let $a\in U$, and suppose 
+	\begin{equation*}
+		f(a) = 0,\quad \frac{\partial f}{\partial x_n}(a)\neq 0.
+	\end{equation*}
+	Then there exist neighborhoods $V\ni (a_1,\dots,a_{n-1})^T$ and $W\ni a_n$, along with a $C^1$ function 
+	\begin{gather*}
+		\phi: V \to W \\
+		\begin{pmatrix} x_1 \\ \vdots \\ x_{n-1} \end{pmatrix} \mapsto x_n 
+	\end{gather*}
+	such that, for all $v\in V$, we have 
+	\begin{equation*}
+		f\begin{pmatrix} v \\ \phi(v) \end{pmatrix} = 0.
+	\end{equation*}
+	That is, near $a$, the level surface $f=0$ can be expressed as a graph over the $x_1\cdots x_{n-1}$ plane. Thus $f=0$ defines $x_n$ implicitly as a function of the remaining variables.
+\end{theorem}
+
+\begin{example}
+	Consider the curve 
+	\begin{equation*}
+		f\begin{pmatrix} x \\ y \end{pmatrix} = y^3-3y-x = 0,
+	\end{equation*}
+	depicted below (Figure \ref{fig_three_sect_curve}).
+
+	\begin{figure}[h]
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+		view={0}{90},
+		axis lines=middle,
+		axis line style={-},
+		xticklabels={},
+		yticklabels={},
+		xtick={-3,-2,...,3},
+	    ytick={-2,-1,...,2},
+		xmin=-3.5, xmax=3.5,
+        ymin=-2.5, ymax=2.5,
+	]
+		\addplot3[
+			contour gnuplot={levels={0}, labels=false, draw color=funkyfuture8_darkpurple},
+			domain y=-2.5:-1
+		]
+		{y^3-3*y-x};
+
+		\addplot3[
+			contour gnuplot={levels={0}, labels=false, draw color=funkyfuture8_lightblue},
+			domain y=-1:1
+		]
+		{y^3-3*y-x};
+
+		\addplot3[
+			contour gnuplot={levels={0}, labels=false, draw color=funkyfuture8_brightorange},
+			domain y=1:2.5
+		]
+		{y^3-3*y-x};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{The curve $y^3-3y-x=0$, split into three segments based on where $D_yf(a)=0$.}
+	\label{fig_three_sect_curve}
+	\end{figure}
+
+	Note this is (globally) a graph of $x$ as a function of $y$, but not vice versa. Now 
+	\begin{equation*}
+		\frac{\partial f}{\partial y} = 3(y^2-1),
+	\end{equation*}
+	which is $0$ when at $\pm (-2,1)^T$. By the implicit function theorem, we know that, away from these points, $y$ is given locally implicitly as a function of $x$. This makes sense if we look at Figure \ref{fig_three_sect_curve}, where indeed cutting the curve at these points yields segments which are valid graphs of $y$ as a function of $x$.
+\end{example}
+
+\begin{para} 
+	We can know legitimize implicit differentiation. The following is an example of how we would carry this out:
+	\begin{gather*}
+		x^2+y^2=1, \\
+		\frac{d}{dx}(x^2+y^2) = \frac{d}{dx}(1), \\
+		2x + 2y\frac{dy}{dx} = 0, \\
+		\frac{dy}{dx}=\frac{-x}{y}.
+	\end{gather*}
+\end{para}	
+
+\begin{lemma}[implicit differentiation]
+	Let $f:U\subset\mathbb{R}^n$ be $C^1$, and suppose $D_nf(a)\neq 0$. Let $\bar{x}=(x_1,\dots,x_{n-1})^T$. By the implicit function theorem, $f=0$ defines $x_n$ implicitly as a $C^1$ function $\phi(\bar{x})$ near $a$. Then for $j=1,\dots,n-1$ we have 
+	\begin{equation*}
+		\frac{\partial \phi}{\partial x_j}(\bar{a}) = -\frac{D_jf(a)}{D_nf(a)}.
+	\end{equation*}
+\end{lemma}
+\begin{proof}
+	Define 
+	\begin{equation*}
+		g: V\to\mathbb{R}^n \\
+		\bar{x} \mapsto \begin{pmatrix} \bar{x} \\ \phi(\bar{x}) \end{pmatrix},
+	\end{equation*}
+	where $V$ is the neighborhood of $\bar{x}$ in the statement of the implicit function theorem. Then $(f\circ g)(\bar{x})=0$ for all $\bar{x}\in V$, once again by the theorem. By the chain rule, $D(f\circ g)(\bar{a})=Df(g(\bar{a}))Dg(\bar{a})=0$, so 
+	\begin{equation*}
+		\begin{pmatrix} D_1f & \cdots D_nf \end{pmatrix} \cdot \begin{pmatrix} 1 & \cdots & 0 \\ \vdots & & \vdots \\ 0 & \cdots & 1 \\ D_1\phi & \cdots & D_{n-1}\phi \end{pmatrix} = 0,
+	\end{equation*}
+	where all derivatives of $\phi$ are evaluated at $\bar{a}$ and all derivatives of $f$ are evaluated at $g(\bar{a})=a$. Thus for any $j=1,\dots,n-1$ we have 
+	\begin{equation*}
+		\frac{\partial f}{\partial x_j}(a) + \frac{\partial f}{\partial x_n}(a)\frac{\partial \phi}{\partial x_j}(\bar{a})=0
+	\end{equation*}
+	and the result follows.
+\end{proof}
+
+\begin{example}
+	Let's return to the example of $x^2+y^2=1$. Consider the function $f=x^2+y^2-1$. This is indeed a $C^1$ function, and our curve in question is the level curve $f=0$. We calculate $D_yf(a)=2y$, which is nonzero for all $a$ other than $(1, 0)^T$ and $(-1, 0)^T$. So for all other $a$ on the curve, there exists a $C^1$ function $\phi$ expression $y$ in terms of $x$.
+
+	\begin{figure}[h] 
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[
+		view ={0}{90},
+		axis lines=middle,
+		axis line style={-},
+		xticklabels={}, yticklabels={},
+		xmin=-1.5, xmax=1.5,
+		ymin=-1.5, ymax=1.5,
+		samples=50
+	]
+		\addplot3[
+			contour gnuplot={
+				levels={0},
+				labels=false,
+				draw color=funkyfuture8_lightblue
+			},
+			domain y=-1:0
+		]
+		{x^2+y^2-1};
+	
+		\addplot3[
+			contour gnuplot={
+				levels={0},
+				labels=false,
+				draw color=funkyfuture8_brightorange
+			},
+			domain y=0:1
+		]
+		{x^2+y^2-1};
+
+		\addplot[mark=*, color=funkyfuture8_darkpurple] coordinates {(-1,0) (1,0)};
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Graph of $x^2+y^2-1=0$ with marked points where $D_yf(a)=0$.}
+	\end{figure}
+
+	By the lemma, away from the two points, we get 
+	\begin{equation*}
+		\frac{\partial\phi}{\partial x}(x_0) = -\frac{D_xf(a)}{D_yf(a)}=-\frac{x}{y}=-\frac{x_0}{y_0}.
+	\end{equation*}
+	In the previous example we got the above value for $\frac{dy}{dx}$. There is no problem here; $\phi$ expresses $y$ as a function of $x$, which is what we implicitly are differentiating in the expression $\frac{dy}{dx}$.
+\end{example}
+
+\begin{proposition}
+	Suppose $f:U\subset\mathbb{R}^n\to\mathbb{R}$ is $C^1$, and $Df(a)\neq 0$. Suppose $f(a)=c$. Then the tangent hyperplane at $a$ of the level surface $M=f^{-1}(\{c\})$ is given by 
+	\begin{equation*}
+		T_aM=\{x\in\mathbb{R}^n : Df(a)(x-a)=0\}.
+	\end{equation*}
+	So in particular $\nabla f(a)$ is normal to the hyperplane.
+\end{proposition}
+\begin{proof}
+	Since $Df(a)\neq 0$, assume without loss of generality that $D_nf(a)\neq 0$. Applying the implicit function theorem to $f-c$, we know $M$ can be expressed near $a$ as the graph $x_n=\phi(\bar{x})$ for some $C^1$ function $\phi$. Now the tangent plane to the graph $x_n=\phi(\bar{x})$ at $(\bar{a}, \phi(\bar{a}))^T$ is, by definition, 
+	\begin{equation*}
+		g(\bar{x})=\phi(\bar{a})+D\phi(\bar{x}-\bar{a}).
+	\end{equation*}
+	Writing $x_n=g(\bar{x})$, we get that $x=(\bar{x}, x_n)^T$ is in the graph of the tangent plane and 
+	\begin{align*}
+		x_n-a_n
+		=& D\phi(\bar{a})(\bar{x}-\bar{a}) = \sum_{j=1}^{n-1}\frac{\partial f}{\partial x_j}(\bar{a})(x_j-a_j) \\
+		=& \sum_{j=1}^{n-1}\left(-\frac{D_jf(a)}{D_nf(a)}\right)(x_j-a_j).
+	\end{align*}
+	So 
+	\begin{equation*}
+		0 = \sum_{j=1}^{n-1}\frac{\partial f}{\partial x_j}(a)(x_j-a_j) + \frac{\partial f}{\partial x_n}(a)(x_n-a_n) = Df(a)(x-a) = 0.
+	\end{equation*}
+\end{proof}
+
+\begin{para} 
+	This is telling us that $M$ is locally represented as a graph over a coordinate hyperplane, e.g. a $C^1$ function $\mathbb{R}^{n-1}\to M$. It turns out that $M$ is an $(n-1)$-dimensional manifold. More generally, a subset $M\subset\mathbb{R}^n$ is an $(n-m)$-dimensional manifold if each point has a neighborhood that is a $C^1$ grpah over some $(n-m)$-dimensional coordinate plane. 
+
+	At this point, it is not obvious that $M$ satisfies the conditions of a manifold. But consider what it means to ``be a $C^1$ graph''. One can show without too much difficulty that if $f:\mathbb{R}^n\to\mathbb{R}^m$ is $C^r$, then $F:\mathbb{R}^n\to\Gamma(f)$ is a $C^r$-diffeomorphism: clearly $F$ is bijective, and $F$ is the composition 
+	\begin{gather*}
+		F:\mathbb{R}^n \to \mathbb{R}^n\times\mathbb{R}^n \to \Gamma(f) \\
+		x\mapsto (x,x) \mapsto (x,f(x))
+	\end{gather*}
+	which is $C^r$, being the composition of the diagonal map followed by the product of the identity and a $C^r$ map, and the inverse is 
+	\begin{gather*}
+		F^{-1}: \Gamma(f) \to \mathbb{R}^n \\
+		(x,f(x))\mapsto x
+	\end{gather*}
+	which is a projection map, hence $C^r$.
+
+	The main point is the level of abstraction in the definition of a manifold, and the motivation for it. It was determined that the essential properties of (level) surfaces are those present in the definition of a manifold, and the things we take as definitions of a manifold are provable theorems about level surfaces.
+\end{para}	
+
+% nonlinear case: manifolds }}}2
 
 % Implict/explicit solutions }}}1
 
