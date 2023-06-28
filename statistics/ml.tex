@@ -82,6 +82,149 @@ As we will demonstrate, once the coefficients $\beta$ have been determined, we c
 
 % logistic regression }}}2
 
+\subsection{naive Bayes classifier} % {{{2 
+
+The situation is when we have some number of features (random variables) $x=(x_1,\dots,x_n)$ and finitely many possible outcomes $C_k$. The \emph{naive Bayes probabilistic model} is a computation of the conditional probabilities $p(C_k | x)$, i.e. the probability of the outcome $C_k$ given the features $x$. The \emph{naive Bayes classifier} determines which outcome $C_k$ is most likely given the feature $x$. It essentially picks the largest conditional probability $p(C_k | x)$. What makes both of these models "naive" is their assumption on the independence of the features in $x$, which greatly simplifies the above computations.
+
+\textbf{background}
+
+The key insight is the simplification provided by assuming the features in $x$ are independent. Specifically, we are assuming that the probability of the $i$th feature equaling $x_i$ is indenpendent of the $j$th feature equaling $x_j$ (provided $i\neq j$). Then $p(x_i|x_j)=p(x_i)$. 
+
+Let's see this simplification in action (this computation will be relevant later). By Bayes' rule, we can write a joint probability in terms of the conditional probability:
+\begin{equation*}
+	p(x,y)=p(x|y)p(y).
+\end{equation*}
+Using this, we can write 
+\begin{align*}
+	p(C_k,x_1,\dots,x_n) 
+	=& p(x_1,\dots,x_n,C_k) \\
+	=& p(x_1 | x_2,\dots,x_n,C_k) p(x_2,\dots,x_n,C_k) \\
+	=& \cdots \\
+	=& p(x_1 | x_2,\dots,x_n,C_k)p(x_2|x_3,\dots,x_n,C_k)\cdots p(x_{n-1}|x_n,C_k)p(x_n|C_k)p(C_k).
+\end{align*}
+By our independence assumption, 
+\begin{equation*}
+	p(x_i | x_{i+1},\dots,x_n,C_k) = p(x_i|C_k).
+\end{equation*}
+So 
+\begin{equation*}
+	p(C_k,x_1,\dots,x_n) = p(C_k)\prod_{i=1}^n p(x_i|C_k).
+\end{equation*}
+
+\textbf{assumptions}
+
+We assume that the values of each feature are independent of each other. For example, given a collection of features $X=(X_1,\dots,X_n)$, the features $X_i$ and $X_j$ are independent (provided $i\neq j$). 
+
+This is rarely true, and the dependence among features is often significant. Suppose we are trying to classify fruits. Suppose we are tracking two features: color and taste. Is it reasonable to assume these two are independent? You have to decide.
+
+\textbf{the probabilistic model}
+
+As mentioned earlier, the naive Bayes probabilistic model is concerned with computing the conditional probability $p(C_k | x)$. 
+
+\begin{proposition}
+	Under the assumptions of the naive Bayes model, 
+	\begin{equation*}
+		p(C_k | x) = \frac{p(C_k)}{p(x)}\prod_{i=1}^n p(x_i | C_k).
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	We compute using the independence assumption:
+	\begin{align*}
+		p(C_k | x)
+		=& \frac{p(C_k,x)}{p(x)} = \frac{p(C_k,x_1,\dots,x_n)}{p(x)} \\
+		=& \frac{p(C_k)}{p(x)}\prod_{i=1}^n p(x_i | C_k).
+	\end{align*}
+\end{proof}
+
+\textbf{the classifier}
+
+The naive Bayes classifier is concerned with, given a fixed $x$, which conditional probability $p(C_k|x)$ is the largest. Intuitively, it determines which outcome $C_k$ is most likely given the features $x$. 
+
+\begin{proposition}
+	For a fixed $x$, 
+	\begin{equation*}
+		\underset{k\in\{1,\dots,K\}}{\text{argmax}}\ p(C_k|x) = \underset{k\in\{1,\dots,K\}}{\text{argmax}}\ p(C_k)\prod_{i=1}^n p(x_i|C_k).
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	The point is that we can remove the $p(x)$ from the probabilistic model. We can do this because we fix $x$, so $p(x)$ is a constant factor shared by all terms we are taking the $\text{argmax}$ over.
+\end{proof}
+
+\begin{definition}
+	The naive Bayes classifier is the function 
+	\begin{align*}
+		X_1\times \cdots X_n \to& \{C_k\} \\
+		(x_1,\dots,x_n) \mapsto& \underset{k\in\{1,\dots,K\}}{\text{argmax}}\ p(C_k)\prod_{i=1}^n p(x_i|C_k).
+	\end{align*}
+\end{definition}
+
+Let's consider a special case. There are two possible outcomes $C_1, C_2$ and $n$ features $X_1,\dots,X_n$. Then we just need to compare the two conditional probabilities $p(C_1|x)$ and $p(C_2|x)$. Assuming $p(C_2|x)\neq 0$, we can consider the ratio 
+\begin{equation*}
+	R=\frac{p(C_1|x)}{p(C_2|x)}=\frac{p(C_1)\prod_{i=1}^n p(x_i|C_k)}{p(C_2)\prod_{i=1}^n p(x_i|C_2)}.
+\end{equation*}
+If $R>1$ the $C_1$ is more likely, if $R<1$ then $C_2$ is more likely, and if $R=1$ the both are equally likely. 
+
+% naive Bayes classifier }}}2
+
+\subsection{additive smoothing} % {{{2 
+
+Additive smoothing helps assign a nonzero probability to conditional properties which are calculated to be zero from the data.
+
+\textbf{background} 
+
+Consider a $d$-dimensional multinomial distribution, of which we take $N$ trials. This means that there are $d$ possible outcome classes, and we have classified $N$ data points into these classes (one at a time, so the same data point may be placed in different classes from one trial to another). Suppose we take another data point $x_i$. We want to determine the probability.
+\begin{equation*}
+	p(x_i | C_k).
+\end{equation*}
+By Bayes' theorem, we know 
+\begin{equation*}
+	p(x_i | C_k) = \frac{p(x_i,C_k)}{p(C_k)}.
+\end{equation*}
+Let $\text{freq}(x_i,C_k)$ denote the number of times $x_i$ was classified as $C_k$ (in the $N$ trials we took of the multinomial distribution). Note this may be 0. Also let $N_k$ be the number of times a data point was sorted into class $C_k$. Then, assuming $N_k\neq 0$, 
+\begin{gather*}
+	p(x_i,C_k) = \frac{\text{freq}(x_i,C_k)}{N}, \\
+	p(C_k) = \frac{N_k}{N}, \\
+	p(x_i | C_k) = \frac{\text{freq}(x_i,C_k)}{N_k}.
+\end{gather*}
+Now there are two potential problems here. The first is that $p(x_i|C_k)=0$ if $\text{freq}(x_i,C_k)$. But it might not be accurate to say this; just because $x_i$ was never classified as $C_k$ in any over our $N$ trials doesn't necessarily mean that it should never by classified as $C_k$. We took a finite number of trials which may not accurate represent the true probabilities. The second issue is that we assumed $N_k\neq 0$, i.e. that during our $N$ trials at least one data point was classified as $C_k$. This may also not be reasonable to assume.
+
+\textbf{assumptions}
+
+We assume that each data point $x_i$ has a nonzero probability of being $C_k$. The extent of this assumption is codified in the "pseudocount" parameter in the additive smoothing formula.
+
+\textbf{formula}
+
+Additive smoothing redefines all conditional probabilities $p(x_i|C_k)$:
+
+\begin{definition}
+	Additive smoothing with pseudocount $\alpha>0$ is 
+	\begin{equation*}
+		\hat{p}(x_i | C_k) = \frac{\text{freq}(x_i,C_k)+\alpha}{N_k + d\alpha}.
+	\end{equation*}
+\end{definition}
+
+The reason this is reasonable is the following:
+
+\begin{proposition}
+	Suppose $\alpha$ is an integer. Consider $n$ data points $x_1,\dots,x_n$. Suppose we have a multinomial distribution with $N+dn\alpha$ trials, which is identical to the old distribution for the first $N$ trails and afterwards each data point $x_i$ was classified $\alpha$ times into each $C_k$. Then 
+	\begin{equation*}
+		p_{\text{new}}(x_i|C_k) = \frac{\text{freq}_{\text{old}}(x_i,C_k) + \alpha}{(N_k)_{\text{old}} + n\alpha}.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	Well 
+	\begin{gather*}
+		\text{freq}_{\text{new}}(x_i, C_k) = \text{freq}_{\text{old}}(x_i, C_k) + \alpha, \\
+		(N_k)_{\text{new}} = (N_k)_{\text{old}}+n\alpha.
+	\end{gather*}
+	Just plug that into 
+	\begin{equation*}
+		p_{\text{new}}(x_i|C_k) = \frac{\text{freq}_{\text{new}}(x_i,C_k)}{(N_k)_{\text{neq}}}.
+	\end{equation*}
+\end{proof}
+
+% additive smoothing }}}2
+
 % appendix }}}1
 
 \end{document}
