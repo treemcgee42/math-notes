@@ -1397,6 +1397,258 @@ and two fundamental spaces in the codomain:
 
 % Implict/explicit solutions }}}1
 
+\section{extremum problems} % {{{1 
+
+\subsection{compactness, maximum value thoerem} % {{{2 
+
+\begin{example}
+	Any level set of a continuous function is closed. (TODO)
+\end{example}
+
+\begin{theorem}[maximum value theorem]
+	Let $X\subset\mathbb{R}^n$ be compact, nad let $f:X\to\mathbb{R}$ be continuous. Then $f$ takes on its maximum and minimum values.
+\end{theorem}
+\begin{proof} 
+	We first claim $f$ is bounded. Suppose otherwise. Then for all $k\in\mathbb{N}$, there exists $x_k\in X$ such that $f(x_k)>k$. Since $X$ is compact, the sequence $\{x_k\}$ has a convergent subsequence, say $x_{k_j}\to a$. Since $f$ is continuous, $f(x_{k_j})\to f(a)<\infty$, a contradiction. Thus $f$ is bounded above. Analagously, $f$ is bounded below.
+
+	Since $f$ is bounded above, it has a least upper bound $M$. So for all $k\in\mathbb{N}$, there is $x_k\in X$ such that $M-f(x_k)<\frac{1}{k}$. Since $X$ is compact, $\{x_k\}$ has a convergent subsequence, say $\{x_{k_j}\}\to z$. Since $f$ is continuous, $f(z)=\lim_{j\to\infty}f(x_{k_j})=M$, so $f$ achieves its maximum value $M$. Analagously, $f$ achieves a minimum value.
+\end{proof}	
+
+\begin{example}
+	The norm of a linear operator is continuous, so for a linear map $T:\mathbb{R}^n\to\mathbb{R}^m$,
+	\begin{equation*}
+		\|T\| = \sup_{\|x\|<1}\|T(x)\| = \max_{\|x\|=1}\|T(x)\|.
+	\end{equation*}
+\end{example}
+
+\begin{proposition}
+	Let $T:\mathbb{R}^n\to\mathbb{R}^m$ be a linear map. Then for all $x\in\mathbb{R}^n$, we have 
+	\begin{equation*}
+		\|T(x)\| \leq \|T\|\cdot \|x\|.
+	\end{equation*}
+	For any $c\in\mathbb{R}$,
+	\begin{equation*}
+		\|cT\|=|c|\cdot\|T\|.
+	\end{equation*}
+	If $S:\mathbb{R}^n\to\mathbb{R}^m$, we also have 
+	\begin{equation*}
+		\|S+T\|\leq \|S\| + \|T\|.
+	\end{equation*}
+\end{proposition}
+
+\begin{example}
+	For an $n\times n$ diagonal matrix $A$ with diagonal entries $d_1,\dots,d_n$, we have 
+	\begin{equation*}
+		\|A\|=\max\{|d_1|,\dots,|d_n|\}.
+	\end{equation*}
+\end{example}
+
+\begin{theorem}[uniform continuity]
+	Let $X\subset\mathbb{R}^n$ be compact, and let $f:X\to\mathbb{R}^n$ be continuous. Then $f$ is uniformly continuous.
+\end{theorem}
+\begin{proof} 
+	Suppose $f$ is not uniformly continuous. Then for some $\epsilon_0>0$, there does not exist a single $\delta>0$ such that $\|x-y\|<\delta$ implies $|f(x)-f(y)|<\epsilon$ for all $x,y\in X$. Then for every $m\in\mathbb{N}$, there exists $x_m,y_m\in X$ with $\|x_m-y_m\|<\frac{1}{m}$ and $|f(x_m)-f(y_m)|\geq\epsilon_0$. Since $X$ is compact, the sequence $\{x_k\}$ has a convergent subsequence $\{x_{k_j}\}$ with $x_{k_j}\to a$. By construction, $\|x_m-y_m\|\to 0$, so also $y_{m_k}\to a$. Since $f$ is continuous at $a$, there exists $\delta_0>0$ such that $\|x-a\|<\delta_0$ implies $|f(x)-f(a)|<\frac{\epsilon_0}{2}$. Now pick $k$ large enough such that $\|x_{m_k}-a\|<\delta_0$ and $\|y_{m_k}-a\|<\delta_0$. Then 
+	\begin{equation*}
+		|f(x_{m_k})-f(y_{m_k})| \leq |f(x_{m_k})| - |f(a)| + |f(a)-f(y_{m_k})| < \epsilon_0.
+	\end{equation*}
+	But we assumed $|f(x_m)-f(y_m)|\geq\epsilon_0$.
+\end{proof}	
+
+% compactness, maximum value thoerem }}}2
+
+\subsection{max/min problems} % {{{2 
+
+\begin{lemma}
+	Suppose $f:X\subset\mathbb{R}^n \to\mathbb{R}$ is defined on some neighborhood of the extremum (i.e. local min/max) $a$, and $f$ is differentiable at $a$. Then $Df(a)=\nabla f(a)^T=0$.
+\end{lemma}
+\begin{proof}
+	We will do the case for $a$ being a local minimum, but the case for local maximum is analagous. Suppose $a$ is a local minimum. Then for any $v\in\mathbb{R}^n$, there exists $\delta>0$ such that $|t|<\delta$ implies $f(a+tv)-f(a)\geq 0$. Then, temporarily allowing limits to take on $\pm\infty$,
+	\begin{equation*}
+		\lim_{t\to 0^+}\frac{f(a+tv)-f(a)}{t}\geq 0, \quad \lim_{t\to 0^-}\frac{f(a+tv)-f(a)}{t}\leq 0.
+	\end{equation*}
+	But $f$ is differentiable at $a$, so $D_vf(a)$ exists, so 
+	\begin{equation*}
+		Df(a)v = D_vf(a) = \lim_{t\to 0}\frac{f(a+tv)-f(a)}{t}=0.
+	\end{equation*}
+	Since $v$ is arbitrary, we have $Df(a)=0$.
+\end{proof}
+
+\begin{remark}
+	In particular, all partials are $0$, so the tangent plane is horizontal at that point.
+\end{remark}
+
+\begin{definition}
+	Suppose $f$ is differentiable at $a$. Call $a$ a \emph{critical point} if $Df(a)=0$. If $a$ is a non-extreumum critical point, then it is a \emph{saddle point}. 
+
+	Equivalently, a saddle point is a critical point $a$ such that, for any neighborhood of $a$ there exists $x$ such that $f(x)>f(a)$ and there exists $x$ such that $f(x)<f(a)$, 
+\end{definition}
+
+\begin{example}
+	The function 
+	\begin{equation*}
+		f\begin{pmatrix}x \\ y\end{pmatrix} = x^2-y^2
+	\end{equation*}
+	has a saddle point at the origin.
+\end{example}
+
+\subsection{quadratic forms, second derivative test} % {{{2 
+
+\begin{lemma}
+	Suppose $g:[0,1]\to \mathbb{R}$ is twice differnetiable. Then 
+	\begin{equation*}
+		g(1)=g(0)+g'(0)+\frac{1}{2}g''(\xi)
+	\end{equation*}
+	for some $0<\xi<1$.
+\end{lemma}
+\begin{proof} 
+	Define 
+	\begin{equation*}
+		P(t) = g(0)+g'(0)t+Ct^2,
+	\end{equation*}
+	where $C=g(1)-g(0)-g'(0)$. Then $P(1)=g(1)$ and $P(0)=g(0)$ and $P'(0)=g'(0)$.
+
+	Now let $h=g-P$, so that 
+	\begin{equation*}
+		h(0)=h'(0)=h(1)=0.
+	\end{equation*}
+	By the mean value theorem applied to $h$, there exists $c\in (0,1)$ such that $h'(c)=0$. By the mean value theorem applied to $h'$, there exists $\xi\in (0,c)$ such that $h''(\xi)=0$. Then 
+	\begin{equation*}
+		g''(\xi)=h''(\xi)+P''(\xi)=P''(xi)=2C,
+	\end{equation*}
+	so 
+	\begin{equation*}
+		g(1)=P(1)=g(0)+g'(0)+\frac{1}{2}g''(\xi).
+	\end{equation*}
+\end{proof}	
+
+\begin{para} 
+	We will see that in the multivariable setting, the derivative behaves like a linear map and the second derivative is like a quadratic form.
+\end{para}	
+
+\begin{definition}
+	Assume $f:U\subset\mathbb{R}^n\to\mathbb{R}$ is a $C^2$ function in a neighborhood of $a$. Define the (symmetric) matrix 
+	\begin{equation*}
+		\text{Hess}(f)(a) = \left[ \frac{\partial^2f}{\partial x_i\partial x_j}(a) \right],
+	\end{equation*}
+	called the \emph{Hessian matrix} of $f$ at $a$. Define the associated quadratic form 
+	\begin{align*}
+		\mathcal{H}_{f,a}:\mathbb{R}^n\to& \mathbb{R} \\
+		h \mapsto& h^T(\text{Hess}(f)(a))h \\
+				 & = \sum_{i,j=1}^n \frac{\partial^2f}{\partial x_i\partial x_j}(a)h_ih_j.
+	\end{align*}
+\end{definition}
+
+\begin{proposition}
+	Suppose $f:B_r(a)\to\mathbb{R}$ is $C^2$. Then if $\|h\|<r$,
+	\begin{equation*}
+		f(a+h)=f(a)+Df(a)h+\frac{1}{2}\mathcal{H}_{f,a+\xi h}(h).
+	\end{equation*}
+	Consequently,
+	\begin{equation*}
+		f(a+h) = f(a)+Df(a)h+\frac{1}{2}\mathcal{H}_{f,a}(h) + \epsilon(h)
+	\end{equation*}
+	where
+	\begin{equation*}
+		\lim_{h\to 0}\frac{\epsilon(h)}{\|h\|^2}.
+	\end{equation*}
+\end{proposition}
+\begin{proof}
+	We will apply the lemma to $g(t)=f(a+th)$. Using the chain rule and Theorem 6.1 of Chapter 3, 
+	\begin{align*}
+		g'(t) =& Df(a+th)h = \sum_{i=1}^n \frac{\partial f}{\partial x_i}(a+th)h_i, \\
+		g''(t) =& \sum_{i=1}^n \left( \sum_{j=1}^n \frac{\partial^2 f}{\partial x_j\partial x_i}(a+th)h_j\right)h_i \\
+		=& \sum_{i,j=1}^n \frac{\partial^2 f}{\partial x_j\partial x_i}(a+th)h_ih_j = \mathcal{H}_{f,a+th}(h).
+	\end{align*}
+	Substituting $g$ for $f$ and taking $t=1$ yields the first result.
+
+	For the second, since $f$ is $C^2$ we have $\text{Hess}(f)$ is continuous, so for any $\epsilon>0$ there exists $\delta>0$ such that $\|v\|<\delta$ implies 
+	\begin{equation*}
+		\|\text{Hess}(f)(a+v)-\text{Hess}(f)(a)\|<\epsilon.
+	\end{equation*}
+	By Cauchy-Schwartz, $|h^TAh|\leq \|A\|\cdot |h|^2$, so whenever $\|h\|<\delta$ 
+	\begin{align*}
+		|\mathcal{H}_{f,a+\xi h}(h)-\mathcal{H}_{f,a}(h)|
+		=& |h^T(\text{Hess}(f)(a+\xi h)-\text{Hess}(f)(h))h| \\
+		\leq& \|h\|^2 (\|\text{Hess}(f)(a+\xi h)-\text{Hess}(f)(h)\|) \\
+		<& \epsilon \|h\|^2.
+	\end{align*}
+	By definition, 
+	\begin{equation*}
+		\epsilon(h) = \frac{1}{2}(\mathcal{H}_{f,a+\xi h}(h)-\mathcal{H}_{f,a}(h)),
+	\end{equation*}
+	so 
+	\begin{equation*}
+		\frac{|\epsilon(h)|}{\|h\|^2} < \frac{\epsilon}{2}
+	\end{equation*}
+	whenver $\|h\|<\delta$. Since $\epsilon>0$ is arbitrary, we're done.
+\end{proof}
+
+\begin{definition}
+	Given a symmetric $n\times n$ matrix $A$, call the map 
+	\begin{align*}
+		Q: \mathbb{R}^n \to& \mathbb{R} \\
+		x \mapsto& x^TAx
+	\end{align*}
+	the \emph{associated quadratic form} of $A$. 
+
+	If for all $x\neq 0$, 
+	\begin{itemize}
+		\item (positive definite) $Q(x)>0$
+		\item (negative definite) $Q(x)<0$
+	\end{itemize}
+	If $Q(x)=0$ for some $x\neq 0$ and 
+	\begin{itemize}
+		\item (positive semidefinite) $Q(x)\geq 0$
+		\item (negative semidefinite) $Q(x)\leq 0$
+	\end{itemize}
+	and 
+	\begin{itemize}
+		\item (indefinite) $Q(x)>0$ for some $x$ and $Q(x)<0$ for some other $x$
+	\end{itemize}
+\end{definition}
+
+\begin{theorem}
+	Suppose $f:B_r(a)\to\mathbb{R}$ is $C^2$ and $a$ is a critical point. 
+	\begin{itemize}
+		\item If $\mathcal{H}_{f,a}$ is positive (resp. negative) definite, then $a$ is a local minimum (resp. local maximum).
+		\item If $\mathcal{H}_{f,a}$ is indefinite, then $a$ is a saddle point.
+		\item If $\mathcal{H}_{f,a}$ is positive or negative semidefinite, then we draw no conclusion.
+	\end{itemize}
+\end{theorem}
+\begin{proof} 
+	By Proposition 3.2, given any $\epsilon>0$ there exists $\delta>0$ such that 
+	\begin{equation*}
+		f(a+h)-f(a) = \frac{1}{2}\mathcal{H}_{f,a}(h) + \epsilon(h)
+	\end{equation*}
+	where 
+	\begin{equation*}
+		\frac{|\epsilon(h)|}{\|h\|^2}<\epsilon
+	\end{equation*}
+	whenever $\|h\|<\delta$.
+
+	First suppose $\mathcal{H}_{f,a}$ is positive definite. Well $\mathcal{H}_{f,a}$ is continuous and defined on all of $\mathbb{R}^n$, in particular on $\|x\|=1$, hence by maximum value theorem there exists $m>0$ such that $\mathcal{H}_{f,a}(x)\geq m$ for all unit vectors $x$. So $\mathcal{H}_{f,a}(h)\geq m\|h\|^2$ for all $h$. Let $\epsilon=\frac{m}{4}$. Then 
+	\begin{equation*}
+		f(a+h)-f(a) = \frac{1}{2}\mathcal{H}_{f,a}(h)+\epsilon(h) > \frac{1}{4}m\|h\|^2 > 0
+	\end{equation*}
+	for all $\|h\|<\delta$. So $a$ is a local minimum. The negative definite case is analagous.
+
+	Now suppose $\mathcal{H}_{f,a}$ is indefinite. Then there exists unit $x,y$ such that $\mathcal{H}_{f,a}(x)=m_1>0$ and $\mathcal{H}_{f,a}(y)=m_2<0$. Let $\epsilon=\frac{1}{4}\min(m_1,-m_2)$. Let $h=tx$ (resp. $ty)$ with $|t|<\delta$. Then 
+	\begin{equation*}
+		f(a+tx)=f(a)>\frac{1}{4}m_1 t^2>0
+	\end{equation*}
+	and 
+	\begin{equation*}
+		f(a+ty)-f(a)<\frac{1}{4}m_2 t^2<0.
+	\end{equation*}
+	So $a$ is a saddle point.
+\end{proof}	
+
+% quadratic forms, second derivative test }}}2
+
+% max/min problems }}}2
+
+% extremum problems }}}1
+
 \section{appendix} % {{{1 
 
 Given a plane $n\cdot x=d$ and a point $x_0$, the vector $x_0-x$ is a vector from the plane to the point. To get the perpindicular distance, we project $x_0-x$ onto $n$:
