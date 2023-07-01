@@ -1491,6 +1491,8 @@ and two fundamental spaces in the codomain:
 	has a saddle point at the origin.
 \end{example}
 
+% max/min problems }}}2
+
 \subsection{quadratic forms, second derivative test} % {{{2 
 
 \begin{lemma}
@@ -1643,9 +1645,113 @@ and two fundamental spaces in the codomain:
 	So $a$ is a saddle point.
 \end{proof}	
 
+\begin{corollary}
+	Let $f:U\subset\mathbb{R}^2\to\mathbb{R}$ be $C^2$, and let $a\in U$ be a critical point. Writing 
+	\begin{equation*}
+		\text{Hess}(f)(a) = \begin{pmatrix} A & B \\ B & C \end{pmatrix} = \begin{pmatrix} D_{x,x}f(a) & D_{x,y}f(a) \\ D_{y,x}f(a) & D_{y,y}f(a) \end{pmatrix},
+	\end{equation*}
+	then 
+	\begin{itemize}
+		\item (local min) $AC-B^2>0$ and $A>0$
+		\item (local max) $AC-B^2>0$ and $A<0$
+		\item (saddle point) $AC-B^2<0$
+		\item (inconclusive) $AC-B^2=0$
+	\end{itemize}
+\end{corollary}
+
+\begin{proposition}
+	Suppose $A$ is a symmetric matrix with associated quadratic form $Q$.
+
+	Suppose $A = LDL^T$, where $L$ is lower triangular with $1$'s in the diagonal and $D$ is diagonal.
+	\begin{itemize}
+		\item If all entries of $D$ are positive (resp. negative), then $Q$ is positive (resp. negative) definite.
+		\item If all entries of $D$ are nonnegative (resp, nonpositive) and at least one is $0$, then $Q$ is positive (resp. negative) semidefinite.
+		\item If entries of $D$ have opposite, then $Q$ is indefinite.
+	\end{itemize}
+
+	Conversely,
+	\begin{itemize}
+		\item If $Q$ is positive (resp. negative) definite, then there exists a lower triangular matrix $L$ with $1$'s in its diagonal, and a diagonal matrix $D$ with positive (resp. negative) entries, such that $A=LDL^T$.
+		\item If $Q$ is semidefinite (resp. indefinite), the matrix $EAE^T$, where $E$ is a suitable product of elementary matrices, can be written as $LDL^T$ where there is at least one $0$ (resp. entries with opposite signs) on the diagonal of $D$.
+	\end{itemize}
+\end{proposition}
+
 % quadratic forms, second derivative test }}}2
 
-% max/min problems }}}2
+\subsection{Lagrange multipliers} % {{{2 
+
+\begin{definition}
+	Suppose 
+	\begin{gather*}
+		f: U\subset\mathbb{R}^n \to \mathbb{R} \\
+		g: U\subset\mathbb{R}^n \to \mathbb{R}^m 
+	\end{gather*}
+	are differentiable. Suppose $g(a)=0$.
+
+	We say $a$ is a local max/min point of $f$ subject to the constraint $g(x)=0$ if, for some $\delta>0$, we have $f(x)\leq f(a)$ (resp. $f(x)\geq f(a)$) for all $x\in B(a,\delta)$ satisfying $g(x)=0$.
+
+	Succintly, letting $M=g^{-1}(\{0\})$, $a$ is an extremum of $f$ restricted to $M$.
+\end{definition}
+
+\begin{theorem}
+	Suppose $U\subset\mathbb{R}^n$ is open, $f:U\to\mathbb{R}$ is differentiable and $g:U\to\mathbb{R}^m$ is $C^1$. Suppose $g(a)=0$ and $\text{rank}(Dg(a))=m$.
+
+	If $a$ is a local extremum of $f$ subject to the constraint $g=0$, then there exists $\lambda_1,\dots,\lambda_m$ such that 
+	\begin{equation*}
+		Df(a) = \lambda_1Dg_1(a) + \cdots + \lambda_m Dg_m(a).
+	\end{equation*}
+	These scalars are called \emph{Lagrange multipliers}.
+\end{theorem}
+
+\begin{remark}
+	This condition is necessary, but not sufficient. For instance, there may be constrained saddle points.
+\end{remark}
+
+\begin{proof}
+	By the implicit function theorem, we can represent $M=g^{-1}(\{0\})$ locally near $a$ as a graph over some coordinate $(n-m)$-plane, let's say locally 
+	\begin{equation*}
+		M = \left\{ \begin{pmatrix} \bar{x} \\ \phi(\bar{x}) \end{pmatrix} : \bar{x}\in V\subset\mathbb{R}^{n-m}\right\},
+	\end{equation*}
+	where $\phi:V\to\mathbb{R}^m$ is $C^1$. Define a local parameterization of $M$ by 
+	\begin{align*}
+		\Phi:V\to& \mathbb{R}^n \\
+		\bar{x} \mapsto& \begin{pmatrix} \bar{x} \\ \phi(\bar{x}) \end{pmatrix}.
+	\end{align*}
+	Observe that 
+	\begin{itemize}
+		\item $g\circ \Phi=0$
+		\item $f\circ\Phi$ has a local extremum at $\bar{a}$, by assumption.
+	\end{itemize}
+	Differentiating,
+	\begin{equation*}
+		Dg(a)D\Phi(\bar{a})=0,\quad Df(a)D\Phi(\bar{a})=0. \tag{$\ast$}
+	\end{equation*}
+	The first equation in ($\ast$) says that $\tau=\text{Im}(D\Phi(\bar{a}))$ satisfies $\tau\subset\ker(Dg(a))$. By the rank-nullity theorem,
+	\begin{equation*}
+		\text{dim}(\mathbf{N}(Dg(a))) = n - \text{rank}(Dg(a)) = n-m,
+	\end{equation*}
+	by assumption on $\text{rank}(Dg(a))$. But $\tau$ itself is $(n-m)$-dimensional by assumption on $\phi$, so it must be that $\tau=\mathbf{N}(Dg(a))=(\mathbf{R}(Dg(a)))^\perp$.
+
+	The second equation in ($\ast$) says 
+	\begin{equation*}
+		\tau\subset\mathbf{N}(Df(a)) = \mathbf{R}(Df(a))^\perp,
+	\end{equation*}
+	so 
+	\begin{equation*}
+		\mathbf{R}(Dg(a))^\perp \subset \mathbf{R}(Df(a))^\perp,
+	\end{equation*}
+	so 
+	\begin{equation*}
+		\mathbf{R}(Df(a)) \subset \mathbf{R}(Dg(a)),
+	\end{equation*}
+	so $Df(a)$ is a linear combination of linear maps $Dg_1(a), \dots, Dg_m(a)$, i.e. $\nabla f(a)$ is a linear combination of $\nabla g_1(a),\dots,\nabla g_m(a)$.
+\end{proof}
+
+\begin{remark}
+	The subspace $\tau=\text{im}(D\Phi(\bar{a}))=\mathbf{R}(Dg(a))^\perp$ is the \emph{tangent space} of $M$ at $a$.
+\end{remark}
+
+% Lagrange multipliers }}}2
 
 % extremum problems }}}1
 
