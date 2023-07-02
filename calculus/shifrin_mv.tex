@@ -1753,6 +1753,246 @@ and two fundamental spaces in the codomain:
 
 % Lagrange multipliers }}}2
 
+\subsection{projections, least squares} % {{{2 
+
+\begin{para} 
+	Let $A$ be an $(m\times n)$-matrix, let $x$ be an $(n\times 1)$-matrix, let $y$ be an $(m\times 1)$ matrix. Sometimes the equation 
+	\begin{equation*}
+		Ax=y
+	\end{equation*}
+	may not have an explicit solution ($y\not\in\mathbf{C}(A)$). Then question then becomes to find a solution $Ax=p$ where $p$ is the vector in $\mathbf{C}(A)$ closest to $b$.
+\end{para}	
+
+\begin{definition}
+	Let $V\subset\mathbb{R}^n$ be a subspace, let $b\in\mathbb{R}^n$. Define the \emph{projection} of $b$ onto $V$ to be the unique vector $p\in V$ with the property that $b-p\in V^\perp$. We write $p=\text{proj}_v(b)$.
+\end{definition}
+
+\begin{proposition}
+	Projection is a linear map.
+\end{proposition}
+
+\begin{para} 
+	Now $V$ can either be given explicity ($V=\mathbf{C}(A)$) or implicitly ($V=\mathbf{N}(B)$).
+
+	Suppose $A$ is a $(m\times n)$-matrix of rank $m$. Say the column vectors $A_{\bullet, 1},\dots,A_{\bullet, m}$ give a basis for $V=\mathbf{C}(A)$. Define 
+	\begin{align*}
+		f: \mathbb{R}^n \to& \mathbb{R} \\ 
+		x \mapsto& \|Ax-b\|^2.
+	\end{align*}
+	We want to find the critical points of $f$. 
+
+	Write 
+	\begin{gather*}
+		h(y) = \|y\|^2 = y_1^2 + \cdots + y_m^2, \\
+		g(x) = Ax-b
+	\end{gather*}
+	so that $f=h\circ g$. Then 
+	\begin{gather*}
+		Dh(y) = 2y_1 + \cdots + 2y_m = 2y^T, \\
+		Dg(x) = A.
+	\end{gather*}
+	So by chain rule,
+	\begin{equation*}
+		Df(x) = Dh(Ax-b)Dg(x) = 2(Ax-b)^T A, 
+	\end{equation*}
+	so $Df(x)=0$ if and only if $(Ax-b)^TA=0$, i.e.
+	\begin{gather*}
+		(Ax-b)^TA=0, \\ 
+		A^T(Ax-b) = 0, \\
+		A^TAx=A^Tb.
+	\end{gather*}
+	Now $A^TA$ is a symmetric $(n\times n)$-matrix, hence nonsingular, hence has a unique solution $\bar{x}$. 
+
+	We claim $\bar{x}$ is a global minimum. Well, $A^T(A\bar{x}-b)=0$ implies 
+	\begin{equation*}
+		A\bar{x}-b\in\mathbf{N}(A^T)=\mathbf{C}(A)^\perp.
+	\end{equation*}
+	So for any $x\in\mathbb{R}^n$ such that $x\neq\bar{x}$, we have 
+	\begin{align*}
+		f(x) 
+		=& \|Ax-b\|^2 \\
+		=& \|A(x-\bar{x}) + (A\bar{x}-b)\|^2 \\
+		=& \|A(x-\bar{x})\|^2 + \|A\bar{x}-b\|^2 \\
+		>& f(\bar{x}), 
+	\end{align*}
+	where in the third line we used $A\bar{x}-b\in\mathbf{C}(A)^\perp$ and $A(x-\bar{x})\in\mathbf{C}(A)$.
+\end{para}	
+
+\begin{definition}
+	We call $\bar{x}$ the \emph{least squares solution}. To recap, it is the solution of least length to \emph{associated normal equation} 
+	\begin{equation*}
+		A^TAx = A^Tb \tag{$\ast$}
+	\end{equation*}
+	and the global minimum of $\|Ax-b\|^2$.
+\end{definition}
+
+\begin{remark}
+	When $A$ has rank $<m$, the linear system ($\ast$) has infinitely many solutions, so we need to pick the least squares solution to be the one of least length.
+\end{remark}
+
+\begin{proposition}
+	For $V\subset\mathbb{R}^n$, the map
+	\begin{equation*}
+		\text{proj}_V:\mathbb{R}^n\to\mathbb{R}^n
+	\end{equation*}
+	is given by 
+	\begin{equation*}
+		P = A(A^TA)^{-1}A^T,
+	\end{equation*}
+	where $A_{\bullet, j}=v_j$, where $v_1,\dots,v_m$ is a basis for $V$.
+\end{proposition}
+\begin{proof} 
+	Given $b\in\mathbb{R}^n$, we know that, letting $\bar{x}=(A^TA)^{-1}A^Tb$, that $A\bar{x}=p=\text{proj}_V(b)$.
+\end{proof}	
+
+So far, we've been working with $V$ explicitly defined. What about implicitly defined?
+
+Suppose an $m$-dimensional subspace $V\subset\mathbb{R}^n$ is the nullspace of an $(n-m)\times n$ matrix $B$ of rank $n-m$. To find the point in $V$ closest to $b\in\mathbb{R}^n$, we want to minimize 
+\begin{align*}
+	f:\mathbb{R}^n \to& \mathbb{R} \\
+	x \mapsto& \|x-b\|^2
+\end{align*}
+subject to the constraint $g(x)=Bx=0$.
+
+We can use Lagrange multipliers here.
+\begin{gather*}
+	Df(x) = \lambda Dg(x), \\
+	(x-b)^T = \sum_{i=1}^{n-m}\lambda_i B_{i,\bullet}, \\
+	x-b = B^T\lambda.
+\end{gather*}
+Multiplying by $B$ and using the constraint equation, 
+\begin{equation*}
+	(BB^T)\lambda = -Bb.
+\end{equation*}
+By analogy with our treatment of ($\ast$), the matrix $BB^T$ has rank $n-m$, and so we can solve for $\lambda$, hence for the constrained extremum $x_0$:
+\begin{align*}
+	x_0 
+	=& b + B^T\lambda = b + B^T(-(BB^T)^{-1}Bb) \\
+	=& b - B^T(BB^T)^{-1}Bb.
+\end{align*}
+By the projection formula, 
+\begin{align*}
+	x_0 
+	=& b - \text{proj}_{\mathbf{C}(B^T)}b = b-\text{proj}_{\mathbf{R}(B)}b = \text{proj}_{\mathbf{R}(B)^\perp}b \\
+	=& \text{proj}_{\mathbf{N}(B)}b.
+\end{align*}
+
+% projections, least squares }}}2
+
+\subsection{data fitting} % {{{2 
+
+Consider trying to find the right constants $a$ and $k$ so that the points 
+\begin{equation*}
+	\begin{pmatrix} x_1 \\ y_1 \end{pmatrix}, \dots, \begin{pmatrix} x_m \\ y_m \end{pmatrix}
+\end{equation*}
+lie on the curve $y=ax^k$. Taking logs, this is equivalent to fitting the points 
+\begin{equation*}
+	\begin{pmatrix} u_i \\ v_i \end{pmatrix} = \begin{pmatrix} \log(x_i) \\ \log(y_i) \end{pmatrix}
+\end{equation*}
+to a line 
+\begin{equation*}
+	v = \log(ax^k) = \log(a) + k\log(x) = \log(a) + ku.
+\end{equation*}
+The least squares solution of such problems is called the least squares line, or a line of regression.
+
+In other words, finding the least squares line $y=\bar{a}x+\bar{b}$ is finding the least squares solution of the (inconsistent) system 
+\begin{equation*}
+	A\begin{pmatrix} a \\ b \end{pmatrix} = y,
+\end{equation*}
+where 
+\begin{equation*}
+	A = \begin{pmatrix} x_1 & \cdots & 1 \\ \vdots & & \vdots \\ x_m & \cdots & 1 \end{pmatrix},\quad y=\begin{pmatrix} y_1 \\ \vdots \\ y_m \end{pmatrix}.
+\end{equation*}
+Let $\bar{y}=A(\bar{a}, \bar{b})^T$ be the projection of $y$ onto $\mathbf{C}(A)$. The least squares solution $(\bar{a}, \bar{b})^T$ has the property that $\|y-\bar{y}\|$ is as small as possible. Define the error vector 
+\begin{equation*}
+	\epsilon = y - \bar{y}.
+\end{equation*}
+Then 
+\begin{equation*}
+	\epsilon = \begin{pmatrix} \epsilon_1 \\ \vdots \\ \epsilon_m \end{pmatrix} = \begin{pmatrix} y_1-\bar{y_1} \\ \vdots \\ y_m-\bar{y_m} \end{pmatrix} = \begin{pmatrix} y_1 - (\bar{a}x_1+\bar{b}) \\ \vdots \\ v_m - (\bar{a}x_m+\bar{b}) \end{pmatrix}.
+\end{equation*}
+Recall $\epsilon=y-\bar{y}\in\mathbf{C}(A)^\perp$. So $\epsilon$ is orthogonal to each column vector of $A$. So 
+\begin{equation*}
+	\begin{pmatrix} \epsilon_1 \\ \vdots \\ \epsilon_m \end{pmatrix} \cdot \begin{pmatrix} 1 \\ \vdots \\ 1 \end{pmatrix} = \epsilon_1 + \cdots + \epsilon_m = 0.
+\end{equation*}
+
+% data fitting }}}2
+
+\subsection{orthogonal bases} % {{{2 
+
+\begin{lemma}
+	Suppose $\{v_1,\dots,v_k\}$ is a basis for $V$, and $x\in V$. Then it is an orthogonal basis if and only if  
+	\begin{equation*}
+		x = \sum_{i=1}^k \text{proj}_{v_i}x = \sum_{i=1}^k \frac{x\cdot v_i}{\|v_i\|^2}v_i.
+	\end{equation*}
+\end{lemma}
+
+\begin{proposition}
+	Let $V\subset\mathbb{R}^n$ be a $k$-dimensional subspace. For any vector $b\in\mathbb{R}^n$, 
+	\begin{equation*}
+		\text{proj}_V(b) = \sum_{i=1}^k \text{proj}_{v_i}b = \sum_{i=1}^k \frac{b\cdot v_i}{\|v_i\|^2}v_i \tag{$\ast\ast$}
+	\end{equation*}
+	if and only if $\{v_1,\dots,v_k\}$ is an orthogonal basis for $V$.
+\end{proposition}
+\begin{proof} 
+	($\Rightarrow$) Assume $\{v_1,\dots,v_k\}$ is an orthogonal basis for $V$. Let $p=\text{proj}_Vb$. Then $b-p\in V^\perp$ and $p\in V$. Since $p\in V$, 
+	\begin{equation*}
+		p = \sum_{i=1}^k \frac{p\cdot v_i}{\|v_i\|^2}v_i.
+	\end{equation*}
+	Since $b-p\in V^\perp$, $(b-p)\cdot v_i=0$ so $b\cdot v_i = p\cdot v_i$ for all $i$. Then 
+	\begin{align*}
+		\text{proj}_Vb 
+		=& p = \sum_{i=1}^k \text{proj}_{v_i}p = \sum_{i=1}^k \frac{p\cdot v_i}{\|v_i\|^2}v_i \\
+		=& \sum_{i=1}^k \frac{b\cdot v_i}{\|v_i\|^2}v_i = \sum_{i=1}^k \text{proj}_{v_i}b.
+	\end{align*}
+	($\Leftarrow$) Suppose 
+	\begin{equation*}
+		\text{proj}_Vb = \sum_{i=1}^k \text{proj}_{v_i}b
+	\end{equation*}
+	for all $b\in\mathbb{R}^n$. In particular, when $b\in V$, we get $b=\text{proj}_Vb$ so $b$ can be written as a linear combination of $v_1,\dots,v_k$. So these $v_i$ span $V$, have the same dimension as $V$, hecne are a basis. By the lemma, it must be orthogonal.
+\end{proof}	
+
+\begin{theorem}[Gram-Schmidt process]
+	Given a basis $\{v_1,\dots,v_k\}$ for a subspace $V\subset\mathbb{R}^n$, we obtain an orthogonal basis $\{w_1,\dots,w_k\}$ for $V$ as follows: 
+	\begin{align*}
+		w_1 =& v_1 \\ 
+		w_2 =& v_2 - \frac{v_2\cdot w_1}{\|w_1\|^2}w_1 \\
+		\vdots& \\
+		w_{j+1} =& v_{j+1} - \frac{v_{j+1}\cdot w_1}{\|w_1\|^2}w_1 - \cdots - \frac{v_{j+1}\cdot w_j}{\|w_j\|^2}w_j \\
+		\vdots& \\
+		w_k =& v_k - \frac{v_k\cdot w_1}{\|w_1\|^2}w_1 - \cdots - \frac{v_k\cdot w_{k-1}}{\|w_{k-1}\|^2}w_{k-1}.
+	\end{align*}
+	These can be normalized to an orthonormal basis.
+\end{theorem}
+
+\begin{theorem}[Lagrange interpolation formula]
+	Given $k+1$ points 
+	\begin{equation*}
+		\begin{pmatrix} t_1 \\ b_1 \end{pmatrix}, \cdots, \begin{pmatrix} t_{k+1} \\ b_{k+1} \end{pmatrix}
+	\end{equation*}
+	in the plane with $t_1,\dots, t_{k+1}$, there is exactly one polynomial $p\in \mathcal{P}_k$ whose graph passes through the points.
+\end{theorem}
+\begin{proof} 
+	We will construct an orthonormal basis for $\mathcal{P}_k$. Let 
+	\begin{equation*}
+		p_i(t) = \frac{(t-t_1)\cdots\widehat{(t-t_i)}\cdots (t-t_{k+1})}{(t_i-t_1)\cdots\widehat{(t_i-t_i)}\cdots (t_i-t_{k+1})}.
+	\end{equation*}
+	Then 
+	\begin{equation*}
+		p_i(t_j) = \begin{cases} 1, & i=j \\ 0, & i\neq j \end{cases}
+	\end{equation*}
+	since $p_i(t_i)=1$ and $p_i(t_j)=0$ for $i\neq j$. Then 
+	\begin{equation*}
+		p = b_1p_1 + \cdots + b_{k+1}p_{k+1},
+	\end{equation*}
+	has the desired properties. For uniqueness, any polynomial $q$ such that $q(t_j)=b_j$ for $j=1,\dots,k+1$ must satisfy 
+	\begin{equation*}
+		\langle q,p_j \rangle = b_j.
+	\end{equation*}
+\end{proof}	
+
+% orthogonal bases }}}2
+
 % extremum problems }}}1
 
 \section{appendix} % {{{1 
