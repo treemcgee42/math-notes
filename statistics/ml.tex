@@ -9,6 +9,96 @@
 \begin{document}
 \maketitle
 
+\section{unsorted} % {{{1 
+
+\subsection{transforming feature vectors} % {{{2 
+
+\textbf{Situation}
+
+We represent words as feature $n$-vectors. There exist two subclasses of words, say $\mathcal{C}$ and $\mathcal{D}$. We believe there is a relationship between a word and another word, e.g. 
+\begin{itemize}
+	\item a country and its capital 
+	\item an English word and its Telugu translation
+\end{itemize}
+We specifically assume this relationship is a linear transformation, consistent between individual feature vectors, i.e. the same linear transform maps 
+\begin{itemize}
+	\item every country to its capital 
+	\item every English word to its Telugu translation.
+\end{itemize}
+
+\textbf{Approximations}
+
+In reality, the relationship is not exactly the same for all words; partly because of noise in measurements, partly because the mapping between $\mathcal{C}$ and $\mathcal{D}$ is not one-to-one (e.g. there isn't a direct translation for every English word).
+
+Consider $m$ feature ($n$-)vectors belonging to $\mathcal{C}$. Arrange then as the rows of an $m\times n$ matrix $A$. Arrange their corresponding vectors in $D$ into an $(m\times n)$ matrix $B$. 
+
+Let $R$ be an $(n\times n)$-matrix, and let's consider what the product $AR$ represents. Well the $i$th row of $AR$ is $A_{i,\bullet}R$, hence $R$ is a lienar map sending rows of $A$ to rows of $AR$. Hence we seek an $R$ which is the best approximation 
+\begin{equation*}
+	AR = B.
+\end{equation*}
+
+\textbf{measuring closeness}
+
+Since we can't hope for $R$ to exactly map rows of $A$ to the rows of $B$, we seek a best approximation. But how do we measure how good an approximation is? One way is to use the Frobenius norm.
+
+\begin{definition}
+	Let $A$ be an $m\times n$ matrix. The \emph{Frobenius norm} of $A$ is the square root of the sum of the squares of its entries: 
+	\begin{equation*}
+		\|A\|_F = \sqrt{\sum_{i=1}^m \sum_{j=1}^n (A_{i,j})^2}.
+	\end{equation*}
+	Equivalently,
+	\begin{equation*}
+		\|A\|_F = \sqrt{\text{tr}(A^TA)}.
+	\end{equation*}
+\end{definition}
+
+\begin{proposition}
+	The two definitions are equivalent.
+\end{proposition}
+\begin{proof} 
+	\begin{align*}
+		\text{tr}(A^TA)
+		=& \sum_{j=1}^n A^T_{j,\bullet}A_{\bullet, j} = \sum_{j=1}^n \left( \sum_{i=1}^m A^T_{j,i}A_{i,j}\right) \\
+		=& \sum_{j=1}^n \sum_{i=1}^m A_{i,j}^2.
+	\end{align*}
+\end{proof}	
+
+Using the Frobenius norm, our goal now is to minimize 
+\begin{equation*}
+	\text{Loss}(R) = \|AR-B\|_F.
+\end{equation*}
+We use gradient descent.
+
+\begin{proposition}
+	\begin{equation*}
+		\nabla_R\text{Loss}(R) = 2A^T(AR-B).
+	\end{equation*}
+\end{proposition}
+\begin{proof} 
+	Be sure to check our conventions. Well 
+	\begin{align*}
+		\text{Loss}(R) 
+		=& \|AR-B\|^2_F = \text{tr}((AR-B)^T(AR-B)) \\
+		=& \text{tr}((R^TA^T - B^T)(AR-B)) \\
+		=& \text{tr}(R^TA^TAR - R^TA^TB - B^TAR - B^TB).
+	\end{align*}
+	Then 
+	\begin{align*}
+		\frac{\partial}{\partial R}\text{Loss}(R) 
+		=& \frac{\partial}{\partial R}\text{tr}(R^T(A^TA)R) - \frac{\partial}{\partial R}(R^T(A^TB)) - \frac{\partial}{\partial R}((B^TA)R) - \frac{\partial}{\partial R}(B^TB) \\ 
+		=& R^T(A^TA + A^TA) - B^TA - B^TA = 2(R^TA^TA - B^TA) \\
+		=& 2(R^TA^T - B^T)A.
+	\end{align*}
+	Then 
+	\begin{equation*}
+		\nabla_R\text{Loss}(R) = (\frac{\partial}{\partial R}\text{Loss}(R))^T = 2A^T(AR-B).
+	\end{equation*}
+\end{proof}	
+
+% transforming feature vectors }}}2
+
+% unsorted }}}1
+
 \section{appendix} % {{{1 
 
 \subsection{logistic regression} % {{{2 
