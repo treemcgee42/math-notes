@@ -1995,6 +1995,392 @@ Recall $\epsilon=y-\bar{y}\in\mathbf{C}(A)^\perp$. So $\epsilon$ is orthogonal t
 
 % extremum problems }}}1
 
+\section{solving nonlinear problems} % {{{1 
+
+\subsection{contraction mapping principle} % {{{2 
+
+\begin{proposition}
+	Suppose $\{a_k\}$ is a sequence of vectors in $\mathbb{R}^n$, and the series 
+	\begin{equation*}
+		\sum_{k=1}^\infty \|a_k\|
+	\end{equation*}
+	converges. Then the series 
+	\begin{equation*}
+		\sum_{k=1}^\infty a_k
+	\end{equation*}
+	converges.
+\end{proposition}
+
+\begin{definition}
+	Let $X\subset\mathbb{R}^n$. A function $f:X\to Y$ is called a \emph{contraction mapping} if there is a constant $0<c<1$ such that 
+	\begin{equation*}
+		\|f(x)-f(y)\| \leq \|x-y\|
+	\end{equation*}
+	for all $x,y\in\mathbb{X}$. 
+\end{definition}
+
+\begin{theorem}[contraction mapping principle]
+	Let $X\subset\mathbb{R}^n$ be closed. Let $f:X\to X$ be a contraction mapping. Then there exists a unique fixed point, i.e. a unique $x\in X$ such that $f(x)=x$. 
+\end{theorem}
+\begin{proof} 
+	Let $x_0\in X$ be arbitrary, and define a sequence 
+	\begin{equation*}
+		x_{k+1}=f(x_k).
+	\end{equation*}
+	We claim this converges to a point $x\in X$. Suppose for a moment that this is true. Then 
+	\begin{equation*}
+		f(x) = \lim_{k\to \infty}f(x_k) = \lim_{k\to\infty}x_{k+1}=x.
+	\end{equation*}
+	This will show the existence of a fixed point (but not uniqueness). To prove the claim, consider 
+	\begin{align*}
+		x_k 
+		=& x_0 + (x_1-x_0) + \cdots + (x_k-x_{k-1}) \\
+		=& x_0 + \sum_{j=1}^k (x_j-x_{j-1}).
+	\end{align*}
+	Set $a_k=x_k-x_{k-1}$. It suffices to show that the sequence of $a_k$ converges, for 
+	\begin{equation*}
+		\lim_{k\to\infty} = \lim_{k\to\infty} x_0 + \sum_{j=1}^k a_j.
+	\end{equation*}
+	(Note that since each $x_k\in X$, so is their limit, if it exists). Well by definition of the $\{x_k\}$ and the contraction, 
+	\begin{align*}
+		\|a_k\| 
+		=& \|x_k-x_{k-1}\| = \|f(x_{k-1})-f(x_{k-2})\| \\
+		\leq& c\|x_{k-1}-x_{k-2}\| = c\|a_{k-1}\|
+	\end{align*}
+	for some $0<c<1$, so 
+	\begin{align*}
+		\|a_k\| 
+		\leq& c\|a_{k-1} \leq c^2 \|a_{k-2}\| \leq \cdots \\
+		\leq& c^{k-1}\|a_1\|.
+	\end{align*}
+	Thus 
+	\begin{equation*}
+		\sum_{k=1}^K \|a_k\| \leq \left(\sum_{k=1}^K c^{k-1}\right)\|a_1\| = \frac{1-c^K}{1-c}\|a_1\|.
+	\end{equation*}
+	Since $0<c<1$, 
+	\begin{equation*}
+		\lim_{K\to\infty}\frac{1-c^K}{1-c} = \frac{1}{1-c}
+	\end{equation*}
+	so $\sum \|a_k\|$ converges. By the proposition, then $\sum a_k$ converges to some $a\in\mathbb{R}^n$. Uniqueness is left as an exercise.
+\end{proof}	
+
+\begin{proposition}[mean value inequality]
+	Suppose $f:U\subset\mathbb{R}^n\to\mathbb{R}^m$ is $C^1$. Suppose $a,b\in U$ are such that the line segment between them is in $U$. Then 
+	\begin{equation*}
+		\|f(b)-f(a)\| \leq \left( \text{max}_{x\in [a,b]} \|Df(x)\| \right) \|b-a\|.
+	\end{equation*}
+\end{proposition}
+\begin{proof} 
+	Define 
+	\begin{align*}
+		g:[0,1]\to \mathbb{R}^m \\
+		t \mapsto& f(a+t(b-a)).
+	\end{align*}
+	Note $f(b)-f(a)=g(1)-g(0)$. By the chain rule, $g$ is differentiable and 
+	\begin{equation*}
+		g'(t) = Df(a+t(b-a))(b-a). \tag{$\ast$}
+	\end{equation*}
+	By lemma 5.3 ch 3, 
+	\begin{align*}
+		\|f(b)-f(a)\| 
+		=& \left\| \int_0^1 g'(t)dt \right\| \leq \int_0^1 \|g'(t)\|dt \\
+		\leq& \text{max}_{t\in [0,1]}\|g'(t)\|.
+	\end{align*}
+	By ($\ast$), we have $\|g'(t)\leq \|Df(a+t(b-a))\|\cdot \|b-a\|$, so 
+	\begin{align*}
+		\text{max}_{t\in [0,1]}\|g'(t)\| 
+		\leq& \left( \text{max}_{t\in [0,1]} \|Df(a+t(b-a))\| \right) \|b-a\| \\
+		=& \left( \text{max}_{x\in [a,b]} \|Df(x)\| \right) \|b-a\|.
+	\end{align*}
+	Here we have used the operator inequality $\|Tx\|\leq \|T\|\cdot \|x\|$.
+\end{proof}	
+
+% contraction mapping principle }}}2
+
+\subsection{inverse, implicit function theorems} % {{{2 
+
+\begin{theorem}[inverse function theorem]
+	Suppose $f:U\subset\mathbb{R}^n\to\mathbb{R}^n$ is $C^1$. Let $x_0\in U$, and suppose $Df(x_0)$ is invertible. Then there exists a nehborhood $x_0\in V\subset U$ of on which $f$ has a $C^1$ inverse function. 
+
+	(That is, there exist neighborhood $V\ni x_0$ and $W\ni f(x_0)=y_0$ and a $C^1$ function $g:W\to Y$ such that $f$ is an inverse to $g$.)
+
+	Moreover, for any $x\in V$, write $f(x)=y$. Then $Dg(y)=(Df(x))^{-1}$.
+\end{theorem}
+\begin{proof} 
+	First observe that, without loss of generality, we can assume $x_0=y_0=0$ and $Df(0)=I$. Indeed, $f$ is (locally) invertible if and only if 
+	\begin{itemize}
+		\item it is invertible after a translation of the domain by $-x_0$.
+		\item it is invertible after a translation of the codomain by $-y_0$.
+		\item $Df(0)^{-1}f(x)$ is invertible. For if $f$ is invertible, then $(f^{-1}(y)Df(0))(Df(0)^{-1}f(x))=$. On the other hand, if $Df(0)^{-1}f(x)$ is invertible, then 
+			\begin{gather*}
+				f(x) = Df(0)Df(0)^{-1}f(x), \\
+				f(x)(Df(0)^{-1}f(x))^{-1}(Df(0))^{-1} = I, \\
+				(Df(0)^{-1}f(x))^{-1} Df(0)^{-1}f(x) = I
+			\end{gather*}
+			so $f$ is invertible.
+	\end{itemize}
+	With that simplification in hand, let's continue.
+
+	Since $f$ is $C^1$, there exists $r>0$ such that $\|x\|\leq r$ implies $\|Df(x)-I\|\leq \frac{1}{2}$. Fix $y$ with $\|y\|\leq \frac{r}{2}$. Define 
+	\begin{equation*}
+		\phi(x) = x - f(x) + y.
+	\end{equation*}
+	Then $\|D\phi(x)\| = \|Df(x)-I_n\|$. Now when $x\leq r$, we have 
+	\begin{equation*}
+		\|\phi(x)\| \leq \|x-f(x)\| + \|y\|. \tag{$\ast$}
+	\end{equation*}
+	Let's examine $\|x-f(x)\|$. Consider the function $(f-I)(x)$. Note $(f-I)(x)=f(x)-x$ and $(f-I)(0)=0$. The mean value inequality says 
+	\begin{gather*}
+		\|(f-I)(\bar{x}) - (f-I)(0)\| \leq \left( \text{max}_{x\in [a,b]} \|D(f-I)(x)\| \right) \|\bar{x}-0\| \\
+		\|x-f(x)\| \leq \text{max}_{x\in [0,\bar{x}]}\|Df(x)-I\|\cdot \|\bar{x}\| \leq \frac{r}{2}.
+	\end{gather*}
+	Thus (claim?) $\|\phi(x)\leq r$. So $\phi$ maps the closed ball $\overline{B_r(0)}$ to itself. Moreover, if $x,y\in B_r(0)$, by Proposition 1.3, we have 
+	\begin{equation*}
+		\|\phi(x)-\phi(y)\|\leq\frac{1}{2}\|x-y\|
+	\end{equation*}
+	so $\phi$ is a contraction mapping on $\overline{B_r(0)}$. By the theorem, it has a unique fixed point $x_y\in\overline{B_r(0)}$, hence such that $f(x_y)=y$. Check $x_y\in B_r(0)$.
+
+	Now let 
+	\begin{align*}
+		W =& B_{r/2}(0) \\
+		V =& f^{-1}(W) \cap B_r(0)
+	\end{align*}
+	and 
+	\begin{align*}
+		g: W\to& V \\
+		y \mapsto& x_y.
+	\end{align*}
+	We claim $g$ is continuous. Define 
+	\begin{align*}
+		\psi: B_r(0) \to& \mathbb{R}^n \\
+		x \mapsto& f(x)=x.
+	\end{align*}
+	Then 
+	\begin{equation*}
+		\|(f(u)-u) - f(v)) - (u-v)\| = \|\psi(u)-\psi(v)\| \leq \frac{1}{2}\|u-v\|.
+	\end{equation*}
+	Thus 
+	\begin{equation*}
+		\|(f(u)-f(v)) - (u-v)\| \leq \frac{1}{2}\|u-v\|.
+	\end{equation*}
+	By the reverse triangle inequality,
+	\begin{equation*}
+		\|u-v\|-\|f(u)-f(v)\| \leq \frac{1}{2}\|u-v\|
+	\end{equation*}
+	so 
+	\begin{equation*}
+		\frac{1}{2}\|u-v\|\leq \|f(u)-f(v)\|.
+	\end{equation*}
+	Writing $f(u)=y$ and $f(v)=z$, we have 
+	\begin{align*}
+		\|g(y)-g(z)\| 
+		\leq& 2\|f(g(y))-f(g(z))\| = 2\|f(x_y)-f(x_z)\| \\ 
+		\leq& 2\|y-z\| \tag{$\ast\ast$}
+	\end{align*}
+	hence $g$ is continuous.
+
+	Now we claim $g$ is differentiable. Fix $y\in W$ and write $g(y)=z$. We want to show $Dg(y)=(Df(x))^{-1}$. Choose $k$ small enough that $y+k\in W$. Set $g(y+k)=x+h$, such that $h=g(y+k)-g(y)$. Write $A=Df(x)$. We want to show 
+	\begin{equation*}
+		\lim_{k\to 0} \frac{g(y+k)-g(y)-A^{-1}k}{\|k\|} = 0.
+	\end{equation*}
+	Multiply by $A$:
+	\begin{equation*}
+		\frac{A(g(y+k)-g(y))-k}{\|k\|} = \frac{Ah-k}{\|k\|} = - \frac{f(x+h)-f(x)-Df(x)h}{\|h\|}\cdot \frac{\|h\|}{\|k\|}
+	\end{equation*}
+	where we have used the fact that 
+	\begin{align*}
+		f(x+h)-f(x) 
+		=& f(g(y+k)) - f(g(y)) \\
+		=& y+k-y = k.
+	\end{align*}
+	Now ($\ast\ast$) implies $\|h\|\leq 2\|k\|$, so $h\to 0$ as $k\to 0$ since $f$ is differentiable. Moreover, $h\neq 0$ when $k\neq 0$ for $h=g(y+k)-g(y)$ and is injective on a neighborhood of those points. So the above product goes to $0$.
+
+	It remains to check $g$ is $C^1$. We have 
+	\begin{equation*}
+		Dg(y) = (Df(g(y)))^{-1},
+	\end{equation*}
+	so $Dg$ is the composition of the function $y\mapsto Df(g(y))$ and $A\mapsto A^{-1}$. Since $g$ is continuous and $f$ is $C^1$, the composition must be continuous. Inversions are continuous, hence $y\mapsto Dg(y)$ is continuous.
+\end{proof}	
+
+\begin{remark}
+	Can generalize this to $C^k$ functions.
+\end{remark}
+
+\begin{example}
+	($Df$ is everywhere invertible, but $f$ is not injective.) Define 
+	\begin{align*}
+		f: \mathbb{R}^2 \to& \mathbb{R}^2 \\
+		\begin{pmatrix}u \\ v\end{pmatrix} \mapsto& \begin{pmatrix}e^u\cos(v) \\ e^u\sin(v) \end{pmatrix}.
+	\end{align*}
+	Then $f$ is $C^1$ and 
+	\begin{equation*}
+		Df\begin{pmatrix} u \\ v\end{pmatrix} = \begin{pmatrix} e^u\cos(v) & -e^u\sin(v) \\ e^u\sin(v) & e^u\cos(v) \end{pmatrix}
+	\end{equation*}
+	is everywhere nonsingular since its determinant is $e^{2u}\neq 0$. But since sine and cosine are periodic, $f$ is not one-to-one.
+
+	On the other hand, if $f(u,v)^T = (x,y)^T$ then we can write 
+	\begin{equation*}
+		g\begin{pmatrix} x \\ y\end{pmatrix} = \begin{pmatrix} \frac{1}{2}\log(x^2+y^2) \\ \arctan(y/x) \end{pmatrix}
+	\end{equation*}
+	and then $f\circ g(x,y)^T = (x,y)^T$. So why is $g$ not the inverse of $f$? Well arctan is a function $\mathbb{R}\to (-\frac{\pi}{2}, \frac{\pi}{2})$.
+
+	Let's calculate the derivative of any local inverse $g$, according to the theorem. If $f(u,v)^T=(x,y)^T$ then 
+	\begin{align*}
+		Dg\begin{pmatrix}x\\ y\end{pmatrix} 
+		=& \left( Df\begin{pmatrix}u\\ v\end{pmatrix}\right)^{-1} = \begin{pmatrix} e^{-u}\cos(v) &  e^{-u}\sin(v) \\ -e^{-u}\sin(v) & e^{-u}\cos(v) \end{pmatrix}^{-1} \\
+		=& \begin{pmatrix} \frac{x}{x^2+y^2} & \frac{y}{x^2+y^2} \\ \frac{-y}{x^2+y^2} & \frac{x}{x^2+y^2} \end{pmatrix}.
+	\end{align*}
+	Indeed, this agrees with the derivative of our specific $g$.
+\end{example}
+
+In what follows, let $n>m$.
+
+\begin{theorem}[implicit function theorem]
+	Suppose $F:U\subset\mathbb{R}^n\to\mathbb{R}^m$ is $C^1$. Write a vector in $\mathbb{R}^n$ as $(x,y)^T$ where $x\in\mathbb{R}^{n-m}$ and $y\in\mathbb{R}^m$.	
+
+	Suppose $F(x_0,y_0)^T=0$ and the $m\times m$ matrix $\frac{\partial F}{\partial y}(x_0, y_0)^T$ is invertible. Then there exist neighborhoods $V\ni x_0$ and $W\ni y_0$ and a $C^1$ function $\phi:V\to W$ such that 
+	\begin{equation*}
+		F\begin{pmatrix}x\\ y\end{pmatrix}=0, x\in V, y\in W \quad \Leftrightarrow \quad y=\phi(x).
+	\end{equation*}
+	Moreover, 
+	\begin{equation*}
+		D\phi(x) = -\left( \frac{\partial F}{\partial y}\begin{pmatrix}x \\ \phi(x)\end{pmatrix}\right)^{-1} \frac{\partial F}{\partial x}\begin{pmatrix}x \\ \phi(x) \end{pmatrix}.
+	\end{equation*}
+\end{theorem}
+\begin{proof} 
+	Define 
+	\begin{align*}
+		F: U\to& \mathbb{R}^n=\mathbb{R}^{n-m}\times\mathbb{R}^m  \\
+		\begin{pmatrix} x \\ y \end{pmatrix} \mapsto& \begin{pmatrix} x \\ F(x,y)^T \end{pmatrix}.
+	\end{align*}
+	Note the linear map 
+	\begin{equation*}
+		Df\begin{pmatrix}x_0 \\ y_0\end{pmatrix} = \begin{pmatrix} I & 0 \\ \frac{\partial F}{\partial x}(x_0,y_0)^T & \frac{\partial F}{\partial y}(x_0, y_0)^T \end{pmatrix}
+	\end{equation*}
+	is invertible (Exercise 4.2.7). (Note the rows are size $n-m$ and $m$, and the columns are size $n-m$ and $m$ as well.) So there exist neighborhoods $V\subset\mathbb{R}^{n-m}$ of $x_0$ and $W\subset\mathbb{R}^m$ of $y_0$ and $Z\subset\mathbb{R}^n$ of $0$ and a $C^1$ function $g:Z\to V\times W$ such that $g$ is an inverse of $f$ on $V\times W$. Now define 
+	\begin{align*}
+		\phi:V\to& W \\
+		\begin{pmatrix} x\\ phi(x) \end{pmatrix} \mapsto& g\begin{pmatrix}x\\ 0\end{pmatrix}.
+	\end{align*}
+	Since $g$ is $C^1$, so is $\phi$. And 
+	\begin{equation*}
+		\begin{pmatrix}x \\ F(x,\phi(x))^T \end{pmatrix} = f\begin{pmatrix}x\\ \phi(x)\end{pmatrix} = f(g(\begin{pmatrix}x\\ 0\end{pmatrix})) = \begin{pmatrix}x\\ 0\end{pmatrix},
+	\end{equation*}
+	so $F(x,\phi(x))^T=0$ as desired. On the other hand, if $F(x,y)^T=0$, $x,V$, $y\in W$, then $(x,y)^T=g(x,0)^T$ so 
+	\begin{equation*}
+		\begin{pmatrix}x\\ 0\end{pmatrix} = \begin{pmatrix}x\\ F(x,y)^T\end{pmatrix} = f\begin{pmatrix}x\\y\end{pmatrix}=f(g\begin{pmatrix}x\\ 0\end{pmatrix})
+	\end{equation*}
+	so $y=\phi(x)$, where we have used the fact that $f$ is injective on this neighborhood so $(x,y)^T=g(x,0)^T=(x,\phi(x))^T$. 
+
+	Now that we know $\phi$ is $C^1$, we calculate the derivative using... Define 
+	\begin{align*}
+		h:V\to& \mathbb{R}^m \\
+		x\mapsto& F(x,\phi(x))^T.
+	\end{align*}
+	Then $h$ is $C^1$. Also $h(x)=0$ for all $x\in V$, so we get 
+	\begin{align*}
+		0 = Dh(x) 
+		=& DF\begin{pmatrix}x\\ \phi(x)\end{pmatrix} D(x\mapsto \begin{pmatrix}x\\\phi(x)\end{pmatrix})(x) \\
+		=& \begin{pmatrix} \frac{\partial F}{\partial x}\begin{pmatrix}x\\ \phi(x)\end{pmatrix} & \frac{\partial F}{\partial y}\begin{pmatrix}x\\ \phi(x)\end{pmatrix} \end{pmatrix} \begin{pmatrix} I \\ D\phi(x) \end{pmatrix} \\
+		=& \frac{\partial F}{\partial x}\begin{pmatrix}x\\ \phi(x)\end{pmatrix} + \frac{\partial F}{\partial y}\begin{pmatrix}x\\ \phi(x)\end{pmatrix}D\phi(x),
+	\end{align*}
+	and use the invertibility of $\frac{\partial F}{\partial y}\begin{pmatrix}x\\ \phi(x)\end{pmatrix}$. (Note in above, the sizes are as follows: the first term is $m\times n$, with the columns being divided as $n-m$ and $m$. The second term is $n\times X$ with rows divided as $n-m$ and $m$).
+\end{proof}	
+
+% inverse, implicit function theorems }}}2
+
+\section{manifolds, revisited} % {{{1 
+
+\begin{para} 
+	We wish to make clear three equivalent formulations of a $k$-dimensional manifold $M$:
+	\begin{itemize}
+		\item (explicit) $M$ is locally a graph over some $k$-dimensional coordinate plane.
+		\item (implicit) $M$ is locally the level set of some function whose derivative has maximum rank.
+		\item (parametric) $M$ is locally parameterized by some function whose derivative has maximal rank (e.g. a parametric curve with nonzero velocity).
+	\end{itemize}
+	More precisely:
+\end{para}	
+
+\begin{definition}
+	We say $M\subset\mathbb{R}^n$ is a $k$-dimensional manifold if any of the following equivalent criteria hold:
+	\begin{enumerate}
+		\item for all $p\in M$, there exists a neighborhood $W\subset\mathbb{R}^n$ of $p$ such that $M\cap W$ is the graph of a smooth function $f:V\subset\mathbb{R}^k\to\mathbb{R}^{n-k}$.
+		\item for all $p\in M$, there exists a neighborhood $W\subset\mathbb{R}^n$ of $p$ and a smooth function $W\to\mathbb{R}^{n-k}$ such that $F^{-1}(0)=M\cap W$ and $\text{rank}(Df(x))-n-k$ for all $x\in M\cap W$.
+		\item for all $p\in M$, there exist a neighborhood $W\subset\mathbb{R}^n$ of $p$ such that $M\cap W$ is the image of a smooth function $g:U\subset\mathbb{R}^k\to\mathbb{R}^n$ which is one-to-one, $\text{rank}(Dg(u))=k$ for all $u\in U$, and $g^{-1}:M\cap W\to U$ is continuous.
+	\end{enumerate}
+\end{definition}
+
+\begin{theorem}
+	The three criteria are equivalent.
+
+	($2\Rightarrow 1$) Implicit function theorem.
+
+	($1\Rightarrow 3$) Set $g(x)=(u, f(u))^T$, WLOG.
+
+	($3\Rightarrow 2$) Suppose $\tilde{W}\subset\mathbb{R}^n$ and $g:U\subset\mathbb{R}^k\to\mathbb{R}^n$ are as in the definition. The fact that $g^{-1}:M\cap\tilde{W}\to U$ is continuous tells us that if $g(u_0)=p$, then points sufficiently close to $p\in M$ must map close to $u_0$ under $g^{-1}$. So all points of $M\cap\tilde{W}$ are the image of a neighborhood of $u_0$ under $g$.
+
+	Renumbering coordinates in $\mathbb{R}^n$ as necessary, we assume $g(0)=p$ and $Dg(0) = (A, B)^T$ where $A$ is an invertible $k\times k$ matrix. Define 
+	\begin{align*}
+		G:U\times\mathbb{R}^{n-k} \to& \mathbb{R}^n \\
+		\begin{pmatrix}u\\ v\end{pmatrix} \mapsto& g(u) + \begin{pmatrix} 0 \\ v\end{pmatrix}.
+	\end{align*}
+	Then 
+	\begin{equation*}
+		Dg\begin{pmatrix}0\\ 0\end{pmatrix} = \begin{pmatrix}A & 0\\ B* I_{n-k}\end{pmatrix}
+	\end{equation*}
+	is invertible. By the inverse function theorem, there exist neighborhoods $V=V_1\times V_2\subset\mathbb{R}^k\times\mathbb{R}^{n-k}$ of $(0,0)^T$ and $W\subset\mathbb{R}^n$ of $p$ and a local (smooth) inverse $H:W\to V$ of $G$. Shrinking $W$ if necessary, we assume $W\subset\tilde{W}$. Write 
+	\begin{equation*}
+		H(X) = \begin{pmatrix} H_1(x) \\ H_2(x) \end{pmatrix} \in \mathbb{R}^k\times\mathbb{R}^{n-k},
+	\end{equation*}
+	and define 
+	\begin{align*}
+		F: W\to& \mathbb{R}^{n-k} \\ 
+		x \mapsto H_2(x).
+	\end{align*}
+	Now suppose $F(x)=0$. Since $x\in W$, $x=G(u,v)^T$ for a unique $(u,v)^T\in V$. Then 
+	\begin{equation*}
+		F(x) = F(G\begin{pmatrix}u\\ v\end{pmatrix}) = H_2(G\begin{pmatrix}u\\ v\end{pmatrix}) = v,
+	\end{equation*}
+	so $F(x)=0$ if and only if $v=0$, so $x=g(u)$. So the equation $F=0$ defines that portion of $M$ given by $g(u)$ for all $u\in V$, but $W\subset\tilde{W}$, so such points are all of $M\cap W$.
+\end{theorem}
+
+\begin{example}
+	Let 
+	\begin{align*}
+		g:\mathbb{R} \to& \mathbb{R}^3 \\
+		u \mapsto& \begin{pmatrix}u\\ u^2\\ u^3\end{pmatrix}
+	\end{align*}
+	and $M=\text{im}(g)$.
+
+	We want to write $M$ (perhaps locally) as the level set of a function near $p=0$. Define 
+	\begin{equation*}
+		G\begin{pmatrix}u\\ u^2\\ u^3\end{pmatrix} = \begin{pmatrix}u\\ u^2\\ u^3\end{pmatrix} + \begin{pmatrix}0\\ v_1\\ v_2\end{pmatrix} = \begin{pmatrix}u\\ u^2+v_1\\ u^3+v_2\end{pmatrix}.
+	\end{equation*}
+	We can explicitly construct an inverse 
+	\begin{equation*}
+		G^{-1}\begin{pmatrix}x\\ y\\ z\end{pmatrix} = H\begin{pmatrix}x\\ y\\ z\end{pmatrix} = \begin{pmatrix}x\\ y-x^2\\ z-x^3\end{pmatrix}.
+	\end{equation*}
+	Letting $F=H_2$, i.e. 
+	\begin{align*}
+		F:\mathbb{R}^3 \to& \mathbb{R}^2 \\
+		\begin{pmatrix}x\\ y\\ z\end{pmatrix} \mapsto& \begin{pmatrix}y-x^2\\ z-x^3\end{pmatrix}
+	\end{align*}
+	and get $M$ as the zero-set of $F$.
+\end{example}
+
+\begin{definition}
+	Let $M$ be a manifold as above. Its \emph{tangent space} at $p$, denoted $T_pM$, is defined in the following equivalent ways: 
+	\begin{enumerate}
+		\item If $M$ is locally the graph of $f$ with $p=(a, f(a))^T$, then $T_pM=\Gamma(Df(a))$.
+		\item Assuming $M$ is locally a level set of $F$, then $T_pM=\mathbf{N}(DF(p))$.
+		\item Assuming $M$ is locally parameterized by $g$ with $p=g(a)$, then $T_pM=\text{im}(Dg(a):\mathbb{R}^n\to\mathbb{R}^n)$.
+	\end{enumerate}
+\end{definition}
+
+% manifolds, revisited }}}1
+
+% solving nonlinear problems }}}1
+
 \section{appendix} % {{{1 
 
 Given a plane $n\cdot x=d$ and a point $x_0$, the vector $x_0-x$ is a vector from the plane to the point. To get the perpindicular distance, we project $x_0-x$ onto $n$:
